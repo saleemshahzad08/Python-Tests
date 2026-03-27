@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Conditional Statements — MCQ Test</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #1a1e2a;
+    --border: #252a38;
+    --accent: #f7c948;
+    --accent2: #4af0b0;
+    --accent3: #f04a7a;
+    --text: #e8eaf0;
+    --muted: #6b7394;
+    --correct: #4af0b0;
+    --wrong: #f04a7a;
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(247,201,72,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(74,240,176,0.05) 0%, transparent 50%);
+  }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  header {
+    text-align: center;
+    margin-bottom: 52px;
+    animation: fadeDown .6s ease both;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(247,201,72,.3);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 15px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .topics {
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .08em;
+  }
+  .topics span { color: var(--accent2); opacity: .8; }
+
+  .progress-wrap {
+    margin-bottom: 36px;
+    animation: fadeDown .6s .1s ease both;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .progress-meta span:last-child { color: var(--accent); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 100px;
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 16px;
+    animation: slideUp .4s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .question-card.answered::before { opacity: 1; }
+
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .q-text { font-size: 16px; font-weight: 600; line-height: 1.6; margin-bottom: 22px; }
+  .q-code {
+    font-family: 'JetBrains Mono', monospace;
+    background: #0a0c11;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--accent2);
+    margin-bottom: 22px;
+    line-height: 1.7;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all .2s ease;
+    background: var(--surface);
+    user-select: none;
+  }
+  .option:hover:not(.locked) {
+    border-color: var(--accent);
+    background: rgba(247,201,72,.06);
+    transform: translateX(4px);
+  }
+  .option-letter {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--border);
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .option-text { font-size: 14.5px; line-height: 1.5; }
+  .option.selected { border-color: var(--accent); background: rgba(247,201,72,.08); }
+  .option.selected .option-letter { background: var(--accent); border-color: var(--accent); color: #000; }
+
+  #result-section { display: none; animation: slideUp .5s ease both; margin-top: 24px; }
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(247,201,72,.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .result-header { text-align: center; margin-bottom: 36px; }
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .score-display {
+    font-size: clamp(52px, 10vw, 80px);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -.04em;
+  }
+  .score-display sub { font-size: 28px; color: var(--muted); font-weight: 600; letter-spacing: 0; }
+  .score-percent { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .grade-badge {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 6px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+  }
+  .grade-A { background: rgba(74,240,176,.15); color: var(--correct); border: 1px solid rgba(74,240,176,.3); }
+  .grade-B { background: rgba(247,201,72,.15); color: var(--accent); border: 1px solid rgba(247,201,72,.3); }
+  .grade-C { background: rgba(240,74,122,.15); color: var(--wrong); border: 1px solid rgba(240,74,122,.3); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
+  .stat-val { font-size: 26px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .stat-val.c { color: var(--correct); }
+  .stat-val.w { color: var(--wrong); }
+  .stat-val.s { color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: .08em; text-transform: uppercase; }
+
+  .review-title {
+    font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace;
+  }
+  .review-list { display: flex; flex-direction: column; gap: 10px; }
+  .review-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 18px; display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: start;
+  }
+  .review-item.correct { border-color: rgba(74,240,176,.25); }
+  .review-item.wrong   { border-color: rgba(240,74,122,.2); }
+  .ri-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); padding-top: 1px; }
+  .ri-body { font-size: 13.5px; line-height: 1.5; }
+  .ri-q { font-weight: 600; margin-bottom: 5px; color: var(--text); }
+  .ri-ans { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .ri-ans .your  { color: var(--wrong); }
+  .ri-ans .right { color: var(--correct); }
+  .ri-ans .ok    { color: var(--correct); }
+  .ri-icon { font-size: 18px; padding-top: 1px; }
+
+  .retry-btn {
+    margin-top: 32px; width: 100%; padding: 16px; background: var(--accent); color: #000;
+    border: none; border-radius: var(--radius); font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: .04em; transition: all .2s;
+  }
+  .retry-btn:hover { background: #ffd966; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,201,72,.25); }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    .question-card { padding: 22px 18px; }
+    .stats-row { gap: 8px; }
+    .result-card { padding: 28px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="badge">🐍 Python Conditionals</div>
+    <h1>Intermediate<br><span>MCQ Test</span></h1>
+    <p class="subtitle">30 questions · one correct answer each</p>
+    <p class="topics"><span>if / elif / else</span> · <span>ternary expressions</span> · <span>match-case</span> · <span>short-circuit evaluation</span> · <span>nested conditions</span> · <span>chained comparisons</span> · <span>truthy &amp; falsy</span></p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="prog-label">0 / 30 answered</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div id="questions-container"></div>
+  <div id="result-section"></div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    q: "What will the following code output?",
+    code: "age = 15\nif age >= 18:\n    print('Adult')\nprint('Done')",
+    opts: ["Adult Done", "Adult", "Done", "Nothing is printed"],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "marks = 55\nres = 'Pass' if marks >= 40 else 'Fail'\nprint(res)",
+    opts: ["Fail", "True", "Pass", "None"],
+    ans: 2
+  },
+  {
+    q: "What is the key difference between using elif and using multiple separate if statements?",
+    opts: [
+      "elif is faster than multiple if statements in all cases",
+      "elif stops at the first True condition; multiple if statements evaluate all conditions regardless",
+      "Multiple if statements stop at the first True condition; elif evaluates all",
+      "There is no difference — both behave identically"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following?",
+    code: "n = 0\nres = 'Pos' if n > 0 else 'Neg' if n < 0 else 'Zero'\nprint(res)",
+    opts: ["Pos", "Neg", "Zero", "None"],
+    ans: 2
+  },
+  {
+    q: "Which of the following correctly describes the else block in an if-else statement?",
+    opts: [
+      "else has its own condition and only runs when that condition is True",
+      "else runs after every iteration of a loop",
+      "else has no condition and always runs when all above conditions fail",
+      "else is mandatory in every if statement"
+    ],
+    ans: 2
+  },
+  {
+    q: "What will the following code print?",
+    code: "x = 10\nif x > 5:\n    if x > 8:\n        print('High')\n    else:\n        print('Medium')\nelse:\n    print('Low')",
+    opts: ["Low", "Medium", "High", "High Medium"],
+    ans: 2
+  },
+  {
+    q: "In Python's match-case statement, what does case _: represent?",
+    opts: [
+      "It matches only None values",
+      "It is the default catch-all case, like else in if-elif-else",
+      "It raises an error if no other case matched",
+      "It matches only integer values"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following?",
+    code: "score = 72\nif score >= 90:\n    print('A')\nelif score >= 75:\n    print('B')\nelif score >= 60:\n    print('C')\nelse:\n    print('D')",
+    opts: ["A", "B", "C", "D"],
+    ans: 2
+  },
+  {
+    q: "What does the following chained comparison check?",
+    code: "if 18 <= age <= 60:\n    print('Working age')",
+    opts: [
+      "Only if age is exactly 18 or exactly 60",
+      "If age is at least 18 AND at most 60 (inclusive on both ends)",
+      "If age is greater than 18 AND less than 60",
+      "If age equals 18 subtracted from 60"
+    ],
+    ans: 1
+  },
+  {
+    q: "What will the following code output?",
+    code: "a, b, c = 3, 7, 5\nif a > b and a > c:\n    print('a is largest')\nelif b > a and b > c:\n    print('b is largest')\nelse:\n    print('c is largest')",
+    opts: ["a is largest", "b is largest", "c is largest", "Nothing is printed"],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following?",
+    code: "x = 5\nprint('Yes') if x > 3 else print('No')",
+    opts: ["No", "Yes No", "None", "Yes"],
+    ans: 3
+  },
+  {
+    q: "Which Python version introduced the match-case statement?",
+    opts: ["Python 3.6", "Python 3.8", "Python 3.10", "Python 3.12"],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "x = True\ny = False\nif x or y:\n    print('A')\nif x and y:\n    print('B')\nprint('C')",
+    opts: ["A B C", "A C", "B C", "C"],
+    ans: 1
+  },
+  {
+    q: "What does the OR pattern in match-case allow?",
+    code: "match number:\n    case 1 | 2 | 3:\n        print('Small')",
+    opts: [
+      "It matches if number is between 1 and 3",
+      "It matches if number equals 1, 2, or 3",
+      "It raises SyntaxError — | is not allowed in case blocks",
+      "It matches only if all three values are present in a list"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following?",
+    code: "val = ''\nif val:\n    print('Truthy')\nelse:\n    print('Falsy')",
+    opts: ["Truthy", "Falsy", "None", "TypeError"],
+    ans: 1
+  },
+  {
+    q: "What is the fundamental difference between a ternary expression and a regular if-else block?",
+    opts: [
+      "Ternary can have more than two outcomes; if-else cannot",
+      "Ternary is a statement that executes code; if-else is an expression that returns a value",
+      "Ternary is an expression that returns a value; if-else is a statement that executes code blocks",
+      "There is no difference — they always produce the same result"
+    ],
+    ans: 2
+  },
+  {
+    q: "What will the following code print?",
+    code: "age = 65\nis_member = False\nif age >= 60:\n    if is_member:\n        print('30% discount')\n    else:\n        print('20% discount')\nelse:\n    print('No discount')",
+    opts: ["30% discount", "No discount", "20% discount", "Nothing"],
+    ans: 2
+  },
+  {
+    q: "When does the and operator short-circuit in a condition?",
+    opts: [
+      "When the first operand evaluates to True",
+      "When the first operand evaluates to False",
+      "When both operands evaluate to True",
+      "When the second operand evaluates to False"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following match-case code?",
+    code: "number = 15\nmatch number:\n    case x if x % 2 == 0:\n        print('Even')\n    case x if x > 10:\n        print('Odd and large')\n    case _:\n        print('Other')",
+    opts: ["Even", "Other", "Odd and large", "SyntaxError"],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "x = 100\nif x > 50:\n    print('High')\nif x > 80:\n    print('Very High')\nif x > 90:\n    print('Extreme')",
+    opts: ["High", "High Very High", "High Very High Extreme", "Extreme"],
+    ans: 2
+  },
+  {
+    q: "What does the tuple method alternative for ternary do?",
+    code: "result = ('Odd', 'Even')[n % 2 == 0]",
+    opts: [
+      "Returns 'Odd' when n % 2 == 0 is True",
+      "Raises IndexError when the condition is False",
+      "Returns 'Even' when n % 2 == 0 is True",
+      "Returns 'Even' when n % 2 == 0 is False"
+    ],
+    ans: 2
+  },
+  {
+    q: "Which of the following is valid Python syntax for a one-liner if statement?",
+    opts: [
+      "if x > 0 { print('positive') }",
+      "if x > 0: print('positive')",
+      "if (x > 0) print('positive')",
+      "if x > 0 then print('positive')"
+    ],
+    ans: 1
+  },
+  {
+    q: "What will the following code output?",
+    code: "x = 7\nmatch x:\n    case 1:\n        print('One')\n    case 2 | 3 | 7:\n        print('Two, Three, or Seven')\n    case _:\n        print('Other')",
+    opts: ["One", "Other", "Two, Three, or Seven", "SyntaxError"],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "a = 5\nb = 10\nif not (a > b):\n    print('A is not greater')\nelse:\n    print('A is greater')",
+    opts: ["A is greater", "A is not greater", "Nothing", "TypeError"],
+    ans: 1
+  },
+  {
+    q: "How many elif blocks can be added in a single if-elif-else chain?",
+    opts: ["Only one", "Maximum of 10", "Maximum of 255", "Unlimited"],
+    ans: 3
+  },
+  {
+    q: "What is the output of the following?",
+    code: "var = 'Y'\nif var == 'Y' or var == 'y':\n    print('Yes')\nelse:\n    print('No')",
+    opts: ["No", "Yes No", "Yes", "None"],
+    ans: 2
+  },
+  {
+    q: "What is the guard clause in a match-case statement?",
+    code: "case x if x > 100:\n    print('Large')",
+    opts: [
+      "The case keyword itself",
+      "An extra condition added after the pattern using if — case matches only when both pattern and guard are True",
+      "A wildcard that matches all values",
+      "A nested if inside the case block"
+    ],
+    ans: 1
+  },
+  {
+    q: "What will the following code output?",
+    code: "x = 0\ny = 5\nif x and y > 0:\n    print('Both positive')\nelse:\n    print('Not both')",
+    opts: ["Both positive", "Not both", "TypeError", "Nothing"],
+    ans: 1
+  },
+  {
+    q: "Which of the following is NOT a valid conditional form in Python?",
+    opts: [
+      "Nested if inside an else block",
+      "A ternary expression inside a function argument",
+      "switch-case with fall-through behavior",
+      "An elif chain with no final else"
+    ],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "score = 90\ngrade = 'A' if score >= 90 else 'B' if score >= 75 else 'C'\nprint(grade)",
+    opts: ["C", "B", "A", "None"],
+    ans: 2
+  }
+];
+
+const labels = ['A','B','C','D'];
+const userAnswers = new Array(questions.length).fill(null);
+let answered = 0;
+let examDone = false;
+
+const container = document.getElementById('questions-container');
+const resultSec = document.getElementById('result-section');
+const progFill  = document.getElementById('progress-fill');
+const progLabel = document.getElementById('prog-label');
+const progPct   = document.getElementById('prog-pct');
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildQuestions() {
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `card-${qi}`;
+    card.style.animationDelay = `${qi * 0.03}s`;
+
+    const codeBlock = q.code ? `<div class="q-code">${escHtml(q.code)}</div>` : '';
+
+    const optsHtml = q.opts.map((opt, oi) => `
+      <div class="option" id="opt-${qi}-${oi}" onclick="selectOption(${qi}, ${oi})">
+        <div class="option-letter">${labels[oi]}</div>
+        <div class="option-text">${escHtml(opt)}</div>
+      </div>`).join('');
+
+    card.innerHTML = `
+      <div class="q-number">Question ${qi + 1} of ${questions.length}</div>
+      <div class="q-text">${escHtml(q.q)}</div>
+      ${codeBlock}
+      <div class="options" id="opts-${qi}">${optsHtml}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function selectOption(qi, oi) {
+  if (examDone) return;
+  const wasNull = userAnswers[qi] === null;
+  userAnswers[qi] = oi;
+
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if (el) el.classList.remove('selected');
+  }
+  document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+  document.getElementById(`card-${qi}`).classList.add('answered');
+
+  if (wasNull) answered++;
+  updateProgress();
+
+  if (answered === questions.length) {
+    examDone = true;
+    setTimeout(showResult, 400);
+  }
+}
+
+function updateProgress() {
+  const pct = Math.round((answered / questions.length) * 100);
+  progFill.style.width = pct + '%';
+  progLabel.textContent = `${answered} / ${questions.length} answered`;
+  progPct.textContent = pct + '%';
+}
+
+function showResult() {
+  let correct = 0;
+  questions.forEach((q, i) => { if (userAnswers[i] === q.ans) correct++; });
+  const wrong = questions.length - correct;
+  const pct = Math.round((correct / questions.length) * 100);
+
+  let grade, gradeClass, gradeMsg;
+  if (pct >= 80)      { grade = '🏆 Excellent'; gradeClass = 'grade-A'; gradeMsg = 'Outstanding performance!'; }
+  else if (pct >= 60) { grade = '✅ Good';       gradeClass = 'grade-B'; gradeMsg = 'Solid understanding!'; }
+  else                { grade = '📚 Keep Going'; gradeClass = 'grade-C'; gradeMsg = 'More practice needed.'; }
+
+  const reviewItems = questions.map((q, i) => {
+    const isRight = userAnswers[i] === q.ans;
+    const userLetter = labels[userAnswers[i]];
+    const corrLetter = labels[q.ans];
+    const qShort = q.q.length > 60 ? q.q.slice(0, 57) + '…' : q.q;
+    const ansHtml = isRight
+      ? `<span class="ok">✓ ${userLetter}: ${escHtml(q.opts[userAnswers[i]])}</span>`
+      : `<span class="your">✗ You: ${userLetter} — ${escHtml(q.opts[userAnswers[i]])}</span><br><span class="right">✓ Correct: ${corrLetter} — ${escHtml(q.opts[q.ans])}</span>`;
+    return `
+      <div class="review-item ${isRight ? 'correct' : 'wrong'}">
+        <div class="ri-num">Q${i+1}</div>
+        <div class="ri-body">
+          <div class="ri-q">${escHtml(qShort)}</div>
+          <div class="ri-ans">${ansHtml}</div>
+        </div>
+        <div class="ri-icon">${isRight ? '✅' : '❌'}</div>
+      </div>`;
+  }).join('');
+
+  resultSec.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-label">Your Result</div>
+        <div class="score-display">${correct}<sub> / ${questions.length}</sub></div>
+        <div class="score-percent">${pct}% correct — ${gradeMsg}</div>
+        <span class="grade-badge ${gradeClass}">${grade}</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-val c">${correct}</div><div class="stat-lbl">Correct</div></div>
+        <div class="stat-box"><div class="stat-val w">${wrong}</div><div class="stat-lbl">Wrong</div></div>
+        <div class="stat-box"><div class="stat-val s">${pct}%</div><div class="stat-lbl">Score</div></div>
+      </div>
+      <div class="review-title">Answer Review</div>
+      <div class="review-list">${reviewItems}</div>
+      <button class="retry-btn" onclick="retryExam()">↺ Retry Exam</button>
+    </div>`;
+
+  resultSec.style.display = 'block';
+  resultSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function retryExam() {
+  userAnswers.fill(null);
+  answered = 0;
+  examDone = false;
+  updateProgress();
+  resultSec.style.display = 'none';
+  resultSec.innerHTML = '';
+  document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.question-card').forEach(el => el.classList.remove('answered'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuestions();
+</script>
+</body>
+</html>
