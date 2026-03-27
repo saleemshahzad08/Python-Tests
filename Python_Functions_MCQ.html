@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Functions — MCQ Test</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #1a1e2a;
+    --border: #252a38;
+    --accent: #f7c948;
+    --accent2: #4af0b0;
+    --accent3: #f04a7a;
+    --text: #e8eaf0;
+    --muted: #6b7394;
+    --correct: #4af0b0;
+    --wrong: #f04a7a;
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(247,201,72,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(74,240,176,0.05) 0%, transparent 50%);
+  }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  header {
+    text-align: center;
+    margin-bottom: 52px;
+    animation: fadeDown .6s ease both;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(247,201,72,.3);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 15px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .topics {
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .08em;
+  }
+  .topics span { color: var(--accent2); opacity: .8; }
+
+  .progress-wrap {
+    margin-bottom: 36px;
+    animation: fadeDown .6s .1s ease both;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .progress-meta span:last-child { color: var(--accent); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 100px;
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 16px;
+    animation: slideUp .4s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .question-card.answered::before { opacity: 1; }
+
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .q-text { font-size: 16px; font-weight: 600; line-height: 1.6; margin-bottom: 22px; }
+  .q-code {
+    font-family: 'JetBrains Mono', monospace;
+    background: #0a0c11;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--accent2);
+    margin-bottom: 22px;
+    line-height: 1.7;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all .2s ease;
+    background: var(--surface);
+    user-select: none;
+  }
+  .option:hover:not(.locked) {
+    border-color: var(--accent);
+    background: rgba(247,201,72,.06);
+    transform: translateX(4px);
+  }
+  .option-letter {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--border);
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .option-text { font-size: 14.5px; line-height: 1.5; }
+  .option.selected { border-color: var(--accent); background: rgba(247,201,72,.08); }
+  .option.selected .option-letter { background: var(--accent); border-color: var(--accent); color: #000; }
+
+  #result-section { display: none; animation: slideUp .5s ease both; margin-top: 24px; }
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(247,201,72,.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .result-header { text-align: center; margin-bottom: 36px; }
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .score-display {
+    font-size: clamp(52px, 10vw, 80px);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -.04em;
+  }
+  .score-display sub { font-size: 28px; color: var(--muted); font-weight: 600; letter-spacing: 0; }
+  .score-percent { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .grade-badge {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 6px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+  }
+  .grade-A { background: rgba(74,240,176,.15); color: var(--correct); border: 1px solid rgba(74,240,176,.3); }
+  .grade-B { background: rgba(247,201,72,.15); color: var(--accent); border: 1px solid rgba(247,201,72,.3); }
+  .grade-C { background: rgba(240,74,122,.15); color: var(--wrong); border: 1px solid rgba(240,74,122,.3); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
+  .stat-val { font-size: 26px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .stat-val.c { color: var(--correct); }
+  .stat-val.w { color: var(--wrong); }
+  .stat-val.s { color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: .08em; text-transform: uppercase; }
+
+  .review-title {
+    font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace;
+  }
+  .review-list { display: flex; flex-direction: column; gap: 10px; }
+  .review-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 14px 18px; display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: start;
+  }
+  .review-item.correct { border-color: rgba(74,240,176,.25); }
+  .review-item.wrong   { border-color: rgba(240,74,122,.2); }
+  .ri-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); padding-top: 1px; }
+  .ri-body { font-size: 13.5px; line-height: 1.5; }
+  .ri-q { font-weight: 600; margin-bottom: 5px; color: var(--text); }
+  .ri-ans { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .ri-ans .your  { color: var(--wrong); }
+  .ri-ans .right { color: var(--correct); }
+  .ri-ans .ok    { color: var(--correct); }
+  .ri-icon { font-size: 18px; padding-top: 1px; }
+
+  .retry-btn {
+    margin-top: 32px; width: 100%; padding: 16px; background: var(--accent); color: #000;
+    border: none; border-radius: var(--radius); font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: .04em; transition: all .2s;
+  }
+  .retry-btn:hover { background: #ffd966; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,201,72,.25); }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    .question-card { padding: 22px 18px; }
+    .stats-row { gap: 8px; }
+    .result-card { padding: 28px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="badge">🐍 Python Functions</div>
+    <h1>Intermediate<br><span>MCQ Test</span></h1>
+    <p class="subtitle">30 questions · one correct answer each</p>
+    <p class="topics"><span>def</span> · <span>*args / **kwargs</span> · <span>lambda</span> · <span>closures</span> · <span>decorators</span> · <span>map/filter/reduce</span> · <span>recursion</span></p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="prog-label">0 / 30 answered</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div id="questions-container"></div>
+  <div id="result-section"></div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    q: "What will the following code output?",
+    code: "def greet():\n    print('Hello')\nresult = greet()\nprint(result)",
+    opts: ["Hello\nNone", "Hello", "None", "Hello\\nNone"],
+    ans: 0
+  },
+  {
+    q: "What is the output of the following?",
+    code: "def f(a, b=10, c=20):\n    return a + b + c\nprint(f(5, c=30))",
+    opts: ["35", "45", "55", "TypeError"],
+    ans: 1
+  },
+  {
+    q: "What type does *args produce inside a function?",
+    opts: ["list", "set", "dict", "tuple"],
+    ans: 3
+  },
+  {
+    q: "What is the output of the following?",
+    code: "def f(*args, **kwargs):\n    print(len(args), len(kwargs))\nf(1, 2, 3, x=4, y=5)",
+    opts: ["2 3", "5 0", "3 2", "TypeError"],
+    ans: 2
+  },
+  {
+    q: "What is the danger of using a mutable default argument like this?",
+    code: "def append_val(x, lst=[]):\n    lst.append(x)\n    return lst",
+    opts: [
+      "The function raises TypeError on the second call",
+      "The default list is shared across all calls, so previous values accumulate",
+      "Python creates a new list on each call automatically",
+      "The function only works the first time it is called"
+    ],
+    ans: 1
+  },
+  {
+    q: "What will the following code output?",
+    code: "def modify(lst):\n    lst.append(99)\na = [1, 2, 3]\nmodify(a)\nprint(a)",
+    opts: ["[1, 2, 3]", "[99]", "[1, 2, 3, 99]", "None"],
+    ans: 2
+  },
+  {
+    q: "What happens when a function reassigns a mutable argument inside itself?",
+    code: "def f(lst):\n    lst = [10, 20, 30]\na = [1, 2, 3]\nf(a)\nprint(a)",
+    opts: ["[10, 20, 30]", "[1, 2, 3, 10, 20, 30]", "[1, 2, 3]", "None"],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "def f():\n    return 1, 2, 3\nx = f()\nprint(type(x), x)",
+    opts: [
+      "<class 'list'> [1, 2, 3]",
+      "<class 'tuple'> (1, 2, 3)",
+      "<class 'int'> 1",
+      "TypeError"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following lambda expression?",
+    code: "sq = lambda x, y: x ** y\nprint(sq(3, 4))",
+    opts: ["12", "7", "64", "81"],
+    ans: 3
+  },
+  {
+    q: "What does list(map(lambda x: x * 2, [1, 2, 3, 4])) return?",
+    opts: ["[1, 2, 3, 4]", "[2, 4, 6, 8]", "[1, 4, 9, 16]", "map object"],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following?",
+    code: "nums = [0, 1, '', 'hi', None, [], [1, 2]]\nresult = list(filter(None, nums))\nprint(result)",
+    opts: [
+      "[0, '', None, []]",
+      "[1, 'hi', [1, 2]]",
+      "[1, 'hi', [], [1, 2]]",
+      "[0, 1, '', 'hi', None, [], [1, 2]]"
+    ],
+    ans: 1
+  },
+  {
+    q: "What does reduce(lambda x, y: x * y, [1, 2, 3, 4, 5]) return?",
+    opts: ["15", "25", "120", "ImportError"],
+    ans: 2
+  },
+  {
+    q: "Which module must be imported to use reduce() in Python 3?",
+    opts: ["itertools", "operator", "collections", "functools"],
+    ans: 3
+  },
+  {
+    q: "What is the output of the following recursive function?",
+    code: "def f(n):\n    if n == 0:\n        return 0\n    return n + f(n - 1)\nprint(f(4))",
+    opts: ["4", "24", "10", "RecursionError"],
+    ans: 2
+  },
+  {
+    q: "What happens when a recursive function has NO base case?",
+    opts: [
+      "It returns None after one call",
+      "Python runs it infinitely with no error",
+      "It raises RecursionError after hitting Python's call stack limit",
+      "Python automatically adds a base case at depth 100"
+    ],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "def outer():\n    x = 10\n    def inner():\n        print(x)\n    inner()\nouter()",
+    opts: ["NameError", "None", "0", "10"],
+    ans: 3
+  },
+  {
+    q: "What does a closure allow an inner function to do?",
+    opts: [
+      "Call itself recursively without a base case",
+      "Remember and access variables from its enclosing function's scope even after that function has returned",
+      "Modify global variables without the global keyword",
+      "Accept unlimited positional and keyword arguments automatically"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following closure?",
+    code: "def make_multiplier(n):\n    def multiply(x):\n        return x * n\n    return multiply\ntriple = make_multiplier(3)\nprint(triple(7))",
+    opts: ["3", "7", "10", "21"],
+    ans: 3
+  },
+  {
+    q: "What does the @decorator syntax above a function definition mean?",
+    code: "@my_decorator\ndef greet():\n    print('Hi')",
+    opts: [
+      "greet is called immediately when the module loads",
+      "greet = my_decorator(greet) — the function is passed to the decorator and replaced",
+      "my_decorator is called every time greet is called",
+      "greet is made private and can only be called via my_decorator"
+    ],
+    ans: 1
+  },
+  {
+    q: "Why should a decorator's wrapper use *args and **kwargs?",
+    code: "def decorator(func):\n    def wrapper(*args, **kwargs):\n        return func(*args, **kwargs)\n    return wrapper",
+    opts: [
+      "To limit the decorated function to only keyword arguments",
+      "To make the decorator work with functions that have any signature",
+      "To prevent the original function from receiving any arguments",
+      "To convert all positional arguments to keyword arguments"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following?",
+    code: "def apply(func, values):\n    return [func(v) for v in values]\nprint(apply(abs, [-3, -1, 2, -5]))",
+    opts: ["[-3, -1, 2, -5]", "[3, 1, -2, 5]", "[3, 1, 2, 5]", "TypeError"],
+    ans: 2
+  },
+  {
+    q: "What does list(map(lambda x, y: x + y, [1, 2, 3], [4, 5, 6])) return?",
+    opts: ["[[1, 4], [2, 5], [3, 6]]", "[5, 7, 9]", "[1, 2, 3, 4, 5, 6]", "TypeError"],
+    ans: 1
+  },
+  {
+    q: "What is the correct order of parameters in a Python function definition?",
+    opts: [
+      "*args → positional → **kwargs → keyword-only",
+      "positional → *args → keyword-only → **kwargs",
+      "**kwargs → positional → *args → keyword-only",
+      "positional → keyword-only → *args → **kwargs"
+    ],
+    ans: 1
+  },
+  {
+    q: "What will the following code print?",
+    code: "fn = lambda x: x if x > 0 else -x\nprint(fn(-8), fn(3))",
+    opts: ["-8 3", "8 -3", "8 3", "-8 -3"],
+    ans: 2
+  },
+  {
+    q: "What is the key limitation of a lambda function compared to a def function?",
+    opts: [
+      "lambda cannot accept any arguments",
+      "lambda cannot be assigned to a variable",
+      "lambda is limited to a single expression and cannot contain statements",
+      "lambda can only return boolean values"
+    ],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "data = [(1, 'banana'), (2, 'apple'), (3, 'cherry')]\ndata.sort(key=lambda x: x[1])\nprint(data[0])",
+    opts: ["(1, 'banana')", "(2, 'apple')", "(3, 'cherry')", "(1, 'apple')"],
+    ans: 1
+  },
+  {
+    q: "What does functools.wraps(func) do when applied inside a decorator?",
+    opts: [
+      "It makes the decorator run faster by caching results",
+      "It preserves the original function's name and docstring after decoration",
+      "It prevents the decorated function from being called more than once",
+      "It automatically adds logging to every decorated function"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following?",
+    code: "def f(a, b, /, c):\n    return a + b + c\nprint(f(1, 2, c=3))",
+    opts: ["TypeError", "3", "6", "SyntaxError"],
+    ans: 2
+  },
+  {
+    q: "What is the difference between map() and filter()?",
+    opts: [
+      "map() removes elements; filter() transforms them",
+      "map() applies a function to every element; filter() keeps only elements where the function returns True",
+      "map() returns a list; filter() returns a tuple",
+      "filter() applies a function to every element; map() keeps elements where it returns True"
+    ],
+    ans: 1
+  },
+  {
+    q: "What will the following decorated function print when called?",
+    code: "def decorator(func):\n    def wrapper():\n        print('Start')\n        func()\n        print('End')\n    return wrapper\n@decorator\ndef hello():\n    print('Hello!')\nhello()",
+    opts: ["Hello!", "Start\nHello!\nEnd", "Start\nEnd", "Hello!\nStart\nEnd"],
+    ans: 1
+  }
+];
+
+const labels = ['A','B','C','D'];
+const userAnswers = new Array(questions.length).fill(null);
+let answered = 0;
+let examDone = false;
+
+const container = document.getElementById('questions-container');
+const resultSec = document.getElementById('result-section');
+const progFill  = document.getElementById('progress-fill');
+const progLabel = document.getElementById('prog-label');
+const progPct   = document.getElementById('prog-pct');
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildQuestions() {
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `card-${qi}`;
+    card.style.animationDelay = `${qi * 0.03}s`;
+
+    const codeBlock = q.code ? `<div class="q-code">${escHtml(q.code)}</div>` : '';
+
+    const optsHtml = q.opts.map((opt, oi) => `
+      <div class="option" id="opt-${qi}-${oi}" onclick="selectOption(${qi}, ${oi})">
+        <div class="option-letter">${labels[oi]}</div>
+        <div class="option-text">${escHtml(opt)}</div>
+      </div>`).join('');
+
+    card.innerHTML = `
+      <div class="q-number">Question ${qi + 1} of ${questions.length}</div>
+      <div class="q-text">${escHtml(q.q)}</div>
+      ${codeBlock}
+      <div class="options" id="opts-${qi}">${optsHtml}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function selectOption(qi, oi) {
+  if (examDone) return;
+  const wasNull = userAnswers[qi] === null;
+  userAnswers[qi] = oi;
+
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if (el) el.classList.remove('selected');
+  }
+  document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+  document.getElementById(`card-${qi}`).classList.add('answered');
+
+  if (wasNull) answered++;
+  updateProgress();
+
+  if (answered === questions.length) {
+    examDone = true;
+    setTimeout(showResult, 400);
+  }
+}
+
+function updateProgress() {
+  const pct = Math.round((answered / questions.length) * 100);
+  progFill.style.width = pct + '%';
+  progLabel.textContent = `${answered} / ${questions.length} answered`;
+  progPct.textContent = pct + '%';
+}
+
+function showResult() {
+  let correct = 0;
+  questions.forEach((q, i) => { if (userAnswers[i] === q.ans) correct++; });
+  const wrong = questions.length - correct;
+  const pct = Math.round((correct / questions.length) * 100);
+
+  let grade, gradeClass, gradeMsg;
+  if (pct >= 80)      { grade = '🏆 Excellent'; gradeClass = 'grade-A'; gradeMsg = 'Outstanding performance!'; }
+  else if (pct >= 60) { grade = '✅ Good';       gradeClass = 'grade-B'; gradeMsg = 'Solid understanding!'; }
+  else                { grade = '📚 Keep Going'; gradeClass = 'grade-C'; gradeMsg = 'More practice needed.'; }
+
+  const reviewItems = questions.map((q, i) => {
+    const isRight = userAnswers[i] === q.ans;
+    const userLetter = labels[userAnswers[i]];
+    const corrLetter = labels[q.ans];
+    const qShort = q.q.length > 60 ? q.q.slice(0, 57) + '…' : q.q;
+    const ansHtml = isRight
+      ? `<span class="ok">✓ ${userLetter}: ${escHtml(q.opts[userAnswers[i]])}</span>`
+      : `<span class="your">✗ You: ${userLetter} — ${escHtml(q.opts[userAnswers[i]])}</span><br><span class="right">✓ Correct: ${corrLetter} — ${escHtml(q.opts[q.ans])}</span>`;
+    return `
+      <div class="review-item ${isRight ? 'correct' : 'wrong'}">
+        <div class="ri-num">Q${i+1}</div>
+        <div class="ri-body">
+          <div class="ri-q">${escHtml(qShort)}</div>
+          <div class="ri-ans">${ansHtml}</div>
+        </div>
+        <div class="ri-icon">${isRight ? '✅' : '❌'}</div>
+      </div>`;
+  }).join('');
+
+  resultSec.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-label">Your Result</div>
+        <div class="score-display">${correct}<sub> / ${questions.length}</sub></div>
+        <div class="score-percent">${pct}% correct — ${gradeMsg}</div>
+        <span class="grade-badge ${gradeClass}">${grade}</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-val c">${correct}</div><div class="stat-lbl">Correct</div></div>
+        <div class="stat-box"><div class="stat-val w">${wrong}</div><div class="stat-lbl">Wrong</div></div>
+        <div class="stat-box"><div class="stat-val s">${pct}%</div><div class="stat-lbl">Score</div></div>
+      </div>
+      <div class="review-title">Answer Review</div>
+      <div class="review-list">${reviewItems}</div>
+      <button class="retry-btn" onclick="retryExam()">↺ Retry Exam</button>
+    </div>`;
+
+  resultSec.style.display = 'block';
+  resultSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function retryExam() {
+  userAnswers.fill(null);
+  answered = 0;
+  examDone = false;
+  updateProgress();
+  resultSec.style.display = 'none';
+  resultSec.innerHTML = '';
+  document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.question-card').forEach(el => el.classList.remove('answered'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuestions();
+</script>
+</body>
+</html>
