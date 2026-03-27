@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Tuples — MCQ Test</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #1a1e2a;
+    --border: #252a38;
+    --accent: #f7c948;
+    --accent2: #4af0b0;
+    --accent3: #f04a7a;
+    --text: #e8eaf0;
+    --muted: #6b7394;
+    --correct: #4af0b0;
+    --wrong: #f04a7a;
+    --radius: 12px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(247,201,72,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(74,240,176,0.05) 0%, transparent 50%);
+  }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  header {
+    text-align: center;
+    margin-bottom: 52px;
+    animation: fadeDown .6s ease both;
+  }
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(247,201,72,.3);
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 18px;
+  }
+  h1 {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+  }
+  h1 span { color: var(--accent); }
+  .subtitle {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 15px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .topics {
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .08em;
+  }
+  .topics span { color: var(--accent2); opacity: .8; }
+
+  .progress-wrap {
+    margin-bottom: 36px;
+    animation: fadeDown .6s .1s ease both;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .progress-meta span:last-child { color: var(--accent); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 100px;
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 36px;
+    margin-bottom: 16px;
+    animation: slideUp .4s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  .question-card.answered::before { opacity: 1; }
+
+  .q-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .q-text { font-size: 16px; font-weight: 600; line-height: 1.6; margin-bottom: 22px; }
+  .q-code {
+    font-family: 'JetBrains Mono', monospace;
+    background: #0a0c11;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--accent2);
+    margin-bottom: 22px;
+    line-height: 1.7;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 13px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all .2s ease;
+    background: var(--surface);
+    user-select: none;
+  }
+  .option:hover:not(.locked) {
+    border-color: var(--accent);
+    background: rgba(247,201,72,.06);
+    transform: translateX(4px);
+  }
+  .option-letter {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--border);
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .option-text { font-size: 14.5px; line-height: 1.5; }
+  .option.selected { border-color: var(--accent); background: rgba(247,201,72,.08); }
+  .option.selected .option-letter { background: var(--accent); border-color: var(--accent); color: #000; }
+
+  #result-section { display: none; animation: slideUp .5s ease both; margin-top: 24px; }
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(247,201,72,.07) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .result-header { text-align: center; margin-bottom: 36px; }
+  .result-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .score-display {
+    font-size: clamp(52px, 10vw, 80px);
+    font-weight: 800;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: -.04em;
+  }
+  .score-display sub { font-size: 28px; color: var(--muted); font-weight: 600; letter-spacing: 0; }
+  .score-percent { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .grade-badge {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 6px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+  }
+  .grade-A { background: rgba(74,240,176,.15); color: var(--correct); border: 1px solid rgba(74,240,176,.3); }
+  .grade-B { background: rgba(247,201,72,.15); color: var(--accent); border: 1px solid rgba(247,201,72,.3); }
+  .grade-C { background: rgba(240,74,122,.15); color: var(--wrong); border: 1px solid rgba(240,74,122,.3); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
+  .stat-val { font-size: 26px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .stat-val.c { color: var(--correct); }
+  .stat-val.w { color: var(--wrong); }
+  .stat-val.s { color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: .08em; text-transform: uppercase; }
+
+  .review-title {
+    font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace;
+  }
+  .review-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .review-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 16px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .review-item.correct { border-left: 3px solid var(--correct); }
+  .review-item.wrong { border-left: 3px solid var(--wrong); }
+  .ri-num {
+    flex-shrink: 0; width: 36px; height: 36px;
+    background: var(--border); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+  }
+  .ri-body { flex: 1; }
+  .ri-q { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .ri-ans { font-size: 13px; line-height: 1.6; }
+  .ri-ans .ok { color: var(--correct); }
+  .ri-ans .your { color: var(--wrong); }
+  .ri-ans .right { color: var(--correct); }
+  .ri-icon { font-size: 18px; flex-shrink: 0; }
+
+  .retry-btn {
+    width: 100%; padding: 14px;
+    background: var(--accent); color: #000;
+    border: none; border-radius: var(--radius);
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: all .2s;
+  }
+  .retry-btn:hover { background: var(--accent2); transform: translateY(-2px); }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 640px) {
+    body { padding: 24px 16px 60px; }
+    .question-card { padding: 24px 20px; }
+    .result-card { padding: 32px 24px; }
+    .stats-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="badge">Intermediate Level</div>
+    <h1>Python <span>Tuples</span></h1>
+    <div class="subtitle">30-Question MCQ Assessment</div>
+    <div class="topics">Topics: <span>Creation • Immutability • Slicing • Unpacking • Methods • Hashing • Built-ins</span></div>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="prog-label">0 / 30 answered</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+  </div>
+
+  <div id="questions-container"></div>
+  <div id="result-section"></div>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Which of the following correctly creates a single-element tuple in Python?",
+    opts: ["tup = (5)", "tup = (5,)", "tup = [5]", "tup = {5}"],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following code?",
+    code: "tup = (10, 20, 30, 40, 50)\nprint(tup[1:4])",
+    opts: ["(10, 20, 30)", "(20, 30, 40)", "(20, 30, 40, 50)", "(10, 20, 30, 40)"],
+    ans: 1
+  },
+  {
+    q: "What will be the result of executing the following?",
+    code: "tup = (1, 2, 3)\ntup[0] = 99",
+    opts: ["tup becomes (99, 2, 3)", "tup remains (1, 2, 3)", "Raises TypeError", "Raises ValueError"],
+    ans: 2
+  },
+  {
+    q: "Which of the following is TRUE about tuples in Python?",
+    opts: [
+      "Tuples can be used as dictionary values only",
+      "Tuples support all list methods",
+      "Tuples can be used as dictionary keys because they are hashable",
+      "Tuples are always slower than lists"
+    ],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following code?",
+    code: "tup = ('a', 'b', 'c', 'd', 'e')\nprint(tup[::-1])",
+    opts: [
+      "('a', 'b', 'c', 'd', 'e')",
+      "('e', 'd', 'c', 'b')",
+      "('e', 'd', 'c', 'b', 'a')",
+      "Raises IndexError"
+    ],
+    ans: 2
+  },
+  {
+    q: "What will the following code print?",
+    code: "tup = (1, 2, 3, 4, 5)\na, *b, c = tup\nprint(b)",
+    opts: ["[2, 3, 4]", "(2, 3, 4)", "[1, 2, 3]", "[2, 3, 4, 5]"],
+    ans: 0
+  },
+  {
+    q: "How many built-in methods does a Python tuple have?",
+    opts: ["0", "2", "5", "11"],
+    ans: 1
+  },
+  {
+    q: "What is the output of the following?",
+    code: "tup = (3, 1, 4, 1, 5, 9, 2, 6)\nprint(sorted(tup))",
+    opts: [
+      "(1, 1, 2, 3, 4, 5, 6, 9)",
+      "[1, 1, 2, 3, 4, 5, 6, 9]",
+      "Raises TypeError because tuples cannot be sorted",
+      "(3, 1, 4, 1, 5, 9, 2, 6)"
+    ],
+    ans: 1
+  },
+  {
+    q: "What happens when you execute del tup[0] on a tuple?",
+    opts: [
+      "The first element is removed",
+      "A new tuple without the first element is returned",
+      "Raises TypeError",
+      "Raises IndexError"
+    ],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following code?",
+    code: "tup = (1, 2, 2, 3, 2, 4)\nprint(tup.count(2))",
+    opts: ["1", "2", "3", "Raises AttributeError"],
+    ans: 2
+  },
+  {
+    q: "What does the following code produce?",
+    code: "tup = (10, 20, 30, 40, 50)\nprint(tup[-3:])",
+    opts: ["(10, 20, 30)", "(30, 40, 50)", "(20, 30, 40)", "(40, 50)"],
+    ans: 1
+  },
+  {
+    q: "Which of the following will raise a ValueError?",
+    opts: [
+      "tup = (1, 2, 3); tup.count(5)",
+      "tup = (1, 2, 3); tup.index(5)",
+      "tup = (1, 2, 3); len(tup)",
+      "tup = (1, 2, 3); max(tup)"
+    ],
+    ans: 1
+  },
+  {
+    q: "What is the result of the following expression?",
+    code: "bool(())",
+    opts: ["True", "False", "None", "Raises TypeError"],
+    ans: 1
+  },
+  {
+    q: "What will the following code output?",
+    code: "tup = (1, 2, 3, 4, 5, 6, 7)\nprint(tup[1:6:2])",
+    opts: ["(1, 3, 5)", "(2, 4, 6)", "(2, 3, 4)", "(1, 2, 3)"],
+    ans: 1
+  },
+  {
+    q: "Which statement correctly describes tuple packing?",
+    opts: [
+      "Converting a list into a tuple using tuple()",
+      "Creating a tuple using parentheses only",
+      "Creating a tuple by separating values with commas without parentheses",
+      "Combining two tuples using the + operator"
+    ],
+    ans: 2
+  },
+  {
+    q: "What will the following code output?",
+    code: "t1 = (1, 2)\nt2 = (3, 4)\nprint(t1 + t2)",
+    opts: ["[1, 2, 3, 4]", "(1, 2, 3, 4)", "(4, 6)", "Raises TypeError"],
+    ans: 1
+  },
+  {
+    q: "What is the result of the following code?",
+    code: "tup = (5,) * 4\nprint(tup)",
+    opts: ["(5, 5, 5, 5)", "(20,)", "(5*4,)", "Raises TypeError"],
+    ans: 0
+  },
+  {
+    q: "Which of the following is a valid way to modify a tuple's content?",
+    opts: [
+      "Using tup.append(x)",
+      "Using tup[0] = new_value",
+      "Converting to a list, modifying, then converting back to tuple",
+      "Using tup.update(x)"
+    ],
+    ans: 2
+  },
+  {
+    q: "What will this code print?",
+    code: "tup = (('a', 'b'), ('c', 'd'))\nprint(tup[1][0])",
+    opts: ["'b'", "'c'", "('c', 'd')", "'d'"],
+    ans: 1
+  },
+  {
+    q: "After executing del tup on a defined tuple, what happens if you attempt to print(tup)?",
+    opts: ["Prints an empty tuple ()", "Prints None", "Raises NameError", "Raises TypeError"],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "tup = (4, 7, 2, 9, 1)\nprint(min(tup), max(tup))",
+    opts: ["4 9", "1 9", "2 7", "1 7"],
+    ans: 1
+  },
+  {
+    q: "What will the following code produce?",
+    code: "tup = (1, 2, 3)\na, b, c, d = tup",
+    opts: [
+      "a=1, b=2, c=3, d=None",
+      "Raises IndexError",
+      "Raises ValueError",
+      "a=1, b=2, c=3, d=3"
+    ],
+    ans: 2
+  },
+  {
+    q: "Which function returns an iterator of (index, value) pairs when used with a tuple?",
+    opts: ["zip()", "map()", "enumerate()", "iter()"],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following code?",
+    code: "tup = (0, '', None, 1, 'hello')\nprint(any(tup))",
+    opts: ["False", "True", "None", "Raises TypeError"],
+    ans: 1
+  },
+  {
+    q: "What is the key reason why a tuple can be used as a dictionary key but a list cannot?",
+    opts: [
+      "Tuples are ordered and lists are not",
+      "Tuples are immutable and therefore hashable, while lists are mutable",
+      "Lists contain duplicate values while tuples do not",
+      "Tuples use parentheses which are valid in dictionaries"
+    ],
+    ans: 1
+  },
+  {
+    q: "What will be printed by the following code?",
+    code: "tup = (10, 20, 30, 40)\nprint(tup[:-2])",
+    opts: ["(10,)", "(30, 40)", "(10, 20)", "(20, 30)"],
+    ans: 2
+  },
+  {
+    q: "What does the following list comprehension do?",
+    code: "a = [(), (1,), (), (2, 3), ()]\nresult = [t for t in a if t]",
+    opts: [
+      "Keeps only single-element tuples",
+      "Keeps all tuples including empty ones",
+      "Filters out empty tuples, keeping only non-empty ones",
+      "Raises TypeError because tuples cannot be evaluated as boolean"
+    ],
+    ans: 2
+  },
+  {
+    q: "What is the output of the following?",
+    code: "tup = tuple('Python')\nprint(tup)",
+    opts: [
+      "('Python',)",
+      "('P', 'y', 't', 'h', 'o', 'n')",
+      "Raises TypeError",
+      "('P', 'ython')"
+    ],
+    ans: 1
+  },
+  {
+    q: "Which of the following correctly swaps variables x and y using tuple unpacking?",
+    opts: [
+      "x, y = y, x",
+      "(x, y) = swap(x, y)",
+      "x = y; y = x",
+      "temp = x; x = y; y = temp (only valid method)"
+    ],
+    ans: 0
+  },
+  {
+    q: "What will the following code output?",
+    code: "tup = (1, 2, 3, 4, 5)\nprint(all(tup))",
+    opts: [
+      "False, because not all elements are equal",
+      "True, because all elements are non-zero (truthy)",
+      "None",
+      "Raises TypeError"
+    ],
+    ans: 1
+  }
+];
+
+const labels = ['A','B','C','D'];
+const userAnswers = new Array(questions.length).fill(null);
+let answered = 0;
+let examDone = false;
+
+const container = document.getElementById('questions-container');
+const resultSec = document.getElementById('result-section');
+const progFill  = document.getElementById('progress-fill');
+const progLabel = document.getElementById('prog-label');
+const progPct   = document.getElementById('prog-pct');
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildQuestions() {
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `card-${qi}`;
+    card.style.animationDelay = `${qi * 0.03}s`;
+
+    const codeBlock = q.code ? `<div class="q-code">${escHtml(q.code)}</div>` : '';
+
+    const optsHtml = q.opts.map((opt, oi) => `
+      <div class="option" id="opt-${qi}-${oi}" onclick="selectOption(${qi}, ${oi})">
+        <div class="option-letter">${labels[oi]}</div>
+        <div class="option-text">${escHtml(opt)}</div>
+      </div>`).join('');
+
+    card.innerHTML = `
+      <div class="q-number">Question ${qi + 1} of ${questions.length}</div>
+      <div class="q-text">${escHtml(q.q)}</div>
+      ${codeBlock}
+      <div class="options" id="opts-${qi}">${optsHtml}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function selectOption(qi, oi) {
+  if (examDone) return;
+  const wasNull = userAnswers[qi] === null;
+  userAnswers[qi] = oi;
+
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if (el) el.classList.remove('selected');
+  }
+  document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+  document.getElementById(`card-${qi}`).classList.add('answered');
+
+  if (wasNull) answered++;
+  updateProgress();
+
+  if (answered === questions.length) {
+    examDone = true;
+    setTimeout(showResult, 400);
+  }
+}
+
+function updateProgress() {
+  const pct = Math.round((answered / questions.length) * 100);
+  progFill.style.width = pct + '%';
+  progLabel.textContent = `${answered} / ${questions.length} answered`;
+  progPct.textContent = pct + '%';
+}
+
+function showResult() {
+  let correct = 0;
+  questions.forEach((q, i) => { if (userAnswers[i] === q.ans) correct++; });
+  const wrong = questions.length - correct;
+  const pct = Math.round((correct / questions.length) * 100);
+
+  let grade, gradeClass, gradeMsg;
+  if (pct >= 80)      { grade = '🏆 Excellent'; gradeClass = 'grade-A'; gradeMsg = 'Outstanding performance!'; }
+  else if (pct >= 60) { grade = '✅ Good';       gradeClass = 'grade-B'; gradeMsg = 'Solid understanding!'; }
+  else                { grade = '📚 Keep Going'; gradeClass = 'grade-C'; gradeMsg = 'More practice needed.'; }
+
+  const reviewItems = questions.map((q, i) => {
+    const isRight = userAnswers[i] === q.ans;
+    const userLetter = labels[userAnswers[i]];
+    const corrLetter = labels[q.ans];
+    const qShort = q.q.length > 60 ? q.q.slice(0, 57) + '…' : q.q;
+    const ansHtml = isRight
+      ? `<span class="ok">✓ ${userLetter}: ${escHtml(q.opts[userAnswers[i]])}</span>`
+      : `<span class="your">✗ You: ${userLetter} — ${escHtml(q.opts[userAnswers[i]])}</span><br><span class="right">✓ Correct: ${corrLetter} — ${escHtml(q.opts[q.ans])}</span>`;
+    return `
+      <div class="review-item ${isRight ? 'correct' : 'wrong'}">
+        <div class="ri-num">Q${i+1}</div>
+        <div class="ri-body">
+          <div class="ri-q">${escHtml(qShort)}</div>
+          <div class="ri-ans">${ansHtml}</div>
+        </div>
+        <div class="ri-icon">${isRight ? '✅' : '❌'}</div>
+      </div>`;
+  }).join('');
+
+  resultSec.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-label">Your Result</div>
+        <div class="score-display">${correct}<sub> / ${questions.length}</sub></div>
+        <div class="score-percent">${pct}% correct — ${gradeMsg}</div>
+        <span class="grade-badge ${gradeClass}">${grade}</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-val c">${correct}</div><div class="stat-lbl">Correct</div></div>
+        <div class="stat-box"><div class="stat-val w">${wrong}</div><div class="stat-lbl">Wrong</div></div>
+        <div class="stat-box"><div class="stat-val s">${pct}%</div><div class="stat-lbl">Score</div></div>
+      </div>
+      <div class="review-title">Answer Review</div>
+      <div class="review-list">${reviewItems}</div>
+      <button class="retry-btn" onclick="retryExam()">↺ Retry Exam</button>
+    </div>`;
+
+  resultSec.style.display = 'block';
+  resultSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function retryExam() {
+  userAnswers.fill(null);
+  answered = 0;
+  examDone = false;
+  updateProgress();
+  resultSec.style.display = 'none';
+  resultSec.innerHTML = '';
+  document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.question-card').forEach(el => el.classList.remove('answered'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuestions();
+</script>
+</body>
+</html>
