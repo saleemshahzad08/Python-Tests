@@ -1,1 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python MCQ Lab — Test Your Skills</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a10;
+    --surface: #0e1118;
+    --card: #121620;
+    --card-hover: #171c28;
+    --border: #1e2435;
+    --border-bright: #2a3350;
+    --gold: #f5c842;
+    --gold-dim: #c9a330;
+    --cyan: #3df5c8;
+    --pink: #f0437a;
+    --blue: #4a8fff;
+    --text: #e2e8f8;
+    --muted: #5a6380;
+    --radius: 14px;
+    --font-mono: 'Space Mono', monospace;
+    --font-body: 'Outfit', sans-serif;
+  }
 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(74,143,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,143,255,0.03) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── GLOW BLOBS ── */
+  .glow-1 {
+    position: fixed;
+    top: -200px;
+    left: -100px;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(245,200,66,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-2 {
+    position: fixed;
+    bottom: -150px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(61,245,200,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,10,16,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-logo .snake { font-size: 20px; }
+  .nav-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--cyan);
+    border: 1px solid rgba(61,245,200,0.3);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 90px 0 70px;
+    text-align: center;
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 1px;
+    background: var(--cyan);
+    opacity: 0.5;
+  }
+  .hero h1 {
+    font-size: clamp(38px, 7vw, 78px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+  .hero h1 .line1 { display: block; color: var(--text); }
+  .hero h1 .line2 {
+    display: block;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--gold);
+    font-style: italic;
+  }
+  .hero-sub {
+    font-size: 17px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 520px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+  }
+  .hero-stats {
+    display: inline-flex;
+    gap: 0;
+    border: 1px solid var(--border-bright);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .stat-pill {
+    padding: 12px 28px;
+    text-align: center;
+    border-right: 1px solid var(--border-bright);
+  }
+  .stat-pill:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+  .stat-lbl {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ── SECTION TITLE ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .section-title {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-bright), transparent);
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+    animation: fadeUp 0.5s 0.1s ease both;
+  }
+  .filter-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .filter-btn:hover,
+  .filter-btn.active {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(245,200,66,0.06);
+  }
+
+  /* ── GRID ── */
+  .tests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 18px;
+  }
+
+  /* ── CARD ── */
+  .test-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    text-decoration: none;
+    display: block;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    animation: fadeUp 0.4s ease both;
+  }
+  .test-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--card-accent, var(--gold)), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .test-card:hover {
+    border-color: var(--border-bright);
+    background: var(--card-hover);
+    transform: translateY(-3px);
+  }
+  .test-card:hover::before { opacity: 1; }
+
+  /* Accent colors per category */
+  .card-accent-gold  { --card-accent: var(--gold); }
+  .card-accent-cyan  { --card-accent: var(--cyan); }
+  .card-accent-pink  { --card-accent: var(--pink); }
+  .card-accent-blue  { --card-accent: var(--blue); }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: rgba(245,200,66,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    border: 1px solid rgba(245,200,66,0.15);
+  }
+  .card-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 7px;
+    letter-spacing: -0.01em;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-meta {
+    display: flex;
+    gap: 10px;
+  }
+  .card-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.04);
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .card-arrow {
+    font-size: 18px;
+    color: var(--muted);
+    transition: transform 0.2s, color 0.2s;
+  }
+  .test-card:hover .card-arrow {
+    transform: translateX(4px);
+    color: var(--gold);
+  }
+
+  /* ── DIFFICULTY DOTS ── */
+  .diff {
+    display: flex;
+    gap: 3px;
+    align-items: center;
+  }
+  .diff-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--border-bright);
+  }
+  .diff-dot.lit { background: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: 100px;
+    border-top: 1px solid var(--border);
+    padding: 36px 0;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .footer-logo span { color: var(--gold); }
+  .footer-sub {
+    font-size: 13px;
+    color: var(--muted);
+    opacity: 0.5;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    margin-bottom: 28px;
+    position: relative;
+    animation: fadeUp 0.5s 0.05s ease both;
+  }
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    padding: 13px 16px 13px 44px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--gold); }
+
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 60px 0;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .hero { padding: 60px 0 50px; }
+    .hero-stats { flex-direction: column; }
+    .stat-pill { border-right: none; border-bottom: 1px solid var(--border-bright); }
+    .stat-pill:last-child { border-bottom: none; }
+    .tests-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="wrap nav-inner">
+    <div class="nav-logo">
+      <span class="snake">🐍</span>
+      <span>Python<span style="color:var(--text);">MCQ</span>Lab</span>
+    </div>
+    <span class="nav-badge">v1.0 · Intermediate</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Interactive Test Suite</div>
+    <h1>
+      <span class="line1">Test Your Python</span>
+      <span class="line2">Knowledge.</span>
+    </h1>
+    <p class="hero-sub">17 topic-specific MCQ exams · 30 questions each · instant feedback · answer review</p>
+    <div class="hero-stats">
+      <div class="stat-pill">
+        <div class="stat-num">17</div>
+        <div class="stat-lbl">Topics</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-num">510</div>
+        <div class="stat-lbl">Questions</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-num">30</div>
+        <div class="stat-lbl">Per Test</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-num">∞</div>
+        <div class="stat-lbl">Retries</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAIN CONTENT -->
+<main>
+  <div class="wrap">
+
+    <div class="section-header">
+      <span class="section-title">// choose a topic</span>
+      <span class="section-line"></span>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="Search topics... (e.g. loops, OOP, strings)" autocomplete="off" />
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+      <button class="filter-btn active" data-filter="all">All Topics</button>
+      <button class="filter-btn" data-filter="fundamentals">Fundamentals</button>
+      <button class="filter-btn" data-filter="data-structures">Data Structures</button>
+      <button class="filter-btn" data-filter="advanced">Advanced</button>
+    </div>
+
+    <!-- GRID -->
+    <div class="tests-grid" id="testsGrid">
+
+      <!-- FUNDAMENTALS -->
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Variables_MCQ.html"
+         class="test-card card-accent-gold"
+         data-category="fundamentals"
+         data-title="Python Variables"
+         style="animation-delay:0.05s">
+        <div class="card-top">
+          <div class="card-icon">📦</div>
+          <div class="card-num">#01</div>
+        </div>
+        <div class="card-title">Variables</div>
+        <div class="card-desc">Assignment, naming rules, dynamic typing, scope, and type conversion.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Fundamentals</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Keywords_MCQ.html"
+         class="test-card card-accent-cyan"
+         data-category="fundamentals"
+         data-title="Python Keywords"
+         style="animation-delay:0.07s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(61,245,200,0.1);border-color:rgba(61,245,200,0.2);">🔑</div>
+          <div class="card-num">#02</div>
+        </div>
+        <div class="card-title">Keywords</div>
+        <div class="card-desc">True/False/None, scope, exceptions, generators, imports, lambda, async.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Fundamentals</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Operators_MCQ.html"
+         class="test-card card-accent-pink"
+         data-category="fundamentals"
+         data-title="Python Operators"
+         style="animation-delay:0.09s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(240,67,122,0.1);border-color:rgba(240,67,122,0.2);">⚙️</div>
+          <div class="card-num">#03</div>
+        </div>
+        <div class="card-title">Operators</div>
+        <div class="card-desc">Arithmetic, bitwise, logical, comparison, walrus, and operator overloading.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Fundamentals</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Numbers_MCQ.html"
+         class="test-card card-accent-blue"
+         data-category="fundamentals"
+         data-title="Python Numbers"
+         style="animation-delay:0.11s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(74,143,255,0.1);border-color:rgba(74,143,255,0.2);">🔢</div>
+          <div class="card-num">#04</div>
+        </div>
+        <div class="card-title">Numbers</div>
+        <div class="card-desc">int, float, complex, type conversion, math module, random, and special values.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Fundamentals</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Booleans_MCQ.html"
+         class="test-card card-accent-gold"
+         data-category="fundamentals"
+         data-title="Python Booleans"
+         style="animation-delay:0.13s">
+        <div class="card-top">
+          <div class="card-icon">✔️</div>
+          <div class="card-num">#05</div>
+        </div>
+        <div class="card-title">Booleans</div>
+        <div class="card-desc">bool type, truthy &amp; falsy, == vs is, short-circuit eval, None comparisons.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Fundamentals</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Input_Output_MCQ.html"
+         class="test-card card-accent-cyan"
+         data-category="fundamentals"
+         data-title="Python Input Output"
+         style="animation-delay:0.15s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(61,245,200,0.1);border-color:rgba(61,245,200,0.2);">💬</div>
+          <div class="card-num">#06</div>
+        </div>
+        <div class="card-title">Input / Output</div>
+        <div class="card-desc">input(), print(), type casting, map(), split(), validation, walrus operator.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Fundamentals</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Conditionals_MCQ.html"
+         class="test-card card-accent-pink"
+         data-category="fundamentals"
+         data-title="Python Conditionals"
+         style="animation-delay:0.17s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(240,67,122,0.1);border-color:rgba(240,67,122,0.2);">🔀</div>
+          <div class="card-num">#07</div>
+        </div>
+        <div class="card-title">Conditionals</div>
+        <div class="card-desc">if/elif/else, ternary expressions, match-case, nested conditions, chained comparisons.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Fundamentals</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Loops_MCQ.html"
+         class="test-card card-accent-blue"
+         data-category="fundamentals"
+         data-title="Python Loops"
+         style="animation-delay:0.19s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(74,143,255,0.1);border-color:rgba(74,143,255,0.2);">🔁</div>
+          <div class="card-num">#08</div>
+        </div>
+        <div class="card-title">Loops</div>
+        <div class="card-desc">for, while, break, continue, pass, else clause, enumerate, nested loops.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Fundamentals</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- DATA STRUCTURES -->
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Strings_MCQ.html"
+         class="test-card card-accent-gold"
+         data-category="data-structures"
+         data-title="Python Strings"
+         style="animation-delay:0.21s">
+        <div class="card-top">
+          <div class="card-icon">🔤</div>
+          <div class="card-num">#09</div>
+        </div>
+        <div class="card-title">Strings</div>
+        <div class="card-desc">Indexing, slicing, methods, f-string formatting, comparison, type conversion.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Data Structures</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Lists_MCQ.html"
+         class="test-card card-accent-cyan"
+         data-category="data-structures"
+         data-title="Python Lists"
+         style="animation-delay:0.23s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(61,245,200,0.1);border-color:rgba(61,245,200,0.2);">📋</div>
+          <div class="card-num">#10</div>
+        </div>
+        <div class="card-title">Lists</div>
+        <div class="card-desc">Indexing, slicing, methods, comprehensions, sorting, copying, nested lists.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Data Structures</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Tuples_MCQ.html"
+         class="test-card card-accent-pink"
+         data-category="data-structures"
+         data-title="Python Tuples"
+         style="animation-delay:0.25s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(240,67,122,0.1);border-color:rgba(240,67,122,0.2);">📌</div>
+          <div class="card-num">#11</div>
+        </div>
+        <div class="card-title">Tuples</div>
+        <div class="card-desc">Creation, immutability, slicing, unpacking, methods, hashing, built-ins.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Data Structures</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Sets_MCQ.html"
+         class="test-card card-accent-blue"
+         data-category="data-structures"
+         data-title="Python Sets"
+         style="animation-delay:0.27s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(74,143,255,0.1);border-color:rgba(74,143,255,0.2);">⭕</div>
+          <div class="card-num">#12</div>
+        </div>
+        <div class="card-title">Sets</div>
+        <div class="card-desc">Creation, set operations, frozenset, comprehensions, methods, hashing.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Data Structures</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Dictionary_MCQ.html"
+         class="test-card card-accent-gold"
+         data-category="data-structures"
+         data-title="Python Dictionary"
+         style="animation-delay:0.29s">
+        <div class="card-top">
+          <div class="card-icon">📖</div>
+          <div class="card-num">#13</div>
+        </div>
+        <div class="card-title">Dictionary</div>
+        <div class="card-desc">dict methods, comprehensions, get/pop/update, shallow vs deep copy, merging.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Data Structures</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Arrays_MCQ.html"
+         class="test-card card-accent-cyan"
+         data-category="data-structures"
+         data-title="Python Arrays"
+         style="animation-delay:0.31s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(61,245,200,0.1);border-color:rgba(61,245,200,0.2);">🗃️</div>
+          <div class="card-num">#14</div>
+        </div>
+        <div class="card-title">Arrays</div>
+        <div class="card-desc">array module, typecodes, slicing, append/extend/insert, buffer_info, NumPy.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Data Structures</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- ADVANCED -->
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Functions_MCQ.html"
+         class="test-card card-accent-pink"
+         data-category="advanced"
+         data-title="Python Functions"
+         style="animation-delay:0.33s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(240,67,122,0.1);border-color:rgba(240,67,122,0.2);">ƒ</div>
+          <div class="card-num">#15</div>
+        </div>
+        <div class="card-title">Functions</div>
+        <div class="card-desc">def, *args/**kwargs, lambda, closures, decorators, map/filter/reduce, recursion.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Advanced</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_OOP_MCQ.html"
+         class="test-card card-accent-blue"
+         data-category="advanced"
+         data-title="Python OOP"
+         style="animation-delay:0.35s">
+        <div class="card-top">
+          <div class="card-icon" style="background:rgba(74,143,255,0.1);border-color:rgba(74,143,255,0.2);">🏗️</div>
+          <div class="card-num">#16</div>
+        </div>
+        <div class="card-title">OOP</div>
+        <div class="card-desc">Classes &amp; objects, inheritance, encapsulation, polymorphism, dunder methods.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Advanced</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Exceptions_MCQ.html"
+         class="test-card card-accent-gold"
+         data-category="advanced"
+         data-title="Python Exceptions"
+         style="animation-delay:0.37s">
+        <div class="card-top">
+          <div class="card-icon">⚠️</div>
+          <div class="card-num">#17</div>
+        </div>
+        <div class="card-title">Exception Handling</div>
+        <div class="card-desc">try/except/else/finally, built-in exceptions, custom exceptions, raise, chaining.</div>
+        <div class="card-footer">
+          <div class="card-meta">
+            <span class="card-tag">30 Qs</span>
+            <span class="card-tag">Advanced</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+    </div><!-- /grid -->
+
+    <div class="no-results" id="noResults">
+      <div style="font-size:32px;margin-bottom:12px;">🔍</div>
+      No topics match your search.
+    </div>
+
+  </div><!-- /wrap -->
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-logo">🐍 Python<span>MCQ</span>Lab</div>
+    <div class="footer-sub">17 topics · 510 questions · intermediate level · free forever</div>
+  </div>
+</footer>
+
+<script>
+  // ── FILTER ──
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.test-card');
+  const noResults = document.getElementById('noResults');
+  const searchInput = document.getElementById('searchInput');
+  let activeFilter = 'all';
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  searchInput.addEventListener('input', applyFilters);
+
+  function applyFilters() {
+    const query = searchInput.value.toLowerCase().trim();
+    let visible = 0;
+
+    cards.forEach(card => {
+      const cat  = card.dataset.category;
+      const title = card.dataset.title.toLowerCase();
+      const desc  = card.querySelector('.card-desc').textContent.toLowerCase();
+
+      const matchFilter = activeFilter === 'all' || cat === activeFilter;
+      const matchSearch = !query || title.includes(query) || desc.includes(query);
+
+      if (matchFilter && matchSearch) {
+        card.style.display = '';
+        visible++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  // ── STAGGER ANIMATION on load ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.style.opacity = 1;
+    });
+  }, { threshold: 0.1 });
+
+  cards.forEach(c => observer.observe(c));
+</script>
+</body>
+</html>
