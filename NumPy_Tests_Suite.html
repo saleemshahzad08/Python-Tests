@@ -450,20 +450,130 @@
     opacity: 0.5;
   }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
-    .hero { padding: 60px 0 50px; }
-    .hero-stats { flex-direction: column; }
-    .stat-pill { border-right: none; border-bottom: 1px solid var(--border-bright); }
-    .stat-pill:last-child { border-bottom: none; }
-    .tests-grid { grid-template-columns: 1fr; }
-    .nav-badge { display: none; }
-  }
-
   /* ── ANIMATIONS ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(22px); }
     to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── RESPONSIVE ── */
+
+  /* Hamburger button */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 7px 8px;
+    flex-shrink: 0;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--muted);
+    border-radius: 2px;
+    transition: all 0.25s;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile nav drawer */
+  .nav-drawer {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 0 10px;
+    border-top: 1px solid var(--border);
+    margin-top: 12px;
+  }
+  .nav-drawer.open { display: flex; }
+  .nav-drawer .nav-tab {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  @media (max-width: 768px) {
+    /* Nav */
+    .nav-tabs { display: none; }
+    .nav-hamburger { display: flex; }
+    .nav-inner { flex-wrap: wrap; }
+    .nav-badge { font-size: 10px; padding: 2px 8px; }
+
+    /* Hero */
+    .hero { padding: 52px 0 44px; }
+    .hero-sub { font-size: 15px; padding: 0 8px; }
+
+    /* Stats — 2×2 grid on tablet */
+    .hero-stats {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 340px;
+    }
+    .stat-pill {
+      border-right: 1px solid var(--border-bright);
+      border-bottom: 1px solid var(--border-bright);
+    }
+    .stat-pill:nth-child(2) { border-right: none; }
+    .stat-pill:nth-child(3) { border-bottom: none; }
+    .stat-pill:nth-child(4) { border-right: none; border-bottom: none; }
+
+    /* Cards — 2 columns on tablet */
+    .tests-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
+    /* Filter bar scroll */
+    .filter-bar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-btn { flex-shrink: 0; }
+  }
+
+  @media (max-width: 500px) {
+    /* Nav */
+    .nav-logo { font-size: 13px; }
+    .nav-badge { display: none; }
+
+    /* Hero */
+    .hero { padding: 40px 0 36px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 0.14em; }
+    .hero-sub { font-size: 14px; margin-bottom: 28px; }
+
+    /* Stats — single column */
+    .hero-stats {
+      display: inline-flex;
+      flex-direction: column;
+      max-width: 260px;
+    }
+    .stat-pill {
+      border-right: none !important;
+      border-bottom: 1px solid var(--border-bright) !important;
+      padding: 10px 20px;
+    }
+    .stat-pill:last-child { border-bottom: none !important; }
+
+    /* Cards — single column */
+    .tests-grid { grid-template-columns: 1fr; gap: 12px; }
+
+    /* Card padding tighter */
+    .test-card { padding: 20px 18px; }
+    .card-title { font-size: 16px; }
+    .card-desc { font-size: 12px; }
+
+    /* Section header */
+    .section-title { font-size: 11px; letter-spacing: 0.1em; }
+
+    /* Wrap padding */
+    .wrap { padding: 0 16px; }
+
+    /* Footer */
+    footer { margin-top: 60px; padding: 28px 0; }
   }
 </style>
 </head>
@@ -474,16 +584,25 @@
 
 <!-- NAVBAR -->
 <nav>
-  <div class="wrap nav-inner">
-    <a href="index.html" class="nav-logo">
-      <span class="snake">🐍</span>
-      <span>Python<span style="color:var(--text);">MCQ</span>Lab</span>
-    </a>
-    <div class="nav-tabs">
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="snake">🐍</span>
+        <span>Python<span style="color:var(--text);">MCQ</span>Lab</span>
+      </a>
+      <div class="nav-tabs">
+        <a href="index.html" class="nav-tab"><span class="tab-dot"></span>Core Python</a>
+        <a href="numpy_tests.html" class="nav-tab active"><span class="tab-dot"></span>NumPy</a>
+      </div>
+      <span class="nav-badge">NumPy Series</span>
+      <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-drawer" id="navDrawer">
       <a href="index.html" class="nav-tab"><span class="tab-dot"></span>Core Python</a>
       <a href="numpy_tests.html" class="nav-tab active"><span class="tab-dot"></span>NumPy</a>
     </div>
-    <span class="nav-badge">NumPy Series</span>
   </div>
 </nav>
 
@@ -502,7 +621,7 @@
         <div class="stat-lbl">Topics</div>
       </div>
       <div class="stat-pill">
-        <div class="stat-num">180</div>
+        <div class="stat-num">30</div>
         <div class="stat-lbl">Questions</div>
       </div>
       <div class="stat-pill">
@@ -682,6 +801,14 @@
 </footer>
 
 <script>
+  // ── HAMBURGER ──
+  const hamburger = document.getElementById('hamburger');
+  const navDrawer = document.getElementById('navDrawer');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navDrawer.classList.toggle('open');
+  });
+
   const filterBtns = document.querySelectorAll('.filter-btn');
   const cards = document.querySelectorAll('.test-card');
   const noResults = document.getElementById('noResults');
