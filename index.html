@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0057)https://saleemshahzad08.github.io/Python-Tests/index.html -->
+<html lang="en" data-arp="" data-qb-installed="true"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Python MCQ Lab — Test Your Skills</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link href="./index_files/css2" rel="stylesheet">
 <style>
   :root {
     --bg: #080a10;
@@ -467,12 +467,129 @@
   }
 
   /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
-    .hero { padding: 60px 0 50px; }
-    .hero-stats { flex-direction: column; }
-    .stat-pill { border-right: none; border-bottom: 1px solid var(--border-bright); }
-    .stat-pill:last-child { border-bottom: none; }
-    .tests-grid { grid-template-columns: 1fr; }
+
+  /* Hamburger button (hidden on desktop) */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 7px 8px;
+    flex-shrink: 0;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--muted);
+    border-radius: 2px;
+    transition: all 0.25s;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile nav drawer */
+  .nav-drawer {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 0 10px;
+    border-top: 1px solid var(--border);
+    margin-top: 12px;
+  }
+  .nav-drawer.open { display: flex; }
+  .nav-drawer .nav-tab {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  @media (max-width: 768px) {
+    /* Nav */
+    .nav-tabs { display: none; }
+    .nav-hamburger { display: flex; }
+    .nav-inner { flex-wrap: wrap; }
+    .nav-inner > * { flex-shrink: 0; }
+    .nav-badge { font-size: 10px; padding: 2px 8px; }
+
+    /* Nav drawer lives inside .wrap below nav-inner */
+    .nav-drawer-wrap {
+      width: 100%;
+    }
+
+    /* Hero */
+    .hero { padding: 52px 0 44px; }
+    .hero-sub { font-size: 15px; padding: 0 8px; }
+
+    /* Stats — 2×2 grid on tablet */
+    .hero-stats {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 340px;
+    }
+    .stat-pill {
+      border-right: 1px solid var(--border-bright);
+      border-bottom: 1px solid var(--border-bright);
+    }
+    .stat-pill:nth-child(2) { border-right: none; }
+    .stat-pill:nth-child(3) { border-bottom: none; }
+    .stat-pill:nth-child(4) { border-right: none; border-bottom: none; }
+
+    /* Cards — 2 columns on tablet */
+    .tests-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
+    /* Filter bar scroll */
+    .filter-bar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
+    .filter-bar::-webkit-scrollbar { display: none; }
+    .filter-btn { flex-shrink: 0; }
+  }
+
+  @media (max-width: 500px) {
+    /* Nav */
+    .nav-logo { font-size: 13px; }
+    .nav-badge { display: none; }
+
+    /* Hero */
+    .hero { padding: 40px 0 36px; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 0.14em; }
+    .hero-sub { font-size: 14px; margin-bottom: 28px; }
+
+    /* Stats — single column */
+    .hero-stats {
+      display: inline-flex;
+      flex-direction: column;
+      max-width: 260px;
+    }
+    .stat-pill {
+      border-right: none !important;
+      border-bottom: 1px solid var(--border-bright) !important;
+      padding: 10px 20px;
+    }
+    .stat-pill:last-child { border-bottom: none !important; }
+
+    /* Cards — single column */
+    .tests-grid { grid-template-columns: 1fr; gap: 12px; }
+
+    /* Card padding tighter */
+    .test-card { padding: 20px 18px; }
+    .card-title { font-size: 16px; }
+    .card-desc { font-size: 12px; }
+
+    /* Section header */
+    .section-title { font-size: 11px; letter-spacing: 0.1em; }
+
+    /* Wrap padding */
+    .wrap { padding: 0 16px; }
+
+    /* Footer */
+    footer { margin-top: 60px; padding: 28px 0; }
   }
 </style>
 </head>
@@ -483,16 +600,25 @@
 
 <!-- NAVBAR -->
 <nav>
-  <div class="wrap nav-inner">
-    <div class="nav-logo">
-      <span class="snake">🐍</span>
-      <span>Python<span style="color:var(--text);">MCQ</span>Lab</span>
+  <div class="wrap">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <span class="snake">🐍</span>
+        <span>Python<span style="color:var(--text);">MCQ</span>Lab</span>
+      </div>
+      <nav class="nav-tabs">
+        <a href="https://saleemshahzad08.github.io/Python-Tests/index.html" class="nav-tab active"><span class="tab-dot"></span>Core Python</a>
+        <a href="https://saleemshahzad08.github.io/Python-Tests/NumPy_Tests_Suite.html" class="nav-tab"><span class="tab-dot"></span>NumPy</a>
+      </nav>
+      <span class="nav-badge">v1.0 · Intermediate</span>
+      <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-    <nav class="nav-tabs">
-      <a href="index.html" class="nav-tab active"><span class="tab-dot"></span>Core Python</a>
-      <a href="NumPy_Tests_Suite.html" class="nav-tab"><span class="tab-dot"></span>NumPy</a>
-    </nav>
-    <span class="nav-badge">v1.0 · Intermediate</span>
+    <div class="nav-drawer" id="navDrawer">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/index.html" class="nav-tab active"><span class="tab-dot"></span>Core Python</a>
+      <a href="https://saleemshahzad08.github.io/Python-Tests/NumPy_Tests_Suite.html" class="nav-tab"><span class="tab-dot"></span>NumPy</a>
+    </div>
   </div>
 </nav>
 
@@ -538,7 +664,7 @@
     <!-- SEARCH -->
     <div class="search-wrap">
       <span class="search-icon">⌕</span>
-      <input class="search-input" type="text" id="searchInput" placeholder="Search topics... (e.g. loops, OOP, strings)" autocomplete="off" />
+      <input class="search-input" type="text" id="searchInput" placeholder="Search topics... (e.g. loops, OOP, strings)" autocomplete="off">
     </div>
 
     <!-- FILTER -->
@@ -553,11 +679,7 @@
     <div class="tests-grid" id="testsGrid">
 
       <!-- FUNDAMENTALS -->
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Variables_MCQ.html"
-         class="test-card card-accent-gold"
-         data-category="fundamentals"
-         data-title="Python Variables"
-         style="animation-delay:0.05s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Variables_MCQ.html" class="test-card card-accent-gold" data-category="fundamentals" data-title="Python Variables" style="animation-delay:0.05s">
         <div class="card-top">
           <div class="card-icon">📦</div>
           <div class="card-num">#01</div>
@@ -573,11 +695,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Keywords_MCQ.html"
-         class="test-card card-accent-cyan"
-         data-category="fundamentals"
-         data-title="Python Keywords"
-         style="animation-delay:0.07s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Keywords_MCQ.html" class="test-card card-accent-cyan" data-category="fundamentals" data-title="Python Keywords" style="animation-delay:0.07s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(61,245,200,0.1);border-color:rgba(61,245,200,0.2);">🔑</div>
           <div class="card-num">#02</div>
@@ -593,11 +711,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Operators_MCQ.html"
-         class="test-card card-accent-pink"
-         data-category="fundamentals"
-         data-title="Python Operators"
-         style="animation-delay:0.09s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Operators_MCQ.html" class="test-card card-accent-pink" data-category="fundamentals" data-title="Python Operators" style="animation-delay:0.09s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(240,67,122,0.1);border-color:rgba(240,67,122,0.2);">⚙️</div>
           <div class="card-num">#03</div>
@@ -613,11 +727,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Numbers_MCQ.html"
-         class="test-card card-accent-blue"
-         data-category="fundamentals"
-         data-title="Python Numbers"
-         style="animation-delay:0.11s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Numbers_MCQ.html" class="test-card card-accent-blue" data-category="fundamentals" data-title="Python Numbers" style="animation-delay:0.11s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(74,143,255,0.1);border-color:rgba(74,143,255,0.2);">🔢</div>
           <div class="card-num">#04</div>
@@ -633,11 +743,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Booleans_MCQ.html"
-         class="test-card card-accent-gold"
-         data-category="fundamentals"
-         data-title="Python Booleans"
-         style="animation-delay:0.13s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Booleans_MCQ.html" class="test-card card-accent-gold" data-category="fundamentals" data-title="Python Booleans" style="animation-delay:0.13s">
         <div class="card-top">
           <div class="card-icon">✔️</div>
           <div class="card-num">#05</div>
@@ -653,11 +759,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Input_Output_MCQ.html"
-         class="test-card card-accent-cyan"
-         data-category="fundamentals"
-         data-title="Python Input Output"
-         style="animation-delay:0.15s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Input_Output_MCQ.html" class="test-card card-accent-cyan" data-category="fundamentals" data-title="Python Input Output" style="animation-delay:0.15s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(61,245,200,0.1);border-color:rgba(61,245,200,0.2);">💬</div>
           <div class="card-num">#06</div>
@@ -673,11 +775,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Conditionals_MCQ.html"
-         class="test-card card-accent-pink"
-         data-category="fundamentals"
-         data-title="Python Conditionals"
-         style="animation-delay:0.17s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Conditionals_MCQ.html" class="test-card card-accent-pink" data-category="fundamentals" data-title="Python Conditionals" style="animation-delay:0.17s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(240,67,122,0.1);border-color:rgba(240,67,122,0.2);">🔀</div>
           <div class="card-num">#07</div>
@@ -693,11 +791,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Loops_MCQ.html"
-         class="test-card card-accent-blue"
-         data-category="fundamentals"
-         data-title="Python Loops"
-         style="animation-delay:0.19s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Loops_MCQ.html" class="test-card card-accent-blue" data-category="fundamentals" data-title="Python Loops" style="animation-delay:0.19s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(74,143,255,0.1);border-color:rgba(74,143,255,0.2);">🔁</div>
           <div class="card-num">#08</div>
@@ -714,11 +808,7 @@
       </a>
 
       <!-- DATA STRUCTURES -->
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Strings_MCQ.html"
-         class="test-card card-accent-gold"
-         data-category="data-structures"
-         data-title="Python Strings"
-         style="animation-delay:0.21s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Strings_MCQ.html" class="test-card card-accent-gold" data-category="data-structures" data-title="Python Strings" style="animation-delay:0.21s">
         <div class="card-top">
           <div class="card-icon">🔤</div>
           <div class="card-num">#09</div>
@@ -734,11 +824,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Lists_MCQ.html"
-         class="test-card card-accent-cyan"
-         data-category="data-structures"
-         data-title="Python Lists"
-         style="animation-delay:0.23s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Lists_MCQ.html" class="test-card card-accent-cyan" data-category="data-structures" data-title="Python Lists" style="animation-delay:0.23s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(61,245,200,0.1);border-color:rgba(61,245,200,0.2);">📋</div>
           <div class="card-num">#10</div>
@@ -754,11 +840,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Tuples_MCQ.html"
-         class="test-card card-accent-pink"
-         data-category="data-structures"
-         data-title="Python Tuples"
-         style="animation-delay:0.25s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Tuples_MCQ.html" class="test-card card-accent-pink" data-category="data-structures" data-title="Python Tuples" style="animation-delay:0.25s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(240,67,122,0.1);border-color:rgba(240,67,122,0.2);">📌</div>
           <div class="card-num">#11</div>
@@ -774,11 +856,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Sets_MCQ.html"
-         class="test-card card-accent-blue"
-         data-category="data-structures"
-         data-title="Python Sets"
-         style="animation-delay:0.27s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Sets_MCQ.html" class="test-card card-accent-blue" data-category="data-structures" data-title="Python Sets" style="animation-delay:0.27s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(74,143,255,0.1);border-color:rgba(74,143,255,0.2);">⭕</div>
           <div class="card-num">#12</div>
@@ -794,11 +872,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Dictionary_MCQ.html"
-         class="test-card card-accent-gold"
-         data-category="data-structures"
-         data-title="Python Dictionary"
-         style="animation-delay:0.29s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Dictionary_MCQ.html" class="test-card card-accent-gold" data-category="data-structures" data-title="Python Dictionary" style="animation-delay:0.29s">
         <div class="card-top">
           <div class="card-icon">📖</div>
           <div class="card-num">#13</div>
@@ -814,11 +888,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Arrays_MCQ.html"
-         class="test-card card-accent-cyan"
-         data-category="data-structures"
-         data-title="Python Arrays"
-         style="animation-delay:0.31s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Arrays_MCQ.html" class="test-card card-accent-cyan" data-category="data-structures" data-title="Python Arrays" style="animation-delay:0.31s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(61,245,200,0.1);border-color:rgba(61,245,200,0.2);">🗃️</div>
           <div class="card-num">#14</div>
@@ -835,11 +905,7 @@
       </a>
 
       <!-- ADVANCED -->
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Functions_MCQ.html"
-         class="test-card card-accent-pink"
-         data-category="advanced"
-         data-title="Python Functions"
-         style="animation-delay:0.33s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Functions_MCQ.html" class="test-card card-accent-pink" data-category="advanced" data-title="Python Functions" style="animation-delay:0.33s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(240,67,122,0.1);border-color:rgba(240,67,122,0.2);">ƒ</div>
           <div class="card-num">#15</div>
@@ -855,11 +921,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_OOP_MCQ.html"
-         class="test-card card-accent-blue"
-         data-category="advanced"
-         data-title="Python OOP"
-         style="animation-delay:0.35s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_OOP_MCQ.html" class="test-card card-accent-blue" data-category="advanced" data-title="Python OOP" style="animation-delay:0.35s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(74,143,255,0.1);border-color:rgba(74,143,255,0.2);">🏗️</div>
           <div class="card-num">#16</div>
@@ -875,11 +937,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Exceptions_MCQ.html"
-         class="test-card card-accent-gold"
-         data-category="advanced"
-         data-title="Python Exceptions"
-         style="animation-delay:0.37s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Exceptions_MCQ.html" class="test-card card-accent-gold" data-category="advanced" data-title="Python Exceptions" style="animation-delay:0.37s">
         <div class="card-top">
           <div class="card-icon">⚠️</div>
           <div class="card-num">#17</div>
@@ -895,11 +953,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Generators_MCQ.html"
-         class="test-card card-accent-cyan"
-         data-category="advanced"
-         data-title="Python Generators"
-         style="animation-delay:0.39s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_Generators_MCQ.html" class="test-card card-accent-cyan" data-category="advanced" data-title="Python Generators" style="animation-delay:0.39s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(61,245,200,0.1);border-color:rgba(61,245,200,0.2);">⚡</div>
           <div class="card-num">#18</div>
@@ -915,11 +969,7 @@
         </div>
       </a>
 
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_RegEx_MCQ.html"
-         class="test-card card-accent-pink"
-         data-category="advanced"
-         data-title="Python RegEx"
-         style="animation-delay:0.41s">
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Python_RegEx_MCQ.html" class="test-card card-accent-pink" data-category="advanced" data-title="Python RegEx" style="animation-delay:0.41s">
         <div class="card-top">
           <div class="card-icon" style="background:rgba(240,67,122,0.1);border-color:rgba(240,67,122,0.2);">🔎</div>
           <div class="card-num">#19</div>
@@ -954,6 +1004,14 @@
 </footer>
 
 <script>
+  // ── HAMBURGER ──
+  const hamburger = document.getElementById('hamburger');
+  const navDrawer = document.getElementById('navDrawer');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navDrawer.classList.toggle('open');
+  });
+
   // ── FILTER ──
   const filterBtns = document.querySelectorAll('.filter-btn');
   const cards = document.querySelectorAll('.test-card');
@@ -1004,5 +1062,6 @@
 
   cards.forEach(c => observer.observe(c));
 </script>
-</body>
-</html>
+
+
+</body></html>
