@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 1: Foundations & Setup — Tkinter Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a10;
+    --surface: #0e1118;
+    --card: #121620;
+    --card-hover: #171c28;
+    --border: #1e2435;
+    --border-bright: #2a3350;
+    --gold: #f5c842;
+    --gold-dim: #c9a330;
+    --cyan: #3df5c8;
+    --pink: #f0437a;
+    --blue: #4a8fff;
+    --tk-accent: #a78bfa;
+    --tk-accent-dim: #7c5fc9;
+    --text: #e2e8f8;
+    --muted: #5a6380;
+    --radius: 14px;
+    --font-mono: 'Space Mono', monospace;
+    --font-body: 'Outfit', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glow-1 {
+    position: fixed;
+    top: -200px; left: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  .glow-2 {
+    position: fixed;
+    bottom: -150px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(61,245,200,0.05) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .wrap {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,10,16,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-logo .snake { font-size: 20px; }
+
+  .nav-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--tk-accent);
+    border: 1px solid rgba(167,139,250,0.3);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.1em;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-tab {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    padding: 7px 18px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .nav-tab:hover {
+    color: var(--text);
+    background: rgba(255,255,255,0.04);
+    border-color: var(--border);
+  }
+
+  .nav-tab.active {
+    color: var(--tk-accent);
+    background: rgba(167,139,250,0.08);
+    border-color: rgba(167,139,250,0.3);
+  }
+
+  .nav-tab .tab-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  .hero {
+    padding: 60px 0 40px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--tk-accent);
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .hero h1 .accent {
+    color: var(--tk-accent);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+
+  .breadcrumb a {
+    color: var(--tk-accent);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--gold);
+  }
+
+  main {
+    padding: 40px 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    margin-top: 48px;
+  }
+
+  .section-header:first-of-type {
+    margin-top: 0;
+  }
+
+  .section-title {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tk-accent);
+    white-space: nowrap;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-bright), transparent);
+  }
+
+  .content-block {
+    margin-bottom: 32px;
+  }
+
+  .content-block h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .content-block p {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-size: 15px;
+  }
+
+  .code-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--cyan);
+    line-height: 1.6;
+  }
+
+  .code-block.dark {
+    background: rgba(0,0,0,0.4);
+    border-color: var(--border-bright);
+  }
+
+  .example-box {
+    background: rgba(167,139,250,0.05);
+    border-left: 3px solid var(--tk-accent);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  .example-box .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--tk-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .properties-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .properties-table th {
+    background: rgba(167,139,250,0.1);
+    padding: 12px 16px;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--tk-accent);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .properties-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .properties-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .properties-table tr:hover {
+    background: rgba(167,139,250,0.03);
+  }
+
+  .toggle-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 16px 0;
+  }
+
+  .toggle-header {
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+    font-weight: 600;
+    user-select: none;
+  }
+
+  .toggle-header:hover {
+    background: var(--card-hover);
+  }
+
+  .toggle-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
+    color: var(--tk-accent);
+  }
+
+  .toggle-box.open .toggle-icon {
+    transform: rotate(180deg);
+  }
+
+  .toggle-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 16px;
+  }
+
+  .toggle-box.open .toggle-content {
+    max-height: 2000px;
+    padding: 0 16px 16px 16px;
+  }
+
+  .key-points {
+    background: rgba(61,245,200,0.05);
+    border-left: 3px solid var(--cyan);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  .key-points ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .key-points li {
+    padding-left: 24px;
+    margin-bottom: 12px;
+    position: relative;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .key-points li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--cyan);
+    font-weight: bold;
+  }
+
+  .nav-tabs-bottom {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    justify-content: space-between;
+  }
+
+  .nav-tabs-bottom a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+
+  .nav-tabs-bottom a:hover {
+    color: var(--tk-accent);
+    border-color: var(--tk-accent);
+    background: rgba(167,139,250,0.05);
+  }
+
+  .nav-tabs-bottom a.next {
+    margin-left: auto;
+  }
+
+  footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  .footer-logo {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .footer-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nav-tabs {
+      display: none;
+    }
+    .hero h1 {
+      font-size: 32px;
+    }
+    .properties-table {
+      font-size: 12px;
+    }
+    .properties-table th,
+    .properties-table td {
+      padding: 8px 12px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="snake">🐍</span>
+        <span>Tkinter<span style="color:var(--text);">Notes</span></span>
+      </a>
+      <div class="nav-tabs">
+        <a href="index.html" class="nav-tab"><span class="tab-dot"></span>Home</a>
+        <a href="#" class="nav-tab active"><span class="tab-dot"></span>Day 1</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <span>Day 1: Foundations & Setup</span>
+    </div>
+    <div class="hero-eyebrow">Lesson 1 of 7</div>
+    <h1>Foundations & <span class="accent">Setup</span></h1>
+    <p class="hero-sub">Understanding Tkinter basics, window creation, and configuration. This foundation is essential before moving to widgets.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+
+    <!-- WHAT IS TKINTER -->
+    <div class="section-header">
+      <span class="section-title">// what is tkinter?</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>What is Tkinter?</h3>
+      <p>Tkinter is Python's <strong>standard library for creating Graphical User Interfaces (GUIs)</strong>. It's the easiest and most straightforward way to build desktop applications with Python.</p>
+      
+      <div class="example-box">
+        <span class="label">Simple Analogy</span>
+        <p style="margin: 0; color: var(--text);">
+          Python code = Logic (your calculations, data processing)
+          <br/>Tkinter = The visual interface (windows, buttons, text fields users interact with)
+        </p>
+      </div>
+
+      <h3 style="margin-top: 32px;">Why Use Tkinter?</h3>
+      <div class="key-points">
+        <ul>
+          <li><strong>Built-in</strong> — Comes with Python, no extra installation needed</li>
+          <li><strong>Easy to Learn</strong> — Simple syntax, perfect for beginners</li>
+          <li><strong>Cross-platform</strong> — Works on Windows, Mac, and Linux</li>
+          <li><strong>Lightweight</strong> — Small file sizes, fast execution</li>
+          <li><strong>Perfect for Practice</strong> — Great for reinforcing Python skills while learning GUI</li>
+        </ul>
+      </div>
+
+      <h3 style="margin-top: 32px;">When to Use Tkinter</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Use Case</th>
+          <th>Tkinter?</th>
+          <th>Notes</th>
+        </tr>
+        <tr>
+          <td>Desktop applications</td>
+          <td>✅ YES</td>
+          <td>Primary use case</td>
+        </tr>
+        <tr>
+          <td>Data entry forms</td>
+          <td>✅ YES</td>
+          <td>Excellent for forms</td>
+        </tr>
+        <tr>
+          <td>File managers</td>
+          <td>✅ YES</td>
+          <td>Can build file tools</td>
+        </tr>
+        <tr>
+          <td>Web apps</td>
+          <td>❌ NO</td>
+          <td>Use Django/Flask instead</td>
+        </tr>
+        <tr>
+          <td>3D graphics</td>
+          <td>❌ NO</td>
+          <td>Use PyOpenGL instead</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- INSTALLATION & VERIFICATION -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// installation & verification</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Step 1: Verify Python Installation</h3>
+      <p>First, check if Python is installed:</p>
+      <div class="code-block">python --version</div>
+      <p style="color: var(--text); font-size: 14px;">You should see Python 3.x (Python 3.8 or higher is recommended)</p>
+
+      <h3 style="margin-top: 24px;">Step 2: Verify Tkinter Installation</h3>
+      <p>Tkinter comes by default with Python, but let's verify:</p>
+      <div class="code-block">python -m tkinter</div>
+      <p style="color: var(--text); font-size: 14px;"><strong>Expected result:</strong> A small window appears saying "Tkinter Test" ✅</p>
+
+      <h3 style="margin-top: 24px;">If Tkinter is Missing</h3>
+      <p>In rare cases, tkinter might not be installed. Use these commands:</p>
+      
+      <div class="toggle-box">
+        <div class="toggle-header">
+          <span>💻 Windows</span>
+          <div class="toggle-icon">▼</div>
+        </div>
+        <div class="toggle-content">
+          <div class="code-block dark">pip install tk</div>
+        </div>
+      </div>
+
+      <div class="toggle-box">
+        <div class="toggle-header">
+          <span>🍎 macOS</span>
+          <div class="toggle-icon">▼</div>
+        </div>
+        <div class="toggle-content">
+          <div class="code-block dark">brew install python-tk@3.11</div>
+        </div>
+      </div>
+
+      <div class="toggle-box">
+        <div class="toggle-header">
+          <span>🐧 Linux (Ubuntu/Debian)</span>
+          <div class="toggle-icon">▼</div>
+        </div>
+        <div class="toggle-content">
+          <div class="code-block dark">sudo apt-get install python3-tk</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATING YOUR FIRST WINDOW -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// your first window</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>The Minimal Tkinter Program (5 Lines!)</h3>
+      <p>This is the absolute minimum code to create a window:</p>
+      <div class="code-block">from tkinter import Tk
+
+root = Tk()
+root.mainloop()</div>
+
+      <div class="example-box">
+        <span class="label">What happens</span>
+        <p style="margin: 0; color: var(--text);">
+          ✅ A window appears
+          <br/>✅ Window stays open until you close it
+          <br/>✅ That's it! (not very impressive, but it works!)
+        </p>
+      </div>
+
+      <h3 style="margin-top: 32px;">Adding Basic Configuration</h3>
+      <p>Let's make it more interesting by adding a title and size:</p>
+      <div class="code-block">from tkinter import Tk
+
+root = Tk()
+root.title("My First App")
+root.geometry("400x300")
+root.mainloop()</div>
+
+      <h3 style="margin-top: 24px;">Understanding the Code</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Code</th>
+          <th>What It Does</th>
+        </tr>
+        <tr>
+          <td><code>from tkinter import Tk</code></td>
+          <td>Import the Tk class from tkinter library</td>
+        </tr>
+        <tr>
+          <td><code>root = Tk()</code></td>
+          <td>Create the main window (always do this first!)</td>
+        </tr>
+        <tr>
+          <td><code>root.title("...")</code></td>
+          <td>Set the window title (shown in title bar)</td>
+        </tr>
+        <tr>
+          <td><code>root.geometry("400x300")</code></td>
+          <td>Set size: 400 pixels wide, 300 pixels tall</td>
+        </tr>
+        <tr>
+          <td><code>root.mainloop()</code></td>
+          <td>Keep window open and listen for events</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- WINDOW PROPERTIES -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// window properties & methods</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Common Window Configuration</h3>
+      <div class="code-block">from tkinter import Tk
+
+root = Tk()
+
+# WINDOW PROPERTIES
+root.title("My Application")           # Window title
+root.geometry("500x400")               # Size: 500px wide, 400px tall
+root.resizable(True, True)             # Allow resizing (True/False)
+root.minsize(300, 200)                 # Minimum size when resizing
+
+# COLORS & APPEARANCE
+root.config(bg="lightblue")            # Background color
+
+# WINDOW POSITION (optional)
+root.geometry("500x400+100+50")        # +100 = 100px from left, +50 = 50px from top
+
+root.mainloop()</div>
+
+      <h3 style="margin-top: 32px;">Available Window Methods</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Method</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>.title()</code></td>
+          <td>Set/get window title</td>
+          <td><code>root.title("My App")</code></td>
+        </tr>
+        <tr>
+          <td><code>.geometry()</code></td>
+          <td>Set/get size & position</td>
+          <td><code>root.geometry("400x300+100+50")</code></td>
+        </tr>
+        <tr>
+          <td><code>.config()</code></td>
+          <td>Configure properties</td>
+          <td><code>root.config(bg="blue")</code></td>
+        </tr>
+        <tr>
+          <td><code>.resizable()</code></td>
+          <td>Allow/disable resizing</td>
+          <td><code>root.resizable(False, False)</code></td>
+        </tr>
+        <tr>
+          <td><code>.minsize()</code></td>
+          <td>Set minimum size</td>
+          <td><code>root.minsize(300, 200)</code></td>
+        </tr>
+        <tr>
+          <td><code>.maxsize()</code></td>
+          <td>Set maximum size</td>
+          <td><code>root.maxsize(800, 600)</code></td>
+        </tr>
+        <tr>
+          <td><code>.mainloop()</code></td>
+          <td>Keep window open</td>
+          <td><code>root.mainloop()</code></td>
+        </tr>
+      </table>
+
+      <h3 style="margin-top: 32px;">Color Options</h3>
+      <p>You can use color names or hex codes:</p>
+      <div class="code-block">
+# Named colors (easy to read)
+root.config(bg="lightblue")
+root.config(bg="white")
+root.config(bg="darkgreen")
+
+# Hex codes (precise)
+root.config(bg="#FF5733")
+root.config(bg="#00FF00")
+      </div>
+
+      <h3 style="margin-top: 32px;">Geometry Format Explained</h3>
+      <div class="example-box">
+        <span class="label">Geometry String Pattern</span>
+        <p style="margin: 8px 0; color: var(--text); font-family: var(--font-mono);">
+          "WIDTHxHEIGHT+X+Y"
+        </p>
+        <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+          <li>WIDTH = window width in pixels</li>
+          <li>HEIGHT = window height in pixels</li>
+          <li>X = pixels from left edge (optional)</li>
+          <li>Y = pixels from top edge (optional)</li>
+        </ul>
+      </div>
+
+      <p style="margin-top: 16px;"><strong>Examples:</strong></p>
+      <div class="code-block">
+"400x300"              # 400 wide, 300 tall
+"600x500+100+50"       # 600 wide, 500 tall, at position (100,50)
+"800x600"              # 800 wide, 600 tall, auto position
+      </div>
+    </div>
+
+    <!-- THE FLOW -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// program flow</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Understanding the Execution Flow</h3>
+      <div class="code-block">
+1. Import tkinter components
+    ↓
+2. Create root window (Tk())
+    ↓
+3. Configure window (title, size, colors)
+    ↓
+4. Add widgets (buttons, labels, etc.) - WE'LL DO THIS IN DAY 2
+    ↓
+5. Run mainloop() - KEEPS WINDOW OPEN AND RESPONSIVE
+      </div>
+
+      <div class="key-points">
+        <ul>
+          <li><code>mainloop()</code> must be at the end and is REQUIRED</li>
+          <li>Code after <code>mainloop()</code> will NOT run until window closes</li>
+          <li>The window will be unresponsive without <code>mainloop()</code></li>
+          <li>Always create <code>root = Tk()</code> first, before any configuration</li>
+        </ul>
+      </div>
+
+      <h3 style="margin-top: 32px;">Complete Example</h3>
+      <div class="code-block">from tkinter import Tk
+
+# Step 1: Create main window
+root = Tk()
+
+# Step 2: Configure window
+root.title("My First Application")
+root.geometry("600x400")
+root.config(bg="lightgray")
+root.resizable(False, False)
+root.minsize(400, 300)
+
+# Step 3: Run application
+root.mainloop()
+      </div>
+    </div>
+
+    <!-- KEY TAKEAWAYS -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// key takeaways</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="key-points">
+      <ul>
+        <li><strong>Tkinter</strong> is Python's standard GUI library</li>
+        <li><strong>No installation needed</strong> — it comes with Python</li>
+        <li><strong>Always</strong> create root window first: <code>root = Tk()</code></li>
+        <li><strong>Always</strong> end with: <code>root.mainloop()</code></li>
+        <li><strong>Geometry format</strong> is: <code>"WIDTHxHEIGHT+X+Y"</code></li>
+        <li><strong>Common properties</strong> to configure: title, geometry, bg, resizable</li>
+        <li><strong>This foundation</strong> is essential before adding widgets</li>
+      </ul>
+    </div>
+
+    <!-- PRACTICE TASK -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// practice task</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <div class="example-box">
+        <span class="label">Your Assignment</span>
+        <p style="margin: 12px 0 0 0; color: var(--text);">
+          Create a file called <code>task1_window.py</code> with:
+          <br/><br/>
+          ✅ Window title: "My First Tkinter App"<br/>
+          ✅ Window size: 600x400 pixels<br/>
+          ✅ Background color: "lightblue"<br/>
+          ✅ NOT resizable<br/>
+          ✅ Positioned 100 pixels from left, 100 pixels from top<br/>
+          ✅ Window should stay open until you close it
+        </p>
+      </div>
+
+      <h3 style="margin-top: 32px;">Solution Template</h3>
+      <div class="code-block">from tkinter import Tk
+
+root = Tk()
+
+# Add your configuration here
+# root.title(...)
+# root.geometry(...)
+# root.config(...)
+# root.resizable(...)
+
+root.mainloop()
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-tabs-bottom">
+      <div></div>
+      <a href="day2_widgets1.html" class="next">
+        Day 2: Basic Widgets →
+      </a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-logo">🐍 Tkinter<span>Notes</span></div>
+    <div class="footer-sub">7 lessons · Complete GUI series · beginner-friendly · free forever</div>
+  </div>
+</footer>
+
+<script>
+  const toggleBoxes = document.querySelectorAll('.toggle-box');
+  
+  toggleBoxes.forEach(box => {
+    const header = box.querySelector('.toggle-header');
+    header.addEventListener('click', () => {
+      box.classList.toggle('open');
+    });
+  });
+</script>
+
+</body>
+</html>
