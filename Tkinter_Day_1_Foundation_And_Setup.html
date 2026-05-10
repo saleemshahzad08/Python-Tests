@@ -645,6 +645,7 @@
       <h3>The Minimal Tkinter Program (5 Lines!)</h3>
       <p>This is the absolute minimum code to create a window:</p>
       <div class="code-block">from tkinter import Tk
+
 <br/>root = Tk()
 <br/>root.mainloop()</div>
 
@@ -661,10 +662,10 @@
       <p>Let's make it more interesting by adding a title and size:</p>
       <div class="code-block">from tkinter import Tk
 
-root = Tk()
-root.title("My First App")
-root.geometry("400x300")
-root.mainloop()</div>
+<br/>root = Tk()
+<br/>root.title("My First App")
+<br/>root.geometry("400x300")
+<br/>root.mainloop()</div>
 
       <h3 style="margin-top: 24px;">Understanding the Code</h3>
       <table class="properties-table">
@@ -705,21 +706,21 @@ root.mainloop()</div>
       <h3>Common Window Configuration</h3>
       <div class="code-block">from tkinter import Tk
 
-root = Tk()
+<br/>root = Tk()
 
-# WINDOW PROPERTIES
-root.title("My Application")           # Window title
-root.geometry("500x400")               # Size: 500px wide, 400px tall
-root.resizable(True, True)             # Allow resizing (True/False)
-root.minsize(300, 200)                 # Minimum size when resizing
+<br/># WINDOW PROPERTIES
+<br/>root.title("My Application")           # Window title
+<br/>root.geometry("500x400")               # Size: 500px wide, 400px tall
+<br/>root.resizable(True, True)             # Allow resizing (True/False)
+<br/>root.minsize(300, 200)                 # Minimum size when resizing
 
-# COLORS & APPEARANCE
-root.config(bg="lightblue")            # Background color
+<br/># COLORS & APPEARANCE
+<br/>root.config(bg="lightblue")            # Background color
 
-# WINDOW POSITION (optional)
-root.geometry("500x400+100+50")        # +100 = 100px from left, +50 = 50px from top
+<br/># WINDOW POSITION (optional)
+<br/>root.geometry("500x400+100+50")        # +100 = 100px from left, +50 = 50px from top
 
-root.mainloop()</div>
+<br/>root.mainloop()</div>
 
       <h3 style="margin-top: 32px;">Available Window Methods</h3>
       <table class="properties-table">
@@ -768,14 +769,14 @@ root.mainloop()</div>
       <h3 style="margin-top: 32px;">Color Options</h3>
       <p>You can use color names or hex codes:</p>
       <div class="code-block">
-# Named colors (easy to read)
-root.config(bg="lightblue")
-root.config(bg="white")
-root.config(bg="darkgreen")
+<br/># Named colors (easy to read)
+<br/>root.config(bg="lightblue")
+<br/>root.config(bg="white")
+<br/>root.config(bg="darkgreen")
 
-# Hex codes (precise)
-root.config(bg="#FF5733")
-root.config(bg="#00FF00")
+<br/># Hex codes (precise)
+<br/>root.config(bg="#FF5733")
+<br/>root.config(bg="#00FF00")
       </div>
 
       <h3 style="margin-top: 32px;">Geometry Format Explained</h3>
@@ -794,9 +795,9 @@ root.config(bg="#00FF00")
 
       <p style="margin-top: 16px;"><strong>Examples:</strong></p>
       <div class="code-block">
-"400x300"              # 400 wide, 300 tall
-"600x500+100+50"       # 600 wide, 500 tall, at position (100,50)
-"800x600"              # 800 wide, 600 tall, auto position
+<br/>"400x300"              # 400 wide, 300 tall
+<br/>"600x500+100+50"       # 600 wide, 500 tall, at position (100,50)
+<br/>"800x600"              # 800 wide, 600 tall, auto position
       </div>
     </div>
 
@@ -809,15 +810,15 @@ root.config(bg="#00FF00")
     <div class="content-block">
       <h3>Understanding the Execution Flow</h3>
       <div class="code-block">
-1. Import tkinter components
-    ↓
-2. Create root window (Tk())
-    ↓
-3. Configure window (title, size, colors)
-    ↓
-4. Add widgets (buttons, labels, etc.) - WE'LL DO THIS IN DAY 2
-    ↓
-5. Run mainloop() - KEEPS WINDOW OPEN AND RESPONSIVE
+<br/>1. Import tkinter components
+        <br/> ↓
+<br/>2. Create root window (Tk())
+        <br/> ↓
+<br/>3. Configure window (title, size, colors)
+        <br/> ↓
+<br/>4. Add widgets (buttons, labels, etc.) - WE'LL DO THIS IN DAY 2
+        <br/> ↓
+<br/>5. Run mainloop() - KEEPS WINDOW OPEN AND RESPONSIVE
       </div>
 
       <div class="key-points">
@@ -832,18 +833,18 @@ root.config(bg="#00FF00")
       <h3 style="margin-top: 32px;">Complete Example</h3>
       <div class="code-block">from tkinter import Tk
 
-# Step 1: Create main window
-root = Tk()
+<br/># Step 1: Create main window
+<br/>root = Tk()
 
-# Step 2: Configure window
-root.title("My First Application")
-root.geometry("600x400")
-root.config(bg="lightgray")
-root.resizable(False, False)
-root.minsize(400, 300)
+<br/># Step 2: Configure window
+<br/>root.title("My First Application")
+<br/>root.geometry("600x400")
+<br/>root.config(bg="lightgray")
+<br/>root.resizable(False, False)
+<br/>root.minsize(400, 300)
 
-# Step 3: Run application
-root.mainloop()
+<br/># Step 3: Run application
+<br/>root.mainloop()
       </div>
     </div>
 
@@ -889,22 +890,22 @@ root.mainloop()
       <h3 style="margin-top: 32px;">Solution Template</h3>
       <div class="code-block">from tkinter import Tk
 
-root = Tk()
+<br/>root = Tk()
 
-# Add your configuration here
-# root.title(...)
-# root.geometry(...)
-# root.config(...)
-# root.resizable(...)
+<br/># Add your configuration here
+<br/># root.title(...)
+<br/># root.geometry(...)
+<br/># root.config(...)
+<br/># root.resizable(...)
 
-root.mainloop()
+<br/>root.mainloop()
       </div>
     </div>
 
     <!-- NAVIGATION -->
     <div class="nav-tabs-bottom">
       <div></div>
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Tkinter_Day_2_Basic_Widgets_Part_1.html" class="next">
+      <a href="day2_widgets1.html" class="next">
         Day 2: Basic Widgets →
       </a>
     </div>
