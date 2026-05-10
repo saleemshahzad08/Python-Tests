@@ -738,7 +738,7 @@
 <br/>root.geometry("400x300")
 
 <br/><br/>def on_click():
-<br/> &emsp;print("Button was clicked!")
+<br/> &emsp;&emsp;print("Button was clicked!")
 
 <br/><br/>button = Button(root, text="Click Me!", command=on_click)
 <br/>button.pack()
@@ -770,7 +770,7 @@
       <p>What if you want to pass arguments to your function?</p>
       <div class="code-block">
 <br/>def greet(name):
-  <br/> print(f"Hello, {name}!")
+  <br/> &emsp;&emsp;print(f"Hello, {name}!")
 
 <br/><br/># Using lambda to pass arguments
 <br/><br/>button = Button(root, text="Greet", command=lambda: greet("Alice"))
@@ -815,7 +815,7 @@
 
 <br/><br/># Button 3: With function
 <br/>def show_message():
-<br/> &emsp;print("Button 3 clicked!")
+<br/> &emsp;&emsp;&emsp;print("Button 3 clicked!")
 
 <br/><br/>button3 = Button(
     root,
@@ -956,8 +956,8 @@
 <br/>entry.pack()
 
 <br/><br/>def get_text():
-<br/>    user_input = entry.get()
-<br/>    print(f"You typed: {user_input}")
+<br/>&emsp;&emsp;user_input = entry.get()
+<br/>&emsp;&emsp;print(f"You typed: {user_input}")
 
 <br/><br/>button = Button(root, text="Submit", command=get_text)
 <br/>button.pack()
@@ -991,10 +991,10 @@
 
 <br/><br/># Getting values from all entries
 <br/>def collect_data():
-    <br/>name = entry1.get()
-    <br/>text = entry2.get()
-    <br/>password = entry3.get()
-    <br/>print(f"Name: {name}, Text: {text}, Password length: {len(password)}")
+    <br/>&emsp;&emsp;name = entry1.get()
+    <br/>&emsp;&emsp;text = entry2.get()
+    <br/>&emsp;&emsp;password = entry3.get()
+    <br/>&emsp;&emsp;print(f"Name: {name}, Text: {text}, Password length: {len(password)}")
 
 <br/><br/>button = Button(root, text="Collect", command=collect_data)
 <br/>button.pack()
@@ -1109,17 +1109,17 @@
 
 <br/><br/># Submit Button
 <br/>def submit_form():
-    <br/>name = name_entry.get()
-    <br/>email = email_entry.get()
-    <br/>password = password_entry.get()
+    <br/>&emsp;&emsp;name = name_entry.get()
+    <br/>&emsp;&emsp;email = email_entry.get()
+    <br/>&emsp;&emsp;password = password_entry.get()
     
-<br/>    if name and email and password:
-      <br/>  print(f"Name: {name}")
-      <br/>  print(f"Email: {email}")
-      <br/>  print(f"Password: {'*' * len(password)}")
-      <br/>  print("Form submitted!")
-    <br/>else:
-        <br/>print("Please fill all fields!")
+<br/>&emsp;&emsp;if name and email and password:
+      <br/>&emsp;&emsp;&emsp;&emsp;print(f"Name: {name}")
+      <br/>&emsp;&emsp;&emsp;&emsp;print(f"Email: {email}")
+      <br/>&emsp;&emsp;&emsp;&emsp;print(f"Password: {'*' * len(password)}")
+      <br/>&emsp;&emsp;&emsp;&emsp;print("Form submitted!")
+    <br/>&emsp;&emsp;else:
+        <br/>&emsp;&emsp;&emsp;&emsp;print("Please fill all fields!")
 
 <br/><br/>submit_button = Button(root, text="Submit", command=submit_form, bg="green", fg="white", font=("Arial", 12), padx=20, pady=10)
 <br/>submit_button.pack(pady=15)
