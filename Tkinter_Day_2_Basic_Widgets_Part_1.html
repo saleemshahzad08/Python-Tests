@@ -545,28 +545,28 @@
 
       <h3 style="margin-top: 32px;">Widget Hierarchy</h3>
       <div class="code-block">
-Tk() [Main Window]
-  ├─ Label (displays text/images)
-  ├─ Button (clickable)
-  ├─ Entry (single-line text input)
-  ├─ Text (multi-line text)
-  ├─ Frame (container for other widgets)
-  ├─ Listbox (list of items)
-  └─ ... and many more
+<br/>Tk() [Main Window]
+<br/>  ├─ Label (displays text/images)
+<br/>  ├─ Button (clickable)
+<br/>  ├─ Entry (single-line text input)
+<br/>  ├─ Text (multi-line text)
+<br/>  ├─ Frame (container for other widgets)
+<br/>  ├─ Listbox (list of items)
+<br/>  └─ ... and many more
       </div>
 
       <h3 style="margin-top: 32px;">Basic Widget Creation Pattern</h3>
       <p>All widgets follow the same pattern:</p>
       <div class="code-block">
-widget = WidgetName(parent, property1=value1, property2=value2)
-widget.pack()  # or .grid() or .place() - makes it visible
+<br/>widget = WidgetName(parent, property1=value1, property2=value2)
+<br/>widget.pack()  # or .grid() or .place() - makes it visible
       </div>
 
       <div class="example-box">
         <span class="label">Real Example</span>
         <div class="code-block" style="margin: 8px 0;">
-label = Label(root, text="Hello", font=("Arial", 14))
-label.pack()
+<br/>label = Label(root, text="Hello", font=("Arial", 14))
+<br/>label.pack()
         </div>
       </div>
     </div>
@@ -583,49 +583,49 @@ label.pack()
 
       <h3 style="margin-top: 24px;">Creating a Simple Label</h3>
       <div class="code-block">
-from tkinter import Tk, Label
+<br/>from tkinter import Tk, Label
 
-root = Tk()
-root.geometry("400x300")
+<br/><br/>root = Tk()
+<br/>root.geometry("400x300")
 
-label = Label(root, text="Hello, World!")
-label.pack()
+<br/><br/>label = Label(root, text="Hello, World!")
+<br/>label.pack()
 
-root.mainloop()
+<br/><br/>root.mainloop()
       </div>
 
       <h3 style="margin-top: 24px;">Customizing Labels</h3>
       <div class="code-block">
-from tkinter import Tk, Label
+<br/>from tkinter import Tk, Label
 
-root = Tk()
-root.geometry("400x300")
-root.config(bg="white")
+<br/><br/>root = Tk()
+<br/>root.geometry("400x300")
+<br/>root.config(bg="white")
 
-# Label 1: Basic
-label1 = Label(root, text="Basic Label")
-label1.pack()
+<br/><br/># Label 1: Basic
+<br/>label1 = Label(root, text="Basic Label")
+<br/>label1.pack()
 
-# Label 2: With Font
-label2 = Label(
+<br/><br/># Label 2: With Font
+<br/>label2 = Label(
     root, 
     text="Big Bold Text",
     font=("Arial", 16, "bold")
 )
-label2.pack()
+<br/>label2.pack()
 
-# Label 3: With Colors
-label3 = Label(
+<br/><br/># Label 3: With Colors
+<br/>label3 = Label(
     root,
     text="Colored Label",
     font=("Courier", 12),
     fg="white",
     bg="darkblue"
 )
-label3.pack()
+<br/>label3.pack()
 
-# Label 4: With Padding
-label4 = Label(
+<br/><br/># Label 4: With Padding
+<br/>label4 = Label(
     root,
     text="Padded Label",
     font=("Arial", 10),
@@ -633,9 +633,9 @@ label4 = Label(
     padx=20,
     pady=10
 )
-label4.pack()
+<br/>label4.pack()
 
-root.mainloop()
+<br/><br/>root.mainloop()
       </div>
 
       <h3 style="margin-top: 24px;">Label Properties</h3>
@@ -712,10 +712,10 @@ root.mainloop()
 
       <p style="margin-top: 16px;"><strong>Font Examples:</strong></p>
       <div class="code-block">
-font=("Arial", 14)              # Size only
-font=("Arial", 14, "bold")      # Bold
-font=("Arial", 14, "italic")    # Italic
-font=("Arial", 14, "bold italic")  # Bold & Italic
+<br/>font=("Arial", 14)              # Size only
+<br/>font=("Arial", 14, "bold")      # Bold
+<br/>font=("Arial", 14, "italic")    # Italic
+<br/>font=("Arial", 14, "bold italic")  # Bold & Italic
       </div>
     </div>
 
@@ -731,19 +731,19 @@ font=("Arial", 14, "bold italic")  # Bold & Italic
 
       <h3 style="margin-top: 24px;">Creating a Simple Button</h3>
       <div class="code-block">
-from tkinter import Tk, Button
+<br/>from tkinter import Tk, Button
 
-root = Tk()
-root.title("Button Demo")
-root.geometry("400x300")
+<br/><br/>root = Tk()
+<br/>root.title("Button Demo")
+<br/>root.geometry("400x300")
 
-def on_click():
-    print("Button was clicked!")
+<br/><br/>def on_click():
+<br/>    print("Button was clicked!")
 
-button = Button(root, text="Click Me!", command=on_click)
-button.pack()
+<br/><br/>button = Button(root, text="Click Me!", command=on_click)
+<br/>button.pack()
 
-root.mainloop()
+<br/><br/>root.mainloop()
       </div>
 
       <div class="example-box">
@@ -759,22 +759,22 @@ root.mainloop()
       <h3 style="margin-top: 24px;">Understanding the command Parameter</h3>
       <p>The command parameter tells the button what function to run when clicked.</p>
       <div class="code-block">
-def greet():
-    print("Hello!")
+<br/>def greet():
+<br/>    print("Hello!")
 
-button = Button(root, text="Say Hello", command=greet)
-button.pack()
+<br/><br/>button = Button(root, text="Say Hello", command=greet)
+<br/>button.pack()
       </div>
 
       <h3 style="margin-top: 24px;">Button with Arguments (Using Lambda)</h3>
       <p>What if you want to pass arguments to your function?</p>
       <div class="code-block">
-def greet(name):
-    print(f"Hello, {name}!")
+<br/>def greet(name):
+  <br/> print(f"Hello, {name}!")
 
-# Using lambda to pass arguments
-button = Button(root, text="Greet", command=lambda: greet("Alice"))
-button.pack()
+<br/><br/># Using lambda to pass arguments
+<br/><br/>button = Button(root, text="Greet", command=lambda: greet("Alice"))
+<br/>button.pack()
       </div>
 
       <div class="example-box">
@@ -790,18 +790,18 @@ button.pack()
 
       <h3 style="margin-top: 24px;">Customizing Buttons</h3>
       <div class="code-block">
-from tkinter import Tk, Button
+<br/>from tkinter import Tk, Button
 
-root = Tk()
-root.title("Button Customization")
-root.geometry("400x300")
+<br/><br/>root = Tk()
+<br/>root.title("Button Customization")
+<br/>root.geometry("400x300")
 
-# Button 1: Basic
-button1 = Button(root, text="Button 1")
-button1.pack()
+<br/><br/># Button 1: Basic
+<br/>button1 = Button(root, text="Button 1")
+<br/>button1.pack()
 
-# Button 2: With styling
-button2 = Button(
+<br/><br/># Button 2: With styling
+<br/>button2 = Button(
     root,
     text="Styled Button",
     font=("Arial", 12),
@@ -811,13 +811,13 @@ button2 = Button(
     pady=10,
     width=20
 )
-button2.pack()
+<br/>button2.pack()
 
-# Button 3: With function
-def show_message():
-    print("Button 3 clicked!")
+<br/><br/># Button 3: With function
+<br/>def show_message():
+    <br/>print("Button 3 clicked!")
 
-button3 = Button(
+<br/><br/>button3 = Button(
     root,
     text="Click for Message",
     command=show_message,
@@ -825,17 +825,17 @@ button3 = Button(
     fg="white",
     relief="raised"
 )
-button3.pack()
+<br/>button3.pack()
 
-# Button 4: Disabled button
-button4 = Button(
+<br/><br/># Button 4: Disabled button
+<br/>button4 = Button(
     root,
     text="Disabled Button",
     state="disabled"
 )
-button4.pack()
+<br/>button4.pack()
 
-root.mainloop()
+<br/><br/>root.mainloop()
       </div>
 
       <h3 style="margin-top: 24px;">Button Properties</h3>
@@ -905,11 +905,11 @@ root.mainloop()
       <h3 style="margin-top: 24px;">Relief Options</h3>
       <p>The relief property controls the button's 3D appearance:</p>
       <div class="code-block">
-relief="raised"   # Button appears raised/3D
-relief="sunken"   # Button appears pressed/indented
-relief="flat"     # No 3D effect, flat appearance
-relief="ridge"    # Ridge effect
-relief="groove"   # Groove effect
+<br/>relief="raised"   # Button appears raised/3D
+<br/>relief="sunken"   # Button appears pressed/indented
+<br/>relief="flat"     # No 3D effect, flat appearance
+<br/>relief="ridge"    # Ridge effect
+<br/>relief="groove"   # Groove effect
       </div>
     </div>
 
@@ -925,16 +925,16 @@ relief="groove"   # Groove effect
 
       <h3 style="margin-top: 24px;">Creating a Simple Entry</h3>
       <div class="code-block">
-from tkinter import Tk, Entry
+<br/>from tkinter import Tk, Entry
 
-root = Tk()
-root.title("Entry Demo")
-root.geometry("400x300")
+<br/><br/>root = Tk()
+<br/>root.title("Entry Demo")
+<br/>root.geometry("400x300")
 
-entry = Entry(root)
-entry.pack()
+<br/><br/>entry = Entry(root)
+<br/>entry.pack()
 
-root.mainloop()
+<br/><br/>root.mainloop()
       </div>
 
       <div class="example-box">
@@ -946,60 +946,60 @@ root.mainloop()
 
       <h3 style="margin-top: 24px;">Getting Text from Entry (.get())</h3>
       <div class="code-block">
-from tkinter import Tk, Entry, Button
+<br/>from tkinter import Tk, Entry, Button
 
-root = Tk()
-root.title("Entry Demo")
-root.geometry("400x300")
+<br/><br/>root = Tk()
+<br/>root.title("Entry Demo")
+<br/>root.geometry("400x300")
 
-entry = Entry(root)
-entry.pack()
+<br/><br/>entry = Entry(root)
+<br/>entry.pack()
 
-def get_text():
-    user_input = entry.get()
-    print(f"You typed: {user_input}")
+<br/><br/>def get_text():
+<br/>    user_input = entry.get()
+<br/>    print(f"You typed: {user_input}")
 
-button = Button(root, text="Submit", command=get_text)
-button.pack()
+<br/><br/>button = Button(root, text="Submit", command=get_text)
+<br/>button.pack()
 
-root.mainloop()
+<br/><br/>root.mainloop()
       </div>
 
       <h3 style="margin-top: 24px;">Customizing Entry</h3>
       <div class="code-block">
-from tkinter import Tk, Entry, Button, Label
+<br/>from tkinter import Tk, Entry, Button, Label
 
-root = Tk()
-root.title("Entry Customization")
-root.geometry("400x300")
+<br/><br/>root = Tk()
+<br/>root.title("Entry Customization")
+<br/>root.geometry("400x300")
 
-# Entry 1: Basic with width
-label1 = Label(root, text="Name:")
-label1.pack()
+<br/><br/># Entry 1: Basic with width
+<br/>label1 = Label(root, text="Name:")
+<br/>label1.pack()
 
-entry1 = Entry(root, width=30)
-entry1.pack()
+<br/><br/>entry1 = Entry(root, width=30)
+<br/>entry1.pack()
 
-# Entry 2: With default text
-entry2 = Entry(root)
-entry2.insert(0, "Type here...")  # 0 = position, then text
-entry2.pack()
+<br/><br/># Entry 2: With default text
+<br/>entry2 = Entry(root)
+<br/>entry2.insert(0, "Type here...")  # 0 = position, then text
+<br/>entry2.pack()
 
-# Entry 3: Password field (masked)
-entry3 = Entry(root, show="*")  # Shows asterisks instead of text
-entry3.pack()
+<br/><br/># Entry 3: Password field (masked)
+<br/>entry3 = Entry(root, show="*")  # Shows asterisks instead of text
+<br/>entry3.pack()
 
-# Getting values from all entries
-def collect_data():
-    name = entry1.get()
-    text = entry2.get()
-    password = entry3.get()
-    print(f"Name: {name}, Text: {text}, Password length: {len(password)}")
+<br/><br/># Getting values from all entries
+<br/>def collect_data():
+    <br/>name = entry1.get()
+    <br/>text = entry2.get()
+    <br/>password = entry3.get()
+    <br/>print(f"Name: {name}, Text: {text}, Password length: {len(password)}")
 
-button = Button(root, text="Collect", command=collect_data)
-button.pack()
+<br/><br/>button = Button(root, text="Collect", command=collect_data)
+<br/>button.pack()
 
-root.mainloop()
+<br/><br/>root.mainloop()
       </div>
 
       <h3 style="margin-top: 24px;">Entry Methods</h3>
@@ -1075,70 +1075,56 @@ root.mainloop()
     <div class="content-block">
       <h3>Simple Form with All 3 Widgets</h3>
       <div class="code-block">
-from tkinter import Tk, Label, Entry, Button
+<br/>from tkinter import Tk, Label, Entry, Button
 
-root = Tk()
-root.title("User Registration Form")
-root.geometry("400x300")
-root.config(bg="lightgray")
+<br/><br/>root = Tk()
+<br/>root.title("User Registration Form")
+<br/>root.geometry("400x300")
+<br/>root.config(bg="lightgray")
 
-# Title
-title = Label(
-    root,
-    text="Registration Form",
-    font=("Arial", 18, "bold"),
-    bg="lightgray"
-)
-title.pack(pady=10)
+<br/><br/># Title
+<br/>title = Label(root, text="Registration Form", font=("Arial", 18, "bold"), bg="lightgray")
+<br/>title.pack(pady=10)
 
-# Name Label & Entry
-name_label = Label(root, text="Name:", bg="lightgray", font=("Arial", 10))
-name_label.pack()
+<br/><br/># Name Label & Entry
+<br/>name_label = Label(root, text="Name:", bg="lightgray", font=("Arial", 10))
+<br/>name_label.pack()
 
-name_entry = Entry(root, width=30, font=("Arial", 10))
-name_entry.pack(pady=5)
+<br/><br/>name_entry = Entry(root, width=30, font=("Arial", 10))
+<br/>name_entry.pack(pady=5)
 
-# Email Label & Entry
-email_label = Label(root, text="Email:", bg="lightgray", font=("Arial", 10))
-email_label.pack()
+<br/><br/># Email Label & Entry
+<br/>email_label = Label(root, text="Email:", bg="lightgray", font=("Arial", 10))
+<br/>email_label.pack()
 
-email_entry = Entry(root, width=30, font=("Arial", 10))
-email_entry.pack(pady=5)
+<br/><br/>email_entry = Entry(root, width=30, font=("Arial", 10))
+<br/>email_entry.pack(pady=5)
 
-# Password Label & Entry
-password_label = Label(root, text="Password:", bg="lightgray", font=("Arial", 10))
-password_label.pack()
+<br/><br/># Password Label & Entry
+<br/>password_label = Label(root, text="Password:", bg="lightgray", font=("Arial", 10))
+<br/>password_label.pack()
 
-password_entry = Entry(root, width=30, font=("Arial", 10), show="*")
-password_entry.pack(pady=5)
+<br/><br/>password_entry = Entry(root, width=30, font=("Arial", 10), show="*")
+<br/>password_entry.pack(pady=5)
 
-# Submit Button
-def submit_form():
-    name = name_entry.get()
-    email = email_entry.get()
-    password = password_entry.get()
+<br/><br/># Submit Button
+<br/>def submit_form():
+    <br/>name = name_entry.get()
+    <br/>email = email_entry.get()
+    <br/>password = password_entry.get()
     
-    if name and email and password:
-        print(f"Name: {name}")
-        print(f"Email: {email}")
-        print(f"Password: {'*' * len(password)}")
-        print("Form submitted!")
-    else:
-        print("Please fill all fields!")
+<br/>    if name and email and password:
+      <br/>  print(f"Name: {name}")
+      <br/>  print(f"Email: {email}")
+      <br/>  print(f"Password: {'*' * len(password)}")
+      <br/>  print("Form submitted!")
+    <br/>else:
+        <br/>print("Please fill all fields!")
 
-submit_button = Button(
-    root,
-    text="Submit",
-    command=submit_form,
-    bg="green",
-    fg="white",
-    font=("Arial", 12),
-    padx=20,
-    pady=10
-)
-submit_button.pack(pady=15)
+<br/><br/>submit_button = Button(root, text="Submit", command=submit_form, bg="green", fg="white", font=("Arial", 12), padx=20, pady=10)
+<br/>submit_button.pack(pady=15)
 
-root.mainloop()
+<br/><br/>root.mainloop()
       </div>
     </div>
 
