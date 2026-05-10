@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 7: Capstone Project — Tkinter Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #080a10; --surface: #0e1118; --card: #121620; --border: #1e2435; --border-bright: #2a3350; --gold: #f5c842; --cyan: #3df5c8; --tk-accent: #a78bfa; --text: #e2e8f8; --muted: #5a6380; --radius: 14px; --font-mono: 'Space Mono', monospace; --font-body: 'Outfit', sans-serif; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; z-index: 0; }
+  .glow-1 { position: fixed; top: -200px; left: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .glow-2 { position: fixed; bottom: -150px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(61,245,200,0.05) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(8,10,16,0.85); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 14px 0; }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-family: var(--font-mono); font-size: 15px; color: var(--gold); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo .snake { font-size: 20px; }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab { font-family: var(--font-mono); font-size: 12px; padding: 7px 18px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px; }
+  .nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.04); border-color: var(--border); }
+  .nav-tab.active { color: var(--tk-accent); background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.3); }
+  .nav-tab .tab-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.7; }
+  .hero { padding: 60px 0 40px; animation: fadeUp 0.7s ease both; }
+  .hero-eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tk-accent); margin-bottom: 16px; display: inline-flex; align-items: center; gap: 8px; }
+  .hero h1 { font-size: 48px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; color: var(--text); }
+  .hero h1 .accent { color: var(--tk-accent); }
+  .hero-sub { font-size: 16px; color: var(--muted); font-weight: 300; max-width: 600px; line-height: 1.6; }
+  .breadcrumb { display: flex; gap: 8px; margin-bottom: 24px; font-size: 13px; color: var(--muted); font-family: var(--font-mono); }
+  .breadcrumb a { color: var(--tk-accent); text-decoration: none; }
+  main { padding: 40px 0; }
+  .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; margin-top: 48px; }
+  .section-title { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tk-accent); white-space: nowrap; }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-bright), transparent); }
+  .content-block { margin-bottom: 32px; }
+  .content-block h3 { font-size: 22px; margin-bottom: 12px; color: var(--text); }
+  .content-block p { color: var(--muted); line-height: 1.7; margin-bottom: 16px; font-size: 15px; }
+  .code-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin: 16px 0; overflow-x: auto; font-family: var(--font-mono); font-size: 13px; color: var(--cyan); line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; }
+  .example-box { background: rgba(167,139,250,0.05); border-left: 3px solid var(--tk-accent); border-radius: var(--radius); padding: 20px; margin: 20px 0; }
+  .example-box .label { font-family: var(--font-mono); font-size: 11px; color: var(--tk-accent); text-transform: uppercase; margin-bottom: 8px; display: block; }
+  .properties-table { width: 100%; border-collapse: collapse; margin: 20px 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .properties-table th { background: rgba(167,139,250,0.1); padding: 12px 16px; text-align: left; font-family: var(--font-mono); font-size: 12px; color: var(--tk-accent); border-bottom: 1px solid var(--border); }
+  .properties-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .properties-table tr:hover { background: rgba(167,139,250,0.03); }
+  .key-points { background: rgba(61,245,200,0.05); border-left: 3px solid var(--cyan); border-radius: var(--radius); padding: 20px; margin: 20px 0; }
+  .key-points ul { list-style: none; padding: 0; }
+  .key-points li { padding-left: 24px; margin-bottom: 12px; position: relative; color: var(--muted); }
+  .key-points li:before { content: '✓'; position: absolute; left: 0; color: var(--cyan); font-weight: bold; }
+  .nav-tabs-bottom { display: flex; gap: 12px; margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--border); justify-content: space-between; }
+  .nav-tabs-bottom a { padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); color: var(--muted); text-decoration: none; transition: all 0.2s; font-size: 13px; font-family: var(--font-mono); display: flex; align-items: center; gap: 8px; }
+  .nav-tabs-bottom a:hover { color: var(--tk-accent); border-color: var(--tk-accent); background: rgba(167,139,250,0.05); }
+  .nav-tabs-bottom a.next { margin-left: auto; }
+  footer { padding: 40px 0; border-top: 1px solid var(--border); text-align: center; margin-top: 60px; }
+  .footer-logo { font-family: var(--font-mono); font-size: 14px; color: var(--gold); margin-bottom: 8px; }
+  .footer-sub { font-size: 13px; color: var(--muted); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><span class="snake">🐍</span><span>Tkinter<span style="color:var(--text);">Notes</span></span></a>
+      <div class="nav-tabs">
+        <a href="index.html" class="nav-tab"><span class="tab-dot"></span>Home</a>
+        <a href="day6_events.html" class="nav-tab"><span class="tab-dot"></span>Day 6</a>
+        <a href="#" class="nav-tab active"><span class="tab-dot"></span>Day 7</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Day 7: Capstone Project</span></div>
+    <div class="hero-eyebrow">Lesson 7 of 7</div>
+    <h1>Capstone <span class="accent">Project</span></h1>
+    <p class="hero-sub">Build a complete Note-Taking Application combining all 7 days of learning. Learn file I/O, class-based architecture, and professional code organization.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+
+    <div class="section-header">
+      <span class="section-title">// project overview</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>What You'll Build</h3>
+      <p>A <strong>professional Note-Taking Application</strong> that demonstrates ALL concepts from Days 1-6:</p>
+
+      <div class="key-points">
+        <ul>
+          <li>✅ All tkinter widgets (Label, Button, Entry, Text, Frame, Listbox, etc.)</li>
+          <li>✅ Grid layout for professional organization</li>
+          <li>✅ Menu system (File, Edit, Help menus)</li>
+          <li>✅ File I/O (save/load notes)</li>
+          <li>✅ Event handling (keyboard shortcuts, buttons)</li>
+          <li>✅ Dialog boxes (message boxes, file dialogs)</li>
+          <li>✅ Class-based architecture</li>
+          <li>✅ Error handling with try-except</li>
+        </ul>
+      </div>
+
+      <h3 style="margin-top: 32px;">Key Features</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Feature</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><strong>Menu Bar</strong></td>
+          <td>File (New, Open, Save, Exit) | Edit (Cut, Copy, Paste) | Help</td>
+        </tr>
+        <tr>
+          <td><strong>Toolbar</strong></td>
+          <td>Quick action buttons (New, Open, Save, Find)</td>
+        </tr>
+        <tr>
+          <td><strong>Text Editor</strong></td>
+          <td>Large text area for writing and editing notes</td>
+        </tr>
+        <tr>
+          <td><strong>Status Bar</strong></td>
+          <td>Shows filename, word count, character count</td>
+        </tr>
+        <tr>
+          <td><strong>File Operations</strong></td>
+          <td>New, Open, Save, Save As functionality</td>
+        </tr>
+        <tr>
+          <td><strong>Find & Replace</strong></td>
+          <td>Search and replace text in document</td>
+        </tr>
+        <tr>
+          <td><strong>Keyboard Shortcuts</strong></td>
+          <td>Ctrl+N, Ctrl+O, Ctrl+S, Ctrl+F, Ctrl+Q</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// class-based architecture</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Why Use Classes?</h3>
+      <p>Classes help organize code professionally and keep related functions together:</p>
+
+      <div class="code-block">class NoteApp:
+    def __init__(self, root):
+        # Initialize all UI components
+        self.root = root
+        self.current_file = None
+        self.file_changed = False
+        
+        # Setup UI
+        self.create_menu()
+        self.create_toolbar()
+        self.create_text_area()
+        self.create_status_bar()
+    
+    def create_menu(self):
+        # Build menu system
+        pass
+    
+    def create_text_area(self):
+        # Build text editor
+        pass
+    
+    def save_file(self):
+        # Save functionality
+        pass
+    
+    def on_text_change(self):
+        # Handle text changes
+        pass
+      </div>
+
+      <h3 style="margin-top: 24px;">Benefits of Class-Based Design</h3>
+      <div class="example-box">
+        <span class="label">Advantages</span>
+        <p style="margin: 12px 0 0 0; color: var(--text);">
+          ✅ Organize related functionality together
+          <br/>✅ Share variables (self.current_file, self.file_changed)
+          <br/>✅ Professional, scalable code
+          <br/>✅ Easy to extend and maintain
+          <br/>✅ Clear separation of concerns
+        </p>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// file i/o operations</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Reading Files</h3>
+      <div class="code-block">try:
+    with open(file_path, "r") as file:
+        content = file.read()
+        # Do something with content
+except FileNotFoundError:
+    messagebox.showerror("Error", "File not found")
+except Exception as e:
+    messagebox.showerror("Error", f"Cannot open: {str(e)}")
+      </div>
+
+      <h3 style="margin-top: 24px;">Writing Files</h3>
+      <div class="code-block">try:
+    with open(file_path, "w") as file:
+        file.write(content)
+    messagebox.showinfo("Success", "File saved!")
+except Exception as e:
+    messagebox.showerror("Error", f"Cannot save: {str(e)}")
+      </div>
+
+      <h3 style="margin-top: 24px;">File Dialog Integration</h3>
+      <div class="code-block">from tkinter import filedialog
+
+def open_file(self):
+    file_path = filedialog.askopenfilename(
+        title="Open File",
+        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+    )
+    if file_path:
+        # Open and read file
+        pass
+
+def save_as_file(self):
+    file_path = filedialog.asksaveasfilename(
+        title="Save As",
+        defaultextension=".txt",
+        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+    )
+    if file_path:
+        # Save file with new name
+        pass
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// menu system implementation</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Creating Menus</h3>
+      <div class="code-block">def create_menu(self):
+    menubar = Menu(self.root)
+    self.root.config(menu=menubar)
+    
+    # FILE MENU
+    file_menu = Menu(menubar, tearoff=0)
+    menubar.add_cascade(label="File", menu=file_menu)
+    file_menu.add_command(label="New", command=self.new_file, 
+                         accelerator="Ctrl+N")
+    file_menu.add_command(label="Open", command=self.open_file, 
+                         accelerator="Ctrl+O")
+    file_menu.add_command(label="Save", command=self.save_file, 
+                         accelerator="Ctrl+S")
+    file_menu.add_separator()
+    file_menu.add_command(label="Exit", command=self.exit_app, 
+                         accelerator="Ctrl+Q")
+    
+    # EDIT MENU
+    edit_menu = Menu(menubar, tearoff=0)
+    menubar.add_cascade(label="Edit", menu=edit_menu)
+    edit_menu.add_command(label="Cut", command=self.cut_text)
+    edit_menu.add_command(label="Copy", command=self.copy_text)
+    edit_menu.add_command(label="Paste", command=self.paste_text)
+    edit_menu.add_separator()
+    edit_menu.add_command(label="Find", command=self.find_text, 
+                         accelerator="Ctrl+F")
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// keyboard shortcuts</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Binding Keyboard Shortcuts</h3>
+      <div class="code-block">def create_menu(self):
+    # ... menu creation ...
+    
+    # Keyboard bindings
+    self.root.bind("<Control-n>", lambda e: self.new_file())
+    self.root.bind("<Control-o>", lambda e: self.open_file())
+    self.root.bind("<Control-s>", lambda e: self.save_file())
+    self.root.bind("<Control-q>", lambda e: self.exit_app())
+    self.root.bind("<Control-f>", lambda e: self.find_text())
+      </div>
+
+      <h3 style="margin-top: 24px;">Common Shortcut Keys</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Shortcut</th>
+          <th>Action</th>
+        </tr>
+        <tr>
+          <td>Ctrl+N</td>
+          <td>New File</td>
+        </tr>
+        <tr>
+          <td>Ctrl+O</td>
+          <td>Open File</td>
+        </tr>
+        <tr>
+          <td>Ctrl+S</td>
+          <td>Save File</td>
+        </tr>
+        <tr>
+          <td>Ctrl+F</td>
+          <td>Find Text</td>
+        </tr>
+        <tr>
+          <td>Ctrl+H</td>
+          <td>Replace Text</td>
+        </tr>
+        <tr>
+          <td>Ctrl+Q</td>
+          <td>Quit Application</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// project structure</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Complete Application Flow</h3>
+      <div class="code-block">import tkinter as tk
+from tkinter import Menu, filedialog, messagebox
+
+class NoteApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Note-Taking Application")
+        self.root.geometry("800x600")
+        
+        # Initialize variables
+        self.current_file = None
+        self.file_changed = False
+        
+        # Setup UI components
+        self.create_menu()
+        self.create_toolbar()
+        self.create_text_area()
+        self.create_status_bar()
+        
+        # Keyboard shortcuts
+        self.setup_shortcuts()
+        
+        # Update status
+        self.update_status()
+    
+    def create_menu(self):
+        # Menu creation code
+        pass
+    
+    def create_toolbar(self):
+        # Toolbar buttons
+        pass
+    
+    def create_text_area(self):
+        # Main text widget
+        pass
+    
+    def create_status_bar(self):
+        # Status bar at bottom
+        pass
+    
+    def setup_shortcuts(self):
+        # Keyboard bindings
+        pass
+    
+    def new_file(self):
+        # New file logic
+        pass
+    
+    def open_file(self):
+        # Open file logic
+        pass
+    
+    def save_file(self):
+        # Save file logic
+        pass
+    
+    def update_status(self):
+        # Update status bar
+        pass
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = NoteApp(root)
+    root.mainloop()
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// completion summary</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>You've Learned</h3>
+      <div class="key-points">
+        <ul>
+          <li>✅ Window creation and configuration (Day 1)</li>
+          <li>✅ All basic widgets: Label, Button, Entry (Day 2)</li>
+          <li>✅ Multi-line widgets: Text, Frame, Listbox, Checkbutton, Radiobutton (Day 3)</li>
+          <li>✅ Professional layouts: Grid, Pack, Place (Day 4)</li>
+          <li>✅ Advanced widgets: Combobox, Menu, Scale, Spinbox, Dialogs (Day 5)</li>
+          <li>✅ Event handling: Binding, Keyboard, Mouse, Lambda (Day 6)</li>
+          <li>✅ Complete application: File I/O, Classes, Professional Architecture (Day 7)</li>
+        </ul>
+      </div>
+
+      <h3 style="margin-top: 32px;">Skills Achieved</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Skill</th>
+          <th>Level</th>
+        </tr>
+        <tr>
+          <td>Create GUI windows</td>
+          <td>⭐⭐⭐⭐⭐ Expert</td>
+        </tr>
+        <tr>
+          <td>Use 13+ widgets</td>
+          <td>⭐⭐⭐⭐⭐ Expert</td>
+        </tr>
+        <tr>
+          <td>Professional layouts (Grid)</td>
+          <td>⭐⭐⭐⭐⭐ Expert</td>
+        </tr>
+        <tr>
+          <td>Event handling</td>
+          <td>⭐⭐⭐⭐⭐ Expert</td>
+        </tr>
+        <tr>
+          <td>File I/O operations</td>
+          <td>⭐⭐⭐⭐ Advanced</td>
+        </tr>
+        <tr>
+          <td>Menu systems</td>
+          <td>⭐⭐⭐⭐⭐ Expert</td>
+        </tr>
+        <tr>
+          <td>Dialog boxes</td>
+          <td>⭐⭐⭐⭐⭐ Expert</td>
+        </tr>
+        <tr>
+          <td>Class-based design</td>
+          <td>⭐⭐⭐⭐ Advanced</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// next steps after day 7</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Continue Your Learning Journey</h3>
+      <div class="example-box">
+        <span class="label">Short-Term (Next 2 weeks)</span>
+        <p style="margin: 12px 0 0 0; color: var(--text);">
+          🔹 Build more tkinter projects<br/>
+          🔹 Explore PyQt5 (professional framework)<br/>
+          🔹 Learn threading for responsive apps<br/>
+          🔹 Add SQLite database integration
+        </p>
+      </div>
+
+      <div class="example-box">
+        <span class="label">Medium-Term (Next month)</span>
+        <p style="margin: 12px 0 0 0; color: var(--text);">
+          🔹 Build a complete portfolio project<br/>
+          🔹 Study design patterns (MVC, MVP)<br/>
+          🔹 Learn web frameworks (Django/Flask)<br/>
+          🔹 Explore data visualization libraries
+        </p>
+      </div>
+
+      <h3 style="margin-top: 32px;">Resources for Continued Learning</h3>
+      <div class="code-block">Official Documentation:
+- Tkinter: https://docs.python.org/3/library/tkinter.html
+- PyQt5: https://www.riverbankcomputing.com/software/pyqt/
+- Python: https://docs.python.org/3/
+
+Frameworks & Libraries:
+- PySimpleGUI (simpler than tkinter)
+- PyQt5 (professional desktop apps)
+- Kivy (mobile apps)
+- PyGame (game development)
+
+Learning Platforms:
+- Real Python (detailed tutorials)
+- GeeksforGeeks (quick reference)
+- Stack Overflow (community help)
+- YouTube (video tutorials)
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// final project assignment</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>TASK 7: Note-Taking Application</h3>
+      <div class="example-box">
+        <span class="label">Your Final Assignment</span>
+        <p style="margin: 12px 0 0 0; color: var(--text);">
+          Build a complete Note-Taking Application that includes:
+          <br/><br/>
+          ✅ Menu bar (File: New, Open, Save, Exit) | (Edit: Cut, Copy, Paste) | (Help: About)<br/>
+          ✅ Toolbar with quick action buttons<br/>
+          ✅ Large text area for note writing<br/>
+          ✅ Status bar showing filename and statistics<br/>
+          ✅ File save/load functionality<br/>
+          ✅ Find & Replace functionality<br/>
+          ✅ Keyboard shortcuts (Ctrl+N, Ctrl+O, Ctrl+S, etc.)<br/>
+          ✅ Track unsaved changes<br/>
+          ✅ Professional error handling<br/>
+          ✅ Class-based architecture
+        </p>
+      </div>
+
+      <h3 style="margin-top: 24px;">Features Checklist</h3>
+      <div class="key-points">
+        <ul>
+          <li>✅ Application runs without errors</li>
+          <li>✅ All menu items work correctly</li>
+          <li>✅ Can create, open, and save files</li>
+          <li>✅ Find and replace functionality works</li>
+          <li>✅ Keyboard shortcuts are responsive</li>
+          <li>✅ Professional UI with proper styling</li>
+          <li>✅ Handles errors gracefully</li>
+          <li>✅ Code is organized with classes</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// congratulations!</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block" style="text-align: center;">
+      <h2 style="color: var(--gold); font-size: 32px; margin: 20px 0;">🎉 You've Completed the 7-Day Tkinter Intensive! 🎉</h2>
+
+      <p style="font-size: 16px; color: var(--text); line-height: 1.8; margin: 20px 0;">
+        From basic windows to professional applications, you now have the skills to:
+        <br/><br/>
+        <strong>Create professional GUI applications</strong><br/>
+        <strong>Handle complex user interactions</strong><br/>
+        <strong>Manage files and data</strong><br/>
+        <strong>Organize code professionally</strong><br/>
+        <strong>Deploy real, usable software</strong>
+      </p>
+
+      <div class="key-points" style="max-width: 600px; margin: 30px auto;">
+        <ul style="text-align: left;">
+          <li>📈 7 days of intensive learning completed</li>
+          <li>💪 7 practical projects built</li>
+          <li>🎯 30+ core concepts mastered</li>
+          <li>🚀 Ready for advanced topics</li>
+          <li>🏆 Professional developer skills acquired</li>
+        </ul>
+      </div>
+
+      <p style="font-size: 18px; color: var(--cyan); margin-top: 30px; font-weight: bold;">
+        Keep building, keep learning, and keep creating amazing applications! 💻✨
+      </p>
+    </div>
+
+    <div class="nav-tabs-bottom">
+      <a href="day6_events.html">← Day 6: Events & Functions</a>
+      <a href="index.html" style="margin-left: auto;">Back to Home</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-logo">🐍 Tkinter<span>Notes</span></div>
+    <div class="footer-sub">7 lessons · Complete GUI series · beginner-friendly · free forever</div>
+  </div>
+</footer>
+
+</body>
+</html>
