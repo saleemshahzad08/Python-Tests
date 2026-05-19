@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tkinter Notes — GUI from Zero to Hero</title>
+<title>Pandas MCQ Lab — Test Your Skills</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -18,8 +18,8 @@
     --cyan: #3df5c8;
     --pink: #f0437a;
     --blue: #4a8fff;
-    --tk-accent: #a78bfa;   /* Tkinter-flavored violet accent */
-    --tk-accent-dim: #7c5fc9;
+    --pd-accent: #f97316;   /* Pandas-flavored orange accent */
+    --pd-accent-dim: #c45a0e;
     --text: #e2e8f8;
     --muted: #5a6380;
     --radius: 14px;
@@ -44,8 +44,8 @@
     position: fixed;
     inset: 0;
     background-image:
-      linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
+      linear-gradient(rgba(249,115,22,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(249,115,22,0.03) 1px, transparent 1px);
     background-size: 44px 44px;
     pointer-events: none;
     z-index: 0;
@@ -56,14 +56,14 @@
     position: fixed;
     top: -200px; left: -100px;
     width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(249,115,22,0.07) 0%, transparent 70%);
     pointer-events: none; z-index: 0;
   }
   .glow-2 {
     position: fixed;
     bottom: -150px; right: -100px;
     width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(61,245,200,0.05) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(245,200,66,0.05) 0%, transparent 70%);
     pointer-events: none; z-index: 0;
   }
 
@@ -102,8 +102,8 @@
   .nav-badge {
     font-family: var(--font-mono);
     font-size: 11px;
-    color: var(--tk-accent);
-    border: 1px solid rgba(167,139,250,0.3);
+    color: var(--pd-accent);
+    border: 1px solid rgba(249,115,22,0.3);
     padding: 3px 10px;
     border-radius: 100px;
     letter-spacing: 0.1em;
@@ -136,13 +136,12 @@
     border-color: var(--border);
   }
   .nav-tab.active {
-    color: var(--tk-accent);
-    background: rgba(167,139,250,0.08);
-    border-color: rgba(167,139,250,0.3);
+    color: var(--pd-accent);
+    background: rgba(249,115,22,0.08);
+    border-color: rgba(249,115,22,0.3);
   }
   .nav-tab .tab-dot {
-    width: 6px;
-    height: 6px;
+    width: 6px; height: 6px;
     border-radius: 50%;
     background: currentColor;
     opacity: 0.7;
@@ -159,7 +158,7 @@
     font-size: 12px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--tk-accent);
+    color: var(--pd-accent);
     margin-bottom: 22px;
     display: inline-flex;
     align-items: center;
@@ -169,9 +168,8 @@
   .hero-eyebrow::after {
     content: '';
     display: inline-block;
-    width: 32px;
-    height: 1px;
-    background: var(--tk-accent);
+    width: 32px; height: 1px;
+    background: var(--pd-accent);
     opacity: 0.5;
   }
   .hero h1 {
@@ -185,7 +183,7 @@
   .hero h1 .line2 {
     display: block;
     color: transparent;
-    -webkit-text-stroke: 1.5px var(--tk-accent);
+    -webkit-text-stroke: 1.5px var(--pd-accent);
     font-style: italic;
   }
   .hero-sub {
@@ -214,7 +212,7 @@
     font-family: var(--font-mono);
     font-size: 22px;
     font-weight: 700;
-    color: var(--tk-accent);
+    color: var(--pd-accent);
   }
   .stat-lbl {
     font-size: 11px;
@@ -240,8 +238,7 @@
     color: var(--muted);
   }
   .section-line {
-    flex: 1;
-    height: 1px;
+    flex: 1; height: 1px;
     background: linear-gradient(90deg, var(--border-bright), transparent);
   }
 
@@ -253,8 +250,7 @@
   }
   .search-icon {
     position: absolute;
-    left: 16px;
-    top: 50%;
+    left: 16px; top: 50%;
     transform: translateY(-50%);
     font-family: var(--font-mono);
     font-size: 14px;
@@ -274,7 +270,7 @@
     transition: border-color 0.2s;
   }
   .search-input::placeholder { color: var(--muted); }
-  .search-input:focus { border-color: var(--tk-accent); }
+  .search-input:focus { border-color: var(--pd-accent); }
 
   /* ── FILTER BAR ── */
   .filter-bar {
@@ -298,20 +294,20 @@
   }
   .filter-btn:hover,
   .filter-btn.active {
-    border-color: var(--tk-accent);
-    color: var(--tk-accent);
-    background: rgba(167,139,250,0.06);
+    border-color: var(--pd-accent);
+    color: var(--pd-accent);
+    background: rgba(249,115,22,0.06);
   }
 
   /* ── GRID ── */
-  .notes-grid {
+  .tests-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
     gap: 18px;
   }
 
   /* ── CARD ── */
-  .note-card {
+  .test-card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -323,28 +319,28 @@
     transition: border-color 0.2s, background 0.2s, transform 0.2s;
     animation: fadeUp 0.4s ease both;
   }
-  .note-card::before {
+  .test-card::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 2px;
-    background: linear-gradient(90deg, var(--card-accent, var(--tk-accent)), transparent);
+    background: linear-gradient(90deg, var(--card-accent, var(--pd-accent)), transparent);
     opacity: 0;
     transition: opacity 0.25s;
   }
-  .note-card:hover {
+  .test-card:hover {
     border-color: var(--border-bright);
     background: var(--card-hover);
     transform: translateY(-3px);
   }
-  .note-card:hover::before { opacity: 1; }
+  .test-card:hover::before { opacity: 1; }
 
   /* Accent colors */
-  .card-accent-violet  { --card-accent: var(--tk-accent); }
-  .card-accent-cyan    { --card-accent: var(--cyan); }
-  .card-accent-pink    { --card-accent: var(--pink); }
-  .card-accent-blue    { --card-accent: var(--blue); }
-  .card-accent-gold    { --card-accent: var(--gold); }
+  .card-accent-orange { --card-accent: var(--pd-accent); }
+  .card-accent-cyan   { --card-accent: var(--cyan); }
+  .card-accent-gold   { --card-accent: var(--gold); }
+  .card-accent-pink   { --card-accent: var(--pink); }
+  .card-accent-blue   { --card-accent: var(--blue); }
 
   .card-top {
     display: flex;
@@ -353,16 +349,15 @@
     margin-bottom: 16px;
   }
   .card-icon {
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     border-radius: 10px;
-    background: rgba(167,139,250,0.1);
+    background: rgba(249,115,22,0.1);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 22px;
     flex-shrink: 0;
-    border: 1px solid rgba(167,139,250,0.2);
+    border: 1px solid rgba(249,115,22,0.2);
   }
   .card-num {
     font-family: var(--font-mono);
@@ -388,10 +383,7 @@
     align-items: center;
     justify-content: space-between;
   }
-  .card-meta {
-    display: flex;
-    gap: 10px;
-  }
+  .card-meta { display: flex; gap: 10px; }
   .card-tag {
     font-family: var(--font-mono);
     font-size: 10px;
@@ -407,9 +399,9 @@
     color: var(--muted);
     transition: transform 0.2s, color 0.2s;
   }
-  .note-card:hover .card-arrow {
+  .test-card:hover .card-arrow {
     transform: translateX(4px);
-    color: var(--tk-accent);
+    color: var(--pd-accent);
   }
 
   /* ── NO RESULTS ── */
@@ -435,7 +427,7 @@
     color: var(--muted);
     margin-bottom: 10px;
   }
-  .footer-logo span { color: var(--tk-accent); }
+  .footer-logo span { color: var(--pd-accent); }
   .footer-sub {
     font-size: 13px;
     color: var(--muted);
@@ -502,7 +494,6 @@
     .hero { padding: 52px 0 44px; }
     .hero-sub { font-size: 15px; padding: 0 8px; }
 
-    /* Stats — 2×2 grid on tablet */
     .hero-stats {
       display: inline-grid;
       grid-template-columns: 1fr 1fr;
@@ -516,7 +507,7 @@
     .stat-pill:nth-child(3) { border-bottom: none; }
     .stat-pill:nth-child(4) { border-right: none; border-bottom: none; }
 
-    .notes-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .tests-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
 
     .filter-bar { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; -webkit-overflow-scrolling: touch; }
     .filter-bar::-webkit-scrollbar { display: none; }
@@ -531,7 +522,6 @@
     .hero-eyebrow { font-size: 10px; letter-spacing: 0.14em; }
     .hero-sub { font-size: 14px; margin-bottom: 28px; }
 
-    /* Stats — single column */
     .hero-stats {
       display: inline-flex;
       flex-direction: column;
@@ -544,9 +534,9 @@
     }
     .stat-pill:last-child { border-bottom: none !important; }
 
-    .notes-grid { grid-template-columns: 1fr; gap: 12px; }
+    .tests-grid { grid-template-columns: 1fr; gap: 12px; }
 
-    .note-card { padding: 20px 18px; }
+    .test-card { padding: 20px 18px; }
     .card-title { font-size: 16px; }
     .card-desc { font-size: 12px; }
 
@@ -572,10 +562,10 @@
       <div class="nav-tabs">
         <a href="https://saleemshahzad08.github.io/Python-Tests/index.html" class="nav-tab"><span class="tab-dot"></span>Core Python</a>
         <a href="https://saleemshahzad08.github.io/Python-Tests/NumPy_Tests_Suite.html" class="nav-tab"><span class="tab-dot"></span>NumPy</a>
-        <a href="#" class="nav-tab active"><span class="tab-dot"></span>Tkinter</a>
-        <a href="PLACEHOLDER_PANDAS_URL" class="nav-tab"><span class="tab-dot"></span>Pandas</a>
+        <a href="https://saleemshahzad08.github.io/Python-Tests/Tkinter_Notes_Suite.html" class="nav-tab"><span class="tab-dot"></span>Tkinter</a>
+        <a href="#" class="nav-tab active"><span class="tab-dot"></span>Pandas</a>
       </div>
-      <span class="nav-badge">GUI Series</span>
+      <span class="nav-badge">Pandas Series</span>
       <button class="nav-hamburger" id="hamburger" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
@@ -583,8 +573,8 @@
     <div class="nav-drawer" id="navDrawer">
       <a href="https://saleemshahzad08.github.io/Python-Tests/index.html" class="nav-tab"><span class="tab-dot"></span>Core Python</a>
       <a href="https://saleemshahzad08.github.io/Python-Tests/NumPy_Tests_Suite.html" class="nav-tab"><span class="tab-dot"></span>NumPy</a>
-      <a href="#" class="nav-tab active"><span class="tab-dot"></span>Tkinter</a>
-      <a href="PLACEHOLDER_PANDAS_URL" class="nav-tab"><span class="tab-dot"></span>Pandas</a>
+      <a href="https://saleemshahzad08.github.io/Python-Tests/Tkinter_Notes_Suite.html" class="nav-tab"><span class="tab-dot"></span>Tkinter</a>
+      <a href="#" class="nav-tab active"><span class="tab-dot"></span>Pandas</a>
     </div>
   </div>
 </nav>
@@ -592,28 +582,28 @@
 <!-- HERO -->
 <section class="hero">
   <div class="wrap">
-    <div class="hero-eyebrow">Lesson Notes Series</div>
+    <div class="hero-eyebrow">Pandas Test Suite</div>
     <h1>
-      <span class="line1">Master Tkinter</span>
-      <span class="line2">GUI Design.</span>
+      <span class="line1">Master Pandas</span>
+      <span class="line2">Data & Analysis.</span>
     </h1>
-    <p class="hero-sub">7 structured lessons · build real desktop apps · zero to hero · free forever</p>
+    <p class="hero-sub">Topic-wise Pandas MCQ exams · 30 questions each · instant feedback · answer review</p>
     <div class="hero-stats">
       <div class="stat-pill">
-        <div class="stat-num">7</div>
-        <div class="stat-lbl">Lessons</div>
+        <div class="stat-num">0</div>
+        <div class="stat-lbl">Topics</div>
       </div>
       <div class="stat-pill">
-        <div class="stat-num">GUI</div>
-        <div class="stat-lbl">Focus</div>
+        <div class="stat-num">0</div>
+        <div class="stat-lbl">Questions</div>
       </div>
       <div class="stat-pill">
-        <div class="stat-num">0→1</div>
-        <div class="stat-lbl">Level</div>
+        <div class="stat-num">30</div>
+        <div class="stat-lbl">Per Test</div>
       </div>
       <div class="stat-pill">
         <div class="stat-num">∞</div>
-        <div class="stat-lbl">Revisits</div>
+        <div class="stat-lbl">Retries</div>
       </div>
     </div>
   </div>
@@ -624,144 +614,34 @@
   <div class="wrap">
 
     <div class="section-header">
-      <span class="section-title">// choose a lesson</span>
+      <span class="section-title">// choose a topic</span>
       <span class="section-line"></span>
     </div>
 
     <!-- SEARCH -->
     <div class="search-wrap">
       <span class="search-icon">⌕</span>
-      <input class="search-input" type="text" id="searchInput" placeholder="Search lessons... (e.g. widgets, layout, events)" autocomplete="off">
+      <input class="search-input" type="text" id="searchInput" placeholder="Search Pandas topics... (e.g. DataFrame, groupby, merge)" autocomplete="off" />
     </div>
 
     <!-- FILTER -->
     <div class="filter-bar">
-      <button class="filter-btn active" data-filter="all">All Lessons</button>
+      <button class="filter-btn active" data-filter="all">All Topics</button>
       <button class="filter-btn" data-filter="basics">Basics</button>
-      <button class="filter-btn" data-filter="widgets">Widgets</button>
+      <button class="filter-btn" data-filter="operations">Operations</button>
       <button class="filter-btn" data-filter="advanced">Advanced</button>
     </div>
 
     <!-- GRID -->
-    <div class="notes-grid" id="notesGrid">
+    <div class="tests-grid" id="testsGrid">
 
-      <a href="http://saleemshahzad08.github.io/Python-Tests/Tkinter/Tkinter_Day_1_Foundation_And_Setup.html" class="note-card card-accent-violet" data-category="basics" data-title="Day-1: Foundations and Setup" style="animation-delay:0.05s">
-        <div class="card-top">
-          <div class="card-icon">🪟</div>
-          <div class="card-num">#01</div>
-        </div>
-        <div class="card-title">Day 1: Foundations & Setup</div>
-        <div class="card-desc">Install Tkinter, create your first window, understand the main loop, and explore root window properties.</div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span class="card-tag">Lesson 1</span>
-            <span class="card-tag">Basics</span>
-          </div>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Tkinter/Tkinter_Day_2_Basic_Widgets_Part_1.html" class="note-card card-accent-cyan" data-category="basics" data-title="Day-2: Basic Widgets Part 1" style="animation-delay:0.10s">
-        <div class="card-top">
-          <div class="card-icon">🧩</div>
-          <div class="card-num">#02</div>
-        </div>
-        <div class="card-title">Day 2: Basic Widgets Part 1</div>
-        <div class="card-desc">Explore foundational Tkinter widgets — Labels, Buttons, and Entry fields to build your first interactive UI.</div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span class="card-tag">Lesson 2</span>
-            <span class="card-tag">Basics</span>
-          </div>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Tkinter/Tkinter_Day_3_Basic_Widgets_Part_2.html" class="note-card card-accent-pink" data-category="widgets" data-title="Day 3: Basic Widgets Part 2" style="animation-delay:0.15s">
-        <div class="card-top">
-          <div class="card-icon">🎛️</div>
-          <div class="card-num">#03</div>
-        </div>
-        <div class="card-title">Day 3: Basic Widgets Part 2</div>
-        <div class="card-desc">Continue exploring Tkinter widgets — Checkbuttons, Radiobuttons, Listboxes, and more interactive elements.</div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span class="card-tag">Lesson 3</span>
-            <span class="card-tag">Widgets</span>
-          </div>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Tkinter/Tkinter_Day_4_Layouts_And_Organization.html" class="note-card card-accent-blue" data-category="widgets" data-title="Day 4: Layouts & Organization" style="animation-delay:0.20s">
-        <div class="card-top">
-          <div class="card-icon">🖱️</div>
-          <div class="card-num">#04</div>
-        </div>
-        <div class="card-title">Day 4: Layouts & Organization</div>
-        <div class="card-desc">Master pack, grid, and place geometry managers to structure and organize your Tkinter application layouts.</div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span class="card-tag">Lesson 4</span>
-            <span class="card-tag">Widgets</span>
-          </div>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="http://saleemshahzad08.github.io/Python-Tests/Tkinter/Tkinter_Day_5_Advanced_Widgets_And_Dialogs.html" class="note-card card-accent-gold" data-category="widgets" data-title="Day 5: Advanced Widgets & Dialogs" style="animation-delay:0.25s">
-        <div class="card-top">
-          <div class="card-icon">📐</div>
-          <div class="card-num">#05</div>
-        </div>
-        <div class="card-title">Day 5: Advanced Widgets & Dialogs</div>
-        <div class="card-desc">Dive into advanced widgets like Canvas, Scale, and Spinbox, plus dialog boxes for user interaction.</div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span class="card-tag">Lesson 5</span>
-            <span class="card-tag">Widgets</span>
-          </div>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="https://saleemshahzad08.github.io/Python-Tests/Tkinter/Tkinter_Day_6_Events_And_Functions.html" class="note-card card-accent-violet" data-category="advanced" data-title="Day 6: Events & Functions" style="animation-delay:0.30s">
-        <div class="card-top">
-          <div class="card-icon">⚡</div>
-          <div class="card-num">#06</div>
-        </div>
-        <div class="card-title">Day 6: Events & Functions</div>
-        <div class="card-desc">Handle user events, bind keyboard and mouse actions, and wire up functions to make your GUI truly interactive.</div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span class="card-tag">Lesson 6</span>
-            <span class="card-tag">Advanced</span>
-          </div>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
-
-      <a href="http://saleemshahzad08.github.io/Python-Tests/Tkinter/Tkinter_Day_7_Capstone_Project.html" class="note-card card-accent-pink" data-category="advanced" data-title="Day 7: Capstone Project" style="animation-delay:0.35s">
-        <div class="card-top">
-          <div class="card-icon">🚀</div>
-          <div class="card-num">#07</div>
-        </div>
-        <div class="card-title">Day 7: Capstone Project</div>
-        <div class="card-desc">Bring it all together — build a complete, fully functional desktop application using everything learned across the series.</div>
-        <div class="card-footer">
-          <div class="card-meta">
-            <span class="card-tag">Lesson 7</span>
-            <span class="card-tag">Advanced</span>
-          </div>
-          <span class="card-arrow">→</span>
-        </div>
-      </a>
+      <!-- Cards will be added here -->
 
     </div><!-- /grid -->
 
     <div class="no-results" id="noResults">
       <div style="font-size:32px;margin-bottom:12px;">🔍</div>
-      No lessons match your search.
+      No topics match your search.
     </div>
 
   </div><!-- /wrap -->
@@ -770,8 +650,8 @@
 <!-- FOOTER -->
 <footer>
   <div class="wrap">
-    <div class="footer-logo">🐍 Python<span>MCQ</span>Lab</div>
-    <div class="footer-sub">7 lessons · Tkinter GUI series · beginner-friendly · free forever</div>
+    <div class="footer-logo">🐍 Python MCQ Lab · <span>Pandas Series</span></div>
+    <div class="footer-sub">more topics coming soon · 30 questions per test · free forever</div>
   </div>
 </footer>
 
@@ -784,9 +664,9 @@
     navDrawer.classList.toggle('open');
   });
 
-  // ── FILTER ──
+  // ── FILTER & SEARCH ──
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const cards = document.querySelectorAll('.note-card');
+  const cards = document.querySelectorAll('.test-card');
   const noResults = document.getElementById('noResults');
   const searchInput = document.getElementById('searchInput');
   let activeFilter = 'all';
@@ -805,34 +685,17 @@
   function applyFilters() {
     const query = searchInput.value.toLowerCase().trim();
     let visible = 0;
-
     cards.forEach(card => {
       const cat   = card.dataset.category;
       const title = card.dataset.title.toLowerCase();
       const desc  = card.querySelector('.card-desc').textContent.toLowerCase();
-
       const matchFilter = activeFilter === 'all' || cat === activeFilter;
       const matchSearch = !query || title.includes(query) || desc.includes(query);
-
-      if (matchFilter && matchSearch) {
-        card.style.display = '';
-        visible++;
-      } else {
-        card.style.display = 'none';
-      }
+      if (matchFilter && matchSearch) { card.style.display = ''; visible++; }
+      else card.style.display = 'none';
     });
-
     noResults.style.display = visible === 0 ? 'block' : 'none';
   }
-
-  // ── STAGGER ANIMATION on load ──
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) e.target.style.opacity = 1;
-    });
-  }, { threshold: 0.1 });
-
-  cards.forEach(c => observer.observe(c));
 </script>
 
 </body>
