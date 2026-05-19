@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 2: Basic Widgets Part 1 — Tkinter Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a10;
+    --surface: #0e1118;
+    --card: #121620;
+    --card-hover: #171c28;
+    --border: #1e2435;
+    --border-bright: #2a3350;
+    --gold: #f5c842;
+    --gold-dim: #c9a330;
+    --cyan: #3df5c8;
+    --pink: #f0437a;
+    --blue: #4a8fff;
+    --tk-accent: #a78bfa;
+    --tk-accent-dim: #7c5fc9;
+    --text: #e2e8f8;
+    --muted: #5a6380;
+    --radius: 14px;
+    --font-mono: 'Space Mono', monospace;
+    --font-body: 'Outfit', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glow-1 {
+    position: fixed;
+    top: -200px; left: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .glow-2 {
+    position: fixed;
+    bottom: -150px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(61,245,200,0.05) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .wrap {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,10,16,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-logo .snake { font-size: 20px; }
+
+  .nav-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--tk-accent);
+    border: 1px solid rgba(167,139,250,0.3);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.1em;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  .nav-tab {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    padding: 7px 18px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .nav-tab:hover {
+    color: var(--text);
+    background: rgba(255,255,255,0.04);
+    border-color: var(--border);
+  }
+
+  .nav-tab.active {
+    color: var(--tk-accent);
+    background: rgba(167,139,250,0.08);
+    border-color: rgba(167,139,250,0.3);
+  }
+
+  .nav-tab .tab-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  .hero {
+    padding: 60px 0 40px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--tk-accent);
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .hero h1 .accent {
+    color: var(--tk-accent);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  .breadcrumb {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 24px;
+    font-size: 13px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+
+  .breadcrumb a {
+    color: var(--tk-accent);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--gold);
+  }
+
+  main {
+    padding: 40px 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    margin-top: 48px;
+  }
+
+  .section-header:first-of-type {
+    margin-top: 0;
+  }
+
+  .section-title {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tk-accent);
+    white-space: nowrap;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-bright), transparent);
+  }
+
+  .content-block {
+    margin-bottom: 32px;
+  }
+
+  .content-block h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .content-block p {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    font-size: 15px;
+  }
+
+  .code-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--cyan);
+    line-height: 1.6;
+  }
+
+  .code-block.dark {
+    background: rgba(0,0,0,0.4);
+    border-color: var(--border-bright);
+  }
+
+  .example-box {
+    background: rgba(167,139,250,0.05);
+    border-left: 3px solid var(--tk-accent);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  .example-box .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--tk-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .properties-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .properties-table th {
+    background: rgba(167,139,250,0.1);
+    padding: 12px 16px;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    color: var(--tk-accent);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .properties-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .properties-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .properties-table tr:hover {
+    background: rgba(167,139,250,0.03);
+  }
+
+  .toggle-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 16px 0;
+  }
+
+  .toggle-header {
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+    font-weight: 600;
+    user-select: none;
+  }
+
+  .toggle-header:hover {
+    background: var(--card-hover);
+  }
+
+  .toggle-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
+    color: var(--tk-accent);
+  }
+
+  .toggle-box.open .toggle-icon {
+    transform: rotate(180deg);
+  }
+
+  .toggle-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 16px;
+  }
+
+  .toggle-box.open .toggle-content {
+    max-height: 3000px;
+    padding: 0 16px 16px 16px;
+  }
+
+  .key-points {
+    background: rgba(61,245,200,0.05);
+    border-left: 3px solid var(--cyan);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 20px 0;
+  }
+
+  .key-points ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .key-points li {
+    padding-left: 24px;
+    margin-bottom: 12px;
+    position: relative;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .key-points li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--cyan);
+    font-weight: bold;
+  }
+
+  .nav-tabs-bottom {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--border);
+    justify-content: space-between;
+  }
+
+  .nav-tabs-bottom a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.2s;
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+
+  .nav-tabs-bottom a:hover {
+    color: var(--tk-accent);
+    border-color: var(--tk-accent);
+    background: rgba(167,139,250,0.05);
+  }
+
+  .nav-tabs-bottom a.next {
+    margin-left: auto;
+  }
+
+  footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  .footer-logo {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .footer-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .nav-tabs {
+      display: none;
+    }
+    .hero h1 {
+      font-size: 32px;
+    }
+    .properties-table {
+      font-size: 12px;
+    }
+    .properties-table th,
+    .properties-table td {
+      padding: 8px 12px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="snake">🐍</span>
+        <span>Tkinter<span style="color:var(--text);">Notes</span></span>
+      </a>
+      <div class="nav-tabs">
+        <a href="index.html" class="nav-tab"><span class="tab-dot"></span>Home</a>
+        <a href="day1_foundations.html" class="nav-tab"><span class="tab-dot"></span>Day 1</a>
+        <a href="#" class="nav-tab active"><span class="tab-dot"></span>Day 2</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>/</span>
+      <span>Day 2: Basic Widgets Part 1</span>
+    </div>
+    <div class="hero-eyebrow">Lesson 2 of 7</div>
+    <h1>Basic Widgets <span class="accent">Part 1</span></h1>
+    <p class="hero-sub">Learn Label, Button, and Entry widgets. Understand widget properties, command functions, and how to get user input.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+
+    <!-- WHAT ARE WIDGETS -->
+    <div class="section-header">
+      <span class="section-title">// what are widgets?</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Understanding Widgets</h3>
+      <p>Widgets are <strong>interactive elements in your GUI window</strong>. Think of widgets as LEGO blocks - each widget does a specific job, and you combine them to build complete interfaces.</p>
+
+      <div class="example-box">
+        <span class="label">Widget Analogy</span>
+        <p style="margin: 0; color: var(--text);">
+          LEGO blocks are like widgets:
+          <br/>• Each block (widget) has a specific purpose
+          <br/>• You stack them together to create something bigger
+          <br/>• The same block can be used in different ways
+          <br/>• You combine many blocks (widgets) to build complete applications
+        </p>
+      </div>
+
+      <h3 style="margin-top: 32px;">Widget Hierarchy</h3>
+      <div class="code-block">
+<br/>Tk() [Main Window]
+<br/>  ├─ Label (displays text/images)
+<br/>  ├─ Button (clickable)
+<br/>  ├─ Entry (single-line text input)
+<br/>  ├─ Text (multi-line text)
+<br/>  ├─ Frame (container for other widgets)
+<br/>  ├─ Listbox (list of items)
+<br/>  └─ ... and many more
+      </div>
+
+      <h3 style="margin-top: 32px;">Basic Widget Creation Pattern</h3>
+      <p>All widgets follow the same pattern:</p>
+      <div class="code-block">
+<br/>widget = WidgetName(parent, property1=value1, property2=value2)
+<br/>widget.pack()  # or .grid() or .place() - makes it visible
+      </div>
+
+      <div class="example-box">
+        <span class="label">Real Example</span>
+        <div class="code-block" style="margin: 8px 0;">
+<br/>label = Label(root, text="Hello", font=("Arial", 14))
+<br/>label.pack()
+        </div>
+      </div>
+    </div>
+
+    <!-- LABEL WIDGET -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// label widget</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>What is a Label?</h3>
+      <p>A <strong>Label</strong> widget <strong>displays text or images</strong> on your window. Labels are NOT interactive (users can't click them to perform actions).</p>
+
+      <h3 style="margin-top: 24px;">Creating a Simple Label</h3>
+      <div class="code-block">
+<br/>from tkinter import Tk, Label
+
+<br/><br/>root = Tk()
+<br/>root.geometry("400x300")
+
+<br/><br/>label = Label(root, text="Hello, World!")
+<br/>label.pack()
+
+<br/><br/>root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Customizing Labels</h3>
+      <div class="code-block">
+<br/>from tkinter import Tk, Label
+
+<br/><br/>root = Tk()
+<br/>root.geometry("400x300")
+<br/>root.config(bg="white")
+
+<br/><br/># Label 1: Basic
+<br/>label1 = Label(root, text="Basic Label")
+<br/>label1.pack()
+
+<br/><br/># Label 2: With Font
+<br/>label2 = Label(
+    root, 
+    text="Big Bold Text",
+    font=("Arial", 16, "bold")
+)
+<br/>label2.pack()
+
+<br/><br/># Label 3: With Colors
+<br/>label3 = Label(
+    root,
+    text="Colored Label",
+    font=("Courier", 12),
+    fg="white",
+    bg="darkblue"
+)
+<br/>label3.pack()
+
+<br/><br/># Label 4: With Padding
+<br/>label4 = Label(
+    root,
+    text="Padded Label",
+    font=("Arial", 10),
+    bg="lightyellow",
+    padx=20,
+    pady=10
+)
+<br/>label4.pack()
+
+<br/><br/>root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Label Properties</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Property</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>text</code></td>
+          <td>Text to display</td>
+          <td><code>text="Hello"</code></td>
+        </tr>
+        <tr>
+          <td><code>font</code></td>
+          <td>Font styling</td>
+          <td><code>font=("Arial", 14, "bold")</code></td>
+        </tr>
+        <tr>
+          <td><code>fg</code></td>
+          <td>Text color (foreground)</td>
+          <td><code>fg="red"</code></td>
+        </tr>
+        <tr>
+          <td><code>bg</code></td>
+          <td>Background color</td>
+          <td><code>bg="lightblue"</code></td>
+        </tr>
+        <tr>
+          <td><code>padx</code></td>
+          <td>Left-right padding</td>
+          <td><code>padx=10</code></td>
+        </tr>
+        <tr>
+          <td><code>pady</code></td>
+          <td>Top-bottom padding</td>
+          <td><code>pady=5</code></td>
+        </tr>
+        <tr>
+          <td><code>width</code></td>
+          <td>Width in characters</td>
+          <td><code>width=20</code></td>
+        </tr>
+        <tr>
+          <td><code>height</code></td>
+          <td>Height in lines</td>
+          <td><code>height=2</code></td>
+        </tr>
+        <tr>
+          <td><code>justify</code></td>
+          <td>Text alignment</td>
+          <td><code>justify="center"</code></td>
+        </tr>
+        <tr>
+          <td><code>relief</code></td>
+          <td>Border style</td>
+          <td><code>relief="raised"</code></td>
+        </tr>
+      </table>
+
+      <h3 style="margin-top: 24px;">Font Format Explained</h3>
+      <div class="example-box">
+        <span class="label">Font Tuple Pattern</span>
+        <p style="margin: 8px 0; color: var(--text); font-family: var(--font-mono);">
+          (FontName, Size, Style)
+        </p>
+        <ul style="margin: 12px 0 0 0; padding-left: 20px; color: var(--text);">
+          <li>FontName: Arial, Courier, Times, Helvetica, Georgia</li>
+          <li>Size: numeric (10, 12, 14, 16, etc.)</li>
+          <li>Style: "bold", "italic", "bold italic", or omit for normal</li>
+        </ul>
+      </div>
+
+      <p style="margin-top: 16px;"><strong>Font Examples:</strong></p>
+      <div class="code-block">
+<br/>font=("Arial", 14)              # Size only
+<br/>font=("Arial", 14, "bold")      # Bold
+<br/>font=("Arial", 14, "italic")    # Italic
+<br/>font=("Arial", 14, "bold italic")  # Bold & Italic
+      </div>
+    </div>
+
+    <!-- BUTTON WIDGET -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// button widget</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>What is a Button?</h3>
+      <p>A <strong>Button</strong> is a <strong>clickable element</strong> that performs an action when clicked.</p>
+
+      <h3 style="margin-top: 24px;">Creating a Simple Button</h3>
+      <div class="code-block">
+<br/>from tkinter import Tk, Button
+
+<br/><br/>root = Tk()
+<br/>root.title("Button Demo")
+<br/>root.geometry("400x300")
+
+<br/><br/>def on_click():
+<br/> &emsp;&emsp;print("Button was clicked!")
+
+<br/><br/>button = Button(root, text="Click Me!", command=on_click)
+<br/>button.pack()
+
+<br/><br/>root.mainloop()
+      </div>
+
+      <div class="example-box">
+        <span class="label">Important Note</span>
+        <p style="margin: 0; color: var(--text);">
+          Use <code>command=function_name</code> (WITHOUT parentheses!)
+          <br/><br/>
+          ✅ <code>command=on_click</code> — Correct<br/>
+          ❌ <code>command=on_click()</code> — Wrong (calls function immediately)
+        </p>
+      </div>
+
+      <h3 style="margin-top: 24px;">Understanding the command Parameter</h3>
+      <p>The command parameter tells the button what function to run when clicked.</p>
+      <div class="code-block">
+<br/>def greet():
+<br/>&emsp;&emsp;print("Hello!")
+
+<br/><br/>button = Button(root, text="Say Hello", command=greet)
+<br/>button.pack()
+      </div>
+
+      <h3 style="margin-top: 24px;">Button with Arguments (Using Lambda)</h3>
+      <p>What if you want to pass arguments to your function?</p>
+      <div class="code-block">
+<br/>def greet(name):
+  <br/> &emsp;&emsp;print(f"Hello, {name}!")
+
+<br/><br/># Using lambda to pass arguments
+<br/><br/>button = Button(root, text="Greet", command=lambda: greet("Alice"))
+<br/>button.pack()
+      </div>
+
+      <div class="example-box">
+        <span class="label">Lambda Explanation</span>
+        <p style="margin: 0; color: var(--text);">
+          Lambda is a small function that lets you pass arguments:
+          <br/><br/>
+          <code style="font-family: var(--font-mono);">lambda: function(argument)</code>
+          <br/><br/>
+          It creates a function on-the-fly that calls your function with specific arguments.
+        </p>
+      </div>
+
+      <h3 style="margin-top: 24px;">Customizing Buttons</h3>
+      <div class="code-block">
+<br/>from tkinter import Tk, Button
+
+<br/><br/>root = Tk()
+<br/>root.title("Button Customization")
+<br/>root.geometry("400x300")
+
+<br/><br/># Button 1: Basic
+<br/>button1 = Button(root, text="Button 1")
+<br/>button1.pack()
+
+<br/><br/># Button 2: With styling
+<br/>button2 = Button(
+    root,
+    text="Styled Button",
+    font=("Arial", 12),
+    fg="white",
+    bg="green",
+    padx=20,
+    pady=10,
+    width=20
+)
+<br/>button2.pack()
+
+<br/><br/># Button 3: With function
+<br/>def show_message():
+<br/> &emsp;&emsp;&emsp;print("Button 3 clicked!")
+
+<br/><br/>button3 = Button(
+    root,
+    text="Click for Message",
+    command=show_message,
+    bg="blue",
+    fg="white",
+    relief="raised"
+)
+<br/>button3.pack()
+
+<br/><br/># Button 4: Disabled button
+<br/>button4 = Button(
+    root,
+    text="Disabled Button",
+    state="disabled"
+)
+<br/>button4.pack()
+
+<br/><br/>root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Button Properties</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Property</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>text</code></td>
+          <td>Button label</td>
+          <td><code>text="Click"</code></td>
+        </tr>
+        <tr>
+          <td><code>command</code></td>
+          <td>Function to run when clicked</td>
+          <td><code>command=my_func</code></td>
+        </tr>
+        <tr>
+          <td><code>font</code></td>
+          <td>Font styling</td>
+          <td><code>font=("Arial", 12)</code></td>
+        </tr>
+        <tr>
+          <td><code>fg</code></td>
+          <td>Text color</td>
+          <td><code>fg="white"</code></td>
+        </tr>
+        <tr>
+          <td><code>bg</code></td>
+          <td>Background color</td>
+          <td><code>bg="blue"</code></td>
+        </tr>
+        <tr>
+          <td><code>padx</code></td>
+          <td>Horizontal padding</td>
+          <td><code>padx=15</code></td>
+        </tr>
+        <tr>
+          <td><code>pady</code></td>
+          <td>Vertical padding</td>
+          <td><code>pady=10</code></td>
+        </tr>
+        <tr>
+          <td><code>width</code></td>
+          <td>Button width</td>
+          <td><code>width=15</code></td>
+        </tr>
+        <tr>
+          <td><code>height</code></td>
+          <td>Button height</td>
+          <td><code>height=2</code></td>
+        </tr>
+        <tr>
+          <td><code>state</code></td>
+          <td>"normal" or "disabled"</td>
+          <td><code>state="disabled"</code></td>
+        </tr>
+        <tr>
+          <td><code>relief</code></td>
+          <td>Button appearance</td>
+          <td><code>relief="raised"</code></td>
+        </tr>
+      </table>
+
+      <h3 style="margin-top: 24px;">Relief Options</h3>
+      <p>The relief property controls the button's 3D appearance:</p>
+      <div class="code-block">
+<br/>relief="raised"   # Button appears raised/3D
+<br/>relief="sunken"   # Button appears pressed/indented
+<br/>relief="flat"     # No 3D effect, flat appearance
+<br/>relief="ridge"    # Ridge effect
+<br/>relief="groove"   # Groove effect
+      </div>
+    </div>
+
+    <!-- ENTRY WIDGET -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// entry widget</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>What is an Entry?</h3>
+      <p>An <strong>Entry</strong> widget lets users <strong>type text input</strong> into your program. It's a single-line text field.</p>
+
+      <h3 style="margin-top: 24px;">Creating a Simple Entry</h3>
+      <div class="code-block">
+<br/>from tkinter import Tk, Entry
+
+<br/><br/>root = Tk()
+<br/>root.title("Entry Demo")
+<br/>root.geometry("400x300")
+
+<br/><br/>entry = Entry(root)
+<br/>entry.pack()
+
+<br/><br/>root.mainloop()
+      </div>
+
+      <div class="example-box">
+        <span class="label">Interactive Test</span>
+        <p style="margin: 0; color: var(--text);">
+          Run the above code and you'll see a text field where you can type!
+        </p>
+      </div>
+
+      <h3 style="margin-top: 24px;">Getting Text from Entry (.get())</h3>
+      <div class="code-block">
+<br/>from tkinter import Tk, Entry, Button
+
+<br/><br/>root = Tk()
+<br/>root.title("Entry Demo")
+<br/>root.geometry("400x300")
+
+<br/><br/>entry = Entry(root)
+<br/>entry.pack()
+
+<br/><br/>def get_text():
+<br/>&emsp;&emsp;user_input = entry.get()
+<br/>&emsp;&emsp;print(f"You typed: {user_input}")
+
+<br/><br/>button = Button(root, text="Submit", command=get_text)
+<br/>button.pack()
+
+<br/><br/>root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Customizing Entry</h3>
+      <div class="code-block">
+<br/>from tkinter import Tk, Entry, Button, Label
+
+<br/><br/>root = Tk()
+<br/>root.title("Entry Customization")
+<br/>root.geometry("400x300")
+
+<br/><br/># Entry 1: Basic with width
+<br/>label1 = Label(root, text="Name:")
+<br/>label1.pack()
+
+<br/><br/>entry1 = Entry(root, width=30)
+<br/>entry1.pack()
+
+<br/><br/># Entry 2: With default text
+<br/>entry2 = Entry(root)
+<br/>entry2.insert(0, "Type here...")  # 0 = position, then text
+<br/>entry2.pack()
+
+<br/><br/># Entry 3: Password field (masked)
+<br/>entry3 = Entry(root, show="*")  # Shows asterisks instead of text
+<br/>entry3.pack()
+
+<br/><br/># Getting values from all entries
+<br/>def collect_data():
+    <br/>&emsp;&emsp;name = entry1.get()
+    <br/>&emsp;&emsp;text = entry2.get()
+    <br/>&emsp;&emsp;password = entry3.get()
+    <br/>&emsp;&emsp;print(f"Name: {name}, Text: {text}, Password length: {len(password)}")
+
+<br/><br/>button = Button(root, text="Collect", command=collect_data)
+<br/>button.pack()
+
+<br/><br/>root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Entry Methods</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Method</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>.get()</code></td>
+          <td>Get text from entry</td>
+          <td><code>text = entry.get()</code></td>
+        </tr>
+        <tr>
+          <td><code>.insert()</code></td>
+          <td>Insert text at position</td>
+          <td><code>entry.insert(0, "Hello")</code></td>
+        </tr>
+        <tr>
+          <td><code>.delete()</code></td>
+          <td>Delete text range</td>
+          <td><code>entry.delete(0, "end")</code></td>
+        </tr>
+      </table>
+
+      <h3 style="margin-top: 24px;">Entry Properties</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Property</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>width</code></td>
+          <td>Width in characters</td>
+          <td><code>width=30</code></td>
+        </tr>
+        <tr>
+          <td><code>font</code></td>
+          <td>Font styling</td>
+          <td><code>font=("Arial", 12)</code></td>
+        </tr>
+        <tr>
+          <td><code>fg</code></td>
+          <td>Text color</td>
+          <td><code>fg="black"</code></td>
+        </tr>
+        <tr>
+          <td><code>bg</code></td>
+          <td>Background color</td>
+          <td><code>bg="white"</code></td>
+        </tr>
+        <tr>
+          <td><code>show</code></td>
+          <td>Mask character (for passwords)</td>
+          <td><code>show="*"</code></td>
+        </tr>
+        <tr>
+          <td><code>state</code></td>
+          <td>"normal" or "disabled"</td>
+          <td><code>state="normal"</code></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- COMPLETE EXAMPLE -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// practical example</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Simple Form with All 3 Widgets</h3>
+      <div class="code-block">
+<br/>from tkinter import Tk, Label, Entry, Button
+
+<br/><br/>root = Tk()
+<br/>root.title("User Registration Form")
+<br/>root.geometry("400x300")
+<br/>root.config(bg="lightgray")
+
+<br/><br/># Title
+<br/>title = Label(root, text="Registration Form", font=("Arial", 18, "bold"), bg="lightgray")
+<br/>title.pack(pady=10)
+
+<br/><br/># Name Label & Entry
+<br/>name_label = Label(root, text="Name:", bg="lightgray", font=("Arial", 10))
+<br/>name_label.pack()
+
+<br/><br/>name_entry = Entry(root, width=30, font=("Arial", 10))
+<br/>name_entry.pack(pady=5)
+
+<br/><br/># Email Label & Entry
+<br/>email_label = Label(root, text="Email:", bg="lightgray", font=("Arial", 10))
+<br/>email_label.pack()
+
+<br/><br/>email_entry = Entry(root, width=30, font=("Arial", 10))
+<br/>email_entry.pack(pady=5)
+
+<br/><br/># Password Label & Entry
+<br/>password_label = Label(root, text="Password:", bg="lightgray", font=("Arial", 10))
+<br/>password_label.pack()
+
+<br/><br/>password_entry = Entry(root, width=30, font=("Arial", 10), show="*")
+<br/>password_entry.pack(pady=5)
+
+<br/><br/># Submit Button
+<br/>def submit_form():
+    <br/>&emsp;&emsp;name = name_entry.get()
+    <br/>&emsp;&emsp;email = email_entry.get()
+    <br/>&emsp;&emsp;password = password_entry.get()
+    
+<br/>&emsp;&emsp;if name and email and password:
+      <br/>&emsp;&emsp;&emsp;&emsp;print(f"Name: {name}")
+      <br/>&emsp;&emsp;&emsp;&emsp;print(f"Email: {email}")
+      <br/>&emsp;&emsp;&emsp;&emsp;print(f"Password: {'*' * len(password)}")
+      <br/>&emsp;&emsp;&emsp;&emsp;print("Form submitted!")
+    <br/>&emsp;&emsp;else:
+        <br/>&emsp;&emsp;&emsp;&emsp;print("Please fill all fields!")
+
+<br/><br/>submit_button = Button(root, text="Submit", command=submit_form, bg="green", fg="white", font=("Arial", 12), padx=20, pady=10)
+<br/>submit_button.pack(pady=15)
+
+<br/><br/>root.mainloop()
+      </div>
+    </div>
+
+    <!-- KEY TAKEAWAYS -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// key takeaways</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="key-points">
+      <ul>
+        <li><strong>Widgets</strong> are interactive elements in your GUI</li>
+        <li><strong>Label</strong> displays text (not interactive)</li>
+        <li><strong>Button</strong> performs actions when clicked (use command parameter)</li>
+        <li><strong>Entry</strong> gets single-line text input from users (use .get() to retrieve)</li>
+        <li><strong>All widgets</strong> follow the same creation pattern</li>
+        <li><strong>Font tuple</strong> format: (Name, Size, Style)</li>
+        <li><strong>Use lambda</strong> to pass arguments to button commands</li>
+        <li><strong>Common properties:</strong> text, font, fg, bg, padx, pady, width, height</li>
+      </ul>
+    </div>
+
+    <!-- PRACTICE TASK -->
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// practice task</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <div class="example-box">
+        <span class="label">Your Assignment (Task 2)</span>
+        <p style="margin: 12px 0 0 0; color: var(--text);">
+          Create a file called <code>task2_form.py</code> with:<br/><br/>
+          ✅ Window title: "Student Information Form"<br/>
+          ✅ Window size: 500x400 pixels<br/>
+          ✅ Background: "lightyellow"<br/>
+          ✅ Title label: "Student Form" (bold, size 16)<br/>
+          ✅ Input fields for:<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;• Student Name (label + entry)<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;• Roll Number (label + entry)<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;• Email (label + entry)<br/>
+          &nbsp;&nbsp;&nbsp;&nbsp;• Age (label + entry)<br/>
+          ✅ Submit button that prints all data when clicked<br/>
+          ✅ Proper styling (fonts, colors, padding)
+        </p>
+      </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-tabs-bottom">
+      <a href="day1_foundations.html">← Day 1: Foundations</a>
+      <a href="day3_widgets2.html" class="next">Day 3: Basic Widgets Part 2 →</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-logo">🐍 Tkinter<span>Notes</span></div>
+    <div class="footer-sub">7 lessons · Complete GUI series · beginner-friendly · free forever</div>
+  </div>
+</footer>
+
+<script>
+  const toggleBoxes = document.querySelectorAll('.toggle-box');
+  
+  toggleBoxes.forEach(box => {
+    const header = box.querySelector('.toggle-header');
+    header.addEventListener('click', () => {
+      box.classList.toggle('open');
+    });
+  });
+</script>
+
+</body>
+</html>

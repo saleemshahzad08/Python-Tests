@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 5: Advanced Widgets & Dialogs — Tkinter Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #080a10; --surface: #0e1118; --card: #121620; --border: #1e2435; --border-bright: #2a3350; --gold: #f5c842; --cyan: #3df5c8; --tk-accent: #a78bfa; --text: #e2e8f8; --muted: #5a6380; --radius: 14px; --font-mono: 'Space Mono', monospace; --font-body: 'Outfit', sans-serif; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; z-index: 0; }
+  .glow-1, .glow-2 { position: fixed; pointer-events: none; z-index: 0; }
+  .glow-1 { top: -200px; left: -100px; width: 600px; height: 600px; background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%); }
+  .glow-2 { bottom: -150px; right: -100px; width: 500px; height: 500px; background: radial-gradient(circle, rgba(61,245,200,0.05) 0%, transparent 70%); }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+  nav { position: sticky; top: 0; z-index: 100; background: rgba(8,10,16,0.85); backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); padding: 14px 0; }
+  .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-family: var(--font-mono); font-size: 15px; color: var(--gold); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo .snake { font-size: 20px; }
+  .nav-tabs { display: flex; gap: 4px; }
+  .nav-tab { font-family: var(--font-mono); font-size: 12px; padding: 7px 18px; border-radius: 8px; border: 1px solid transparent; background: transparent; color: var(--muted); cursor: pointer; text-decoration: none; transition: all 0.2s; display: inline-flex; align-items: center; gap: 7px; }
+  .nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.04); border-color: var(--border); }
+  .nav-tab.active { color: var(--tk-accent); background: rgba(167,139,250,0.08); border-color: rgba(167,139,250,0.3); }
+  .nav-tab .tab-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: 0.7; }
+  .hero { padding: 60px 0 40px; animation: fadeUp 0.7s ease both; }
+  .hero-eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--tk-accent); margin-bottom: 16px; display: inline-flex; align-items: center; gap: 8px; }
+  .hero h1 { font-size: 48px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; color: var(--text); }
+  .hero h1 .accent { color: var(--tk-accent); }
+  .hero-sub { font-size: 16px; color: var(--muted); font-weight: 300; max-width: 600px; line-height: 1.6; }
+  .breadcrumb { display: flex; gap: 8px; margin-bottom: 24px; font-size: 13px; color: var(--muted); font-family: var(--font-mono); }
+  .breadcrumb a { color: var(--tk-accent); text-decoration: none; }
+  main { padding: 40px 0; }
+  .section-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; margin-top: 48px; }
+  .section-title { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--tk-accent); white-space: nowrap; }
+  .section-line { flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-bright), transparent); }
+  .content-block { margin-bottom: 32px; }
+  .content-block h3 { font-size: 22px; margin-bottom: 12px; color: var(--text); }
+  .content-block p { color: var(--muted); line-height: 1.7; margin-bottom: 16px; font-size: 15px; }
+  .code-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin: 16px 0; overflow-x: auto; font-family: var(--font-mono); font-size: 13px; color: var(--cyan); line-height: 1.8; white-space: pre-wrap; word-wrap: break-word; }
+  .example-box { background: rgba(167,139,250,0.05); border-left: 3px solid var(--tk-accent); border-radius: var(--radius); padding: 20px; margin: 20px 0; }
+  .example-box .label { font-family: var(--font-mono); font-size: 11px; color: var(--tk-accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; display: block; }
+  .properties-table { width: 100%; border-collapse: collapse; margin: 20px 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .properties-table th { background: rgba(167,139,250,0.1); padding: 12px 16px; text-align: left; font-family: var(--font-mono); font-size: 12px; color: var(--tk-accent); border-bottom: 1px solid var(--border); }
+  .properties-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .properties-table tr:hover { background: rgba(167,139,250,0.03); }
+  .key-points { background: rgba(61,245,200,0.05); border-left: 3px solid var(--cyan); border-radius: var(--radius); padding: 20px; margin: 20px 0; }
+  .key-points ul { list-style: none; padding: 0; }
+  .key-points li { padding-left: 24px; margin-bottom: 12px; position: relative; color: var(--muted); }
+  .key-points li:before { content: '✓'; position: absolute; left: 0; color: var(--cyan); font-weight: bold; }
+  .nav-tabs-bottom { display: flex; gap: 12px; margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--border); justify-content: space-between; }
+  .nav-tabs-bottom a { padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); color: var(--muted); text-decoration: none; transition: all 0.2s; font-size: 13px; font-family: var(--font-mono); display: flex; align-items: center; gap: 8px; }
+  .nav-tabs-bottom a:hover { color: var(--tk-accent); border-color: var(--tk-accent); background: rgba(167,139,250,0.05); }
+  .nav-tabs-bottom a.next { margin-left: auto; }
+  footer { padding: 40px 0; border-top: 1px solid var(--border); text-align: center; margin-top: 60px; }
+  .footer-logo { font-family: var(--font-mono); font-size: 14px; color: var(--gold); margin-bottom: 8px; }
+  .footer-sub { font-size: 13px; color: var(--muted); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo"><span class="snake">🐍</span><span>Tkinter<span style="color:var(--text);">Notes</span></span></a>
+      <div class="nav-tabs">
+        <a href="index.html" class="nav-tab"><span class="tab-dot"></span>Home</a>
+        <a href="day4_layouts.html" class="nav-tab"><span class="tab-dot"></span>Day 4</a>
+        <a href="#" class="nav-tab active"><span class="tab-dot"></span>Day 5</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a><span>/</span><span>Day 5: Advanced Widgets & Dialogs</span></div>
+    <div class="hero-eyebrow">Lesson 5 of 7</div>
+    <h1>Advanced Widgets & <span class="accent">Dialogs</span></h1>
+    <p class="hero-sub">Master Combobox, Menu, Scale, Spinbox. Learn message boxes, file dialogs, and interactive controls.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+
+    <div class="section-header">
+      <span class="section-title">// combobox widget</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>What is a Combobox?</h3>
+      <p>A <strong>Combobox</strong> is a <strong>dropdown list</strong> that lets users select from predefined options OR type their own value.</p>
+
+      <h3 style="margin-top: 24px;">Creating a Combobox</h3>
+      <div class="code-block">from tkinter import Tk
+from tkinter.ttk import Combobox
+
+root = Tk()
+root.title("Combobox Demo")
+root.geometry("400x300")
+
+combo = Combobox(root, values=["Python", "Java", "C++", "JavaScript"])
+combo.pack(padx=10, pady=10)
+
+combo.set("Select a language")
+
+root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Getting Combobox Value</h3>
+      <div class="code-block">from tkinter import Tk, Button
+from tkinter.ttk import Combobox
+
+root = Tk()
+root.title("Combobox Demo")
+root.geometry("400x300")
+
+combo = Combobox(root, values=["Python", "Java", "C++"])
+combo.pack(padx=10, pady=10)
+combo.set("Select")
+
+def get_selection():
+    &emsp;&emsp;selected = combo.get()
+    &emsp;&emsp;print(f"You selected: {selected}")
+
+button = Button(root, text="Get Selection", command=get_selection)
+button.pack()
+
+root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Combobox Properties</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Property</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>values</code></td>
+          <td>List of options</td>
+          <td><code>values=["A", "B", "C"]</code></td>
+        </tr>
+        <tr>
+          <td><code>state</code></td>
+          <td>"readonly" or "normal"</td>
+          <td><code>state="readonly"</code></td>
+        </tr>
+        <tr>
+          <td><code>width</code></td>
+          <td>Width in characters</td>
+          <td><code>width=20</code></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// menu & menubar</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Creating a Menu Bar</h3>
+      <div class="code-block">from tkinter import Tk, Menu
+
+root = Tk()
+root.title("Menu Demo")
+root.geometry("400x300")
+
+menubar = Menu(root)
+root.config(menu=menubar)
+
+# File Menu
+file_menu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="New", command=lambda: print("New"))
+file_menu.add_command(label="Open", command=lambda: print("Open"))
+file_menu.add_separator()
+file_menu.add_command(label="Exit", command=root.quit)
+
+# Edit Menu
+edit_menu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Edit", menu=edit_menu)
+edit_menu.add_command(label="Cut", command=lambda: print("Cut"))
+edit_menu.add_command(label="Copy", command=lambda: print("Copy"))
+edit_menu.add_command(label="Paste", command=lambda: print("Paste"))
+
+root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Menu Methods</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Method</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>.add_command()</code></td>
+          <td>Add clickable item</td>
+          <td><code>menu.add_command(label="Open", command=func)</code></td>
+        </tr>
+        <tr>
+          <td><code>.add_separator()</code></td>
+          <td>Add divider line</td>
+          <td><code>menu.add_separator()</code></td>
+        </tr>
+        <tr>
+          <td><code>.add_cascade()</code></td>
+          <td>Add submenu</td>
+          <td><code>menubar.add_cascade(label="File", menu=file_menu)</code></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// scale & spinbox widgets</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Scale Widget (Slider)</h3>
+      <div class="code-block">from tkinter import Tk, Scale, HORIZONTAL
+
+root = Tk()
+root.title("Scale Demo")
+root.geometry("400x300")
+
+# Horizontal scale
+scale = Scale(root, from_=0, to=100, orient=HORIZONTAL)
+scale.pack(padx=10, pady=10)
+
+def get_value():
+    &emsp;&emsp;value = scale.get()
+    &emsp;&emsp;print(f"Scale value: {value}")
+
+from tkinter import Button
+button = Button(root, text="Get Value", command=get_value)
+button.pack()
+
+root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Spinbox Widget</h3>
+      <div class="code-block">from tkinter import Tk, Button
+from tkinter.ttk import Spinbox
+
+root = Tk()
+root.title("Spinbox Demo")
+root.geometry("400x300")
+
+# Numeric spinbox
+spinbox = Spinbox(root, from_=0, to=100)
+spinbox.pack(padx=10, pady=10)
+
+def get_value():
+    &emsp;&emsp;value = spinbox.get()
+    &emsp;&emsp;print(f"Spinbox value: {value}")
+
+button = Button(root, text="Get Value", command=get_value)
+button.pack()
+
+root.mainloop()
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// message boxes & dialogs</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Message Box Functions</h3>
+      <div class="code-block">from tkinter import Tk, Button, messagebox
+
+root = Tk()
+root.title("Message Boxes")
+root.geometry("400x300")
+
+def show_info():
+    &emsp;&emsp;messagebox.showinfo("Info", "This is info")
+
+def show_warning():
+    &emsp;&emsp;messagebox.showwarning("Warning", "This is a warning")
+
+def show_error():
+    &emsp;&emsp;messagebox.showerror("Error", "This is an error")
+
+def ask_yes_no():
+    &emsp;&emsp;response = messagebox.askyesno("Question", "Do you like Python?")
+    &emsp;&emsp;print(f"Response: {response}")
+
+info_btn = Button(root, text="Info", command=show_info)
+info_btn.pack(pady=5)
+
+warning_btn = Button(root, text="Warning", command=show_warning)
+warning_btn.pack(pady=5)
+
+error_btn = Button(root, text="Error", command=show_error)
+error_btn.pack(pady=5)
+
+yes_no_btn = Button(root, text="Yes/No", command=ask_yes_no)
+yes_no_btn.pack(pady=5)
+
+root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">File Dialogs</h3>
+      <div class="code-block">from tkinter import Tk, Button, filedialog
+
+root = Tk()
+root.title("File Dialogs")
+root.geometry("400x300")
+
+def open_file():
+    &emsp;&emsp;file_path = filedialog.askopenfilename(
+        &emsp;&emsp;&emsp;&emsp;title="Open File",
+        &emsp;&emsp;&emsp;&emsp;filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+    &emsp;&emsp;)
+    &emsp;&emsp;if file_path:
+        &emsp;&emsp;&emsp;&emsp;print(f"Selected: {file_path}")
+
+def save_file():
+    &emsp;&emsp;file_path = filedialog.asksaveasfilename(
+        &emsp;&emsp;&emsp;&emsp;title="Save File",
+        &emsp;&emsp;&emsp;&emsp;defaultextension=".txt",
+        &emsp;&emsp;&emsp;&emsp;filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+    &emsp;&emsp;)
+    &emsp;&emsp;if file_path:
+        &emsp;&emsp;&emsp;&emsp;print(f"Saving to: {file_path}")
+
+open_btn = Button(root, text="Open File", command=open_file)
+open_btn.pack(pady=10)
+
+save_btn = Button(root, text="Save File", command=save_file)
+save_btn.pack(pady=10)
+
+root.mainloop()
+      </div>
+
+      <h3 style="margin-top: 24px;">Message Box Functions</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Function</th>
+          <th>Purpose</th>
+          <th>Returns</th>
+        </tr>
+        <tr>
+          <td><code>showinfo()</code></td>
+          <td>Information dialog</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td><code>showwarning()</code></td>
+          <td>Warning dialog</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td><code>showerror()</code></td>
+          <td>Error dialog</td>
+          <td>None</td>
+        </tr>
+        <tr>
+          <td><code>askyesno()</code></td>
+          <td>Yes/No question</td>
+          <td>True/False</td>
+        </tr>
+        <tr>
+          <td><code>askokcancel()</code></td>
+          <td>OK/Cancel question</td>
+          <td>True/False</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section-header" style="margin-top: 48px;">
+      <span class="section-title">// key takeaways</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="key-points">
+      <ul>
+        <li><strong>Combobox</strong> provides dropdown selections with editing</li>
+        <li><strong>Menu/Menubar</strong> creates professional menus</li>
+        <li><strong>Scale</strong> is a slider for numeric input</li>
+        <li><strong>Spinbox</strong> is numeric input with arrow buttons</li>
+        <li><strong>Message boxes</strong> provide dialog interactions</li>
+        <li><strong>File dialogs</strong> let users open/save files</li>
+        <li><strong>Combobox</strong> is from tkinter.ttk, not tkinter</li>
+      </ul>
+    </div>
+
+    <div class="nav-tabs-bottom">
+      <a href="day4_layouts.html">← Day 4: Layouts</a>
+      <a href="day6_events.html" class="next">Day 6: Events & Functions →</a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-logo">🐍 Tkinter<span>Notes</span></div>
+    <div class="footer-sub">7 lessons · Complete GUI series · beginner-friendly · free forever</div>
+  </div>
+</footer>
+
+</body>
+</html>
