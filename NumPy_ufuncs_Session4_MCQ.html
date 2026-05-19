@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NumPy Broadcasting — MCQ Test</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14; --surface: #13161e; --card: #1a1e2a; --border: #252a38;
+    --accent: #f7c948; --accent2: #4af0b0; --accent3: #f04a7a;
+    --text: #e8eaf0; --muted: #6b7394; --correct: #4af0b0; --wrong: #f04a7a; --radius: 12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif;
+    min-height: 100vh; padding: 40px 20px 80px;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(247,201,72,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(74,240,176,0.05) 0%, transparent 50%);
+  }
+  .container { max-width: 780px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 52px; animation: fadeDown .6s ease both; }
+  .badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--accent);
+    border: 1px solid rgba(247,201,72,.3); padding: 5px 14px; border-radius: 100px; margin-bottom: 18px;
+  }
+  h1 { font-size: clamp(28px, 5vw, 46px); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; }
+  h1 span { color: var(--accent); }
+  .subtitle { margin-top: 10px; color: var(--muted); font-size: 15px; font-family: 'JetBrains Mono', monospace; }
+  .topics { margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: .08em; }
+  .topics span { color: var(--accent2); opacity: .8; }
+  .progress-wrap { margin-bottom: 36px; animation: fadeDown .6s .1s ease both; }
+  .progress-meta { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .progress-meta span:last-child { color: var(--accent); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 100px; transition: width .5s cubic-bezier(.4,0,.2,1); width: 0%; }
+  .question-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+    padding: 32px 36px; margin-bottom: 16px; animation: slideUp .4s ease both;
+    position: relative; overflow: hidden;
+  }
+  .question-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent); opacity: 0; transition: opacity .3s;
+  }
+  .question-card.answered::before { opacity: 1; }
+  .q-number { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .q-text { font-size: 16px; font-weight: 600; line-height: 1.6; margin-bottom: 22px; }
+  .q-code {
+    font-family: 'JetBrains Mono', monospace; background: #0a0c11; border: 1px solid var(--border);
+    border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--accent2);
+    margin-bottom: 22px; line-height: 1.7; white-space: pre; overflow-x: auto;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex; align-items: center; gap: 14px; padding: 13px 18px;
+    border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer;
+    transition: all .2s ease; background: var(--surface); user-select: none;
+  }
+  .option:hover:not(.locked) { border-color: var(--accent); background: rgba(247,201,72,.06); transform: translateX(4px); }
+  .option-letter {
+    width: 30px; height: 30px; border-radius: 8px; background: var(--border);
+    border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700;
+    color: var(--muted); flex-shrink: 0; transition: all .2s;
+  }
+  .option-text { font-size: 14.5px; line-height: 1.5; }
+  .option.selected { border-color: var(--accent); background: rgba(247,201,72,.08); }
+  .option.selected .option-letter { background: var(--accent); border-color: var(--accent); color: #000; }
+  #result-section { display: none; animation: slideUp .5s ease both; margin-top: 24px; }
+  .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 40px 36px; position: relative; overflow: hidden; }
+  .result-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(247,201,72,.07) 0%, transparent 60%); pointer-events: none; }
+  .result-header { text-align: center; margin-bottom: 36px; }
+  .result-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+  .score-display { font-size: clamp(52px, 10vw, 80px); font-weight: 800; line-height: 1; color: var(--accent); letter-spacing: -.04em; }
+  .score-display sub { font-size: 28px; color: var(--muted); font-weight: 600; letter-spacing: 0; }
+  .score-percent { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .grade-badge { display: inline-block; margin-top: 16px; padding: 6px 20px; border-radius: 100px; font-size: 13px; font-weight: 700; letter-spacing: .06em; }
+  .grade-A { background: rgba(74,240,176,.15); color: var(--correct); border: 1px solid rgba(74,240,176,.3); }
+  .grade-B { background: rgba(247,201,72,.15); color: var(--accent); border: 1px solid rgba(247,201,72,.3); }
+  .grade-C { background: rgba(240,74,122,.15); color: var(--wrong); border: 1px solid rgba(240,74,122,.3); }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
+  .stat-val { font-size: 26px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .stat-val.c { color: var(--correct); } .stat-val.w { color: var(--wrong); } .stat-val.s { color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: .08em; text-transform: uppercase; }
+  .review-title { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; }
+  .review-list { display: flex; flex-direction: column; gap: 10px; }
+  .review-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: start; }
+  .review-item.correct { border-color: rgba(74,240,176,.25); }
+  .review-item.wrong   { border-color: rgba(240,74,122,.2); }
+  .ri-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); padding-top: 1px; }
+  .ri-body { font-size: 13.5px; line-height: 1.5; }
+  .ri-q { font-weight: 600; margin-bottom: 5px; color: var(--text); }
+  .ri-ans { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .ri-ans .your { color: var(--wrong); } .ri-ans .right { color: var(--correct); } .ri-ans .ok { color: var(--correct); }
+  .ri-icon { font-size: 18px; padding-top: 1px; }
+  .retry-btn {
+    margin-top: 32px; width: 100%; padding: 16px; background: var(--accent); color: #000;
+    border: none; border-radius: var(--radius); font-family: 'Syne', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: .04em; transition: all .2s;
+  }
+  .retry-btn:hover { background: #ffd966; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,201,72,.25); }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp  { from { opacity: 0; transform: translateY(20px);  } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 520px) { .question-card { padding: 22px 18px; } .stats-row { gap: 8px; } .result-card { padding: 28px 18px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="badge">🔢 NumPy — Broadcasting</div>
+    <h1>Intermediate<br><span>MCQ Test</span></h1>
+    <p class="subtitle">30 questions · one correct answer each</p>
+    <p class="topics"><span>broadcast rules</span> · <span>shape compatibility</span> · <span>np.newaxis</span> · <span>keepdims</span> · <span>broadcast_to</span> · <span>Z-score</span> · <span>softmax</span> · <span>row normaliz.</span></p>
+  </header>
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="prog-label">0 / 30 answered</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+  <div id="questions-container"></div>
+  <div id="result-section"></div>
+</div>
+<script>
+const questions = [
+  {
+    q: "[Theory] What does broadcasting do?",
+    opts: [
+      "Copies the smaller array to match sizes",
+      "Operates on different-shaped arrays without copying data",
+      "Transposes arrays to match shapes",
+      "Reshapes arrays permanently"
+    ],
+    ans: 1
+  },
+  {
+    q: "[Theory] In Rule 1, dimensions are padded on which side?",
+    opts: ["Right", "Both sides", "Left", "Neither"],
+    ans: 2
+  },
+  {
+    q: "[Theory] Which dimension sizes are compatible for broadcasting?",
+    opts: ["Any two sizes", "Only equal sizes", "Equal sizes OR one of them is 1", "Only when one is 0"],
+    ans: 2
+  },
+  {
+    q: "[Theory] What does keepdims=True do?",
+    opts: ["Doubles the array", "Preserves aggregated axis as size-1 dimension", "Copies the array", "Raises an error"],
+    ans: 1
+  },
+  {
+    q: "[Theory] What does np.newaxis insert?",
+    opts: ["A new array", "A size-1 dimension", "A copy", "A scalar"],
+    ans: 1
+  },
+  {
+    q: "[Theory] What does np.broadcast_to() return?",
+    opts: ["A writable copy", "A scalar", "A read-only broadcast view", "None"],
+    ans: 2
+  },
+  {
+    q: "[Theory] What is the output shape of (3,1) broadcast with (1,4)?",
+    opts: ["(1,1)", "(3,4)", "(4,3)", "ValueError"],
+    ans: 1
+  },
+  {
+    q: "[Theory] In X @ W + b where b is (out,), what broadcasting occurs?",
+    opts: [
+      "b is transposed",
+      "b is reshaped to (1,out) and stretches to (n,out)",
+      "b is multiplied element-wise",
+      "No broadcasting"
+    ],
+    ans: 1
+  },
+  {
+    q: "[Code] What is the output shape?",
+    code: "a = np.ones((3,1))\nb = np.ones((1,4))\nprint((a+b).shape)",
+    opts: ["(1,1)", "(4,3)", "(3,4)", "Error"],
+    ans: 2
+  },
+  {
+    q: "[Code] What is the output shape?",
+    code: "a = np.ones((5,1,4))\nb = np.ones((3,4))\nprint((a+b).shape)",
+    opts: ["(5,3,4)", "(3,4)", "(5,4)", "Error"],
+    ans: 0
+  },
+  {
+    q: "[Code] Does this raise an error?",
+    code: "np.ones((3,4)) + np.ones((4,3))",
+    opts: ["No — shape (3,4)", "No — shape (4,4)", "Yes — ValueError", "No — shape (7,7)"],
+    ans: 2
+  },
+  {
+    q: "[Code] What is the output shape?",
+    code: "a = np.ones((2,3,4))\nb = np.ones((4,))\nprint((a+b).shape)",
+    opts: ["(4,)", "(2,3)", "(2,3,4)", "Error"],
+    ans: 2
+  },
+  {
+    q: "[Code] What does this print?",
+    code: "a = np.array([[1],[2],[3]])\nb = np.array([10,20,30,40])\nprint((a+b).shape)",
+    opts: ["(3,)", "(4,3)", "(3,4)", "Error"],
+    ans: 2
+  },
+  {
+    q: "[Code] What is wrong here?",
+    code: "data = np.ones((4,3))\nmeans = np.mean(data, axis=1)  # shape (4,)\nresult = data - means",
+    opts: [
+      "Nothing wrong",
+      "means should use keepdims=True",
+      "axis should be 0",
+      "data should be transposed"
+    ],
+    ans: 1
+  },
+  {
+    q: "[Code] What shape does this produce?",
+    code: "a = np.array([1,2,3])  # (3,)\nprint(a[:,np.newaxis].shape)",
+    opts: ["(1,3)", "(3,)", "(3,1)", "Error"],
+    ans: 2
+  },
+  {
+    q: "[Code] What shape does this produce?",
+    code: "a = np.array([1,2,3])  # (3,)\nprint(a[np.newaxis,:].shape)",
+    opts: ["(3,1)", "(3,)", "(1,3)", "Error"],
+    ans: 2
+  },
+  {
+    q: "[Code] What does this print?",
+    code: "a = np.array([[1],[2],[3]])\nb = np.array([10,20,30])\nprint((a+b)[1,2])",
+    opts: ["32", "23", "52", "Error"],
+    ans: 0
+  },
+  {
+    q: "[Code] What is the output shape?",
+    code: "X = np.ones((5,4))\nW = np.ones((4,3))\nb = np.ones(3)\nprint((X@W+b).shape)",
+    opts: ["(4,3)", "(5,3)", "(5,4)", "Error"],
+    ans: 1
+  },
+  {
+    q: "[Code] What does np.broadcast_to return?",
+    code: "a = np.array([1,2,3])\nexp = np.broadcast_to(a, (4,3))\nprint(np.shares_memory(a, exp))",
+    opts: ["False", "None", "Error", "True"],
+    ans: 3
+  },
+  {
+    q: "[Code] What is the output shape?",
+    code: "X = np.ones((6,4))\ndiff = X[:,np.newaxis,:] - X[np.newaxis,:,:]\nprint(diff.shape)",
+    opts: ["(6,4)", "(6,6)", "(6,6,4)", "Error"],
+    ans: 2
+  },
+  {
+    q: "[Code] What shape does this produce?",
+    code: "data = np.ones((3,5))\nm = np.mean(data, axis=1, keepdims=True)\nprint(m.shape)",
+    opts: ["(3,)", "(1,5)", "(5,)", "(3,1)"],
+    ans: 3
+  },
+  {
+    q: "[Code] Which of these is the correct Z-score normalization?",
+    opts: [
+      "(X - np.mean(X)) / np.std(X)",
+      "(X - np.mean(X,axis=0)) / np.std(X,axis=0)",
+      "X / np.std(X,axis=1)",
+      "X - np.mean(X,axis=1)"
+    ],
+    ans: 1
+  },
+  {
+    q: "[Code] What is the output shape?",
+    code: "a = np.ones((2,1,3))\nb = np.ones((4,3))\nprint((a+b).shape)",
+    opts: ["(2,4,3)", "(4,3)", "(2,3)", "Error"],
+    ans: 0
+  },
+  {
+    q: "[Code] What does this produce?",
+    code: "a = np.array([1,2,3])\nb = np.array([1,2,3])\nprint((a[:,np.newaxis]+b[np.newaxis,:]).shape)",
+    opts: ["(3,)", "(6,)", "(3,3)", "Error"],
+    ans: 2
+  },
+  {
+    q: "[Code] What does np.broadcast(a,b).shape return?",
+    code: "a = np.ones((3,1))\nb = np.ones((1,4))",
+    opts: ["(1,1)", "(3,1)", "(3,4)", "Error"],
+    ans: 2
+  },
+  {
+    q: "[Code] What is wrong with this softmax?",
+    code: "def softmax(x):\n    e = np.exp(x - np.max(x))\n    return e / np.sum(e)",
+    opts: [
+      "Missing np.max",
+      "Should subtract min not max",
+      "Works for 1D but fails for batches — needs axis=-1 keepdims=True",
+      "Nothing wrong"
+    ],
+    ans: 2
+  },
+  {
+    q: "[Code] What does this shape check tell you?",
+    code: "bc = np.broadcast(np.ones((3,1)), np.ones((5,)))\nprint(bc.shape)",
+    opts: ["Error", "(3,5)", "(3,1)", "(5,)"],
+    ans: 1
+  },
+  {
+    q: "[Code] What is the output shape?",
+    code: "a = np.ones((4,1,3))\nb = np.ones((1,5,3))\nprint((a*b).shape)",
+    opts: ["(4,5)", "(5,4,3)", "(4,5,3)", "Error"],
+    ans: 2
+  },
+  {
+    q: "[Code] After this, what does result[0,1] equal?",
+    code: "a = np.array([[1],[2],[3]])\nb = np.array([10,20,30])\nresult = a + b",
+    opts: ["11", "21", "12", "30"],
+    ans: 1
+  },
+  {
+    q: "[Code] Which pattern correctly normalizes each row to [0,1]?",
+    opts: [
+      "(X-np.min(X))/(np.max(X)-np.min(X))",
+      "(X-np.min(X,axis=1))/(np.max(X,axis=1)-np.min(X,axis=1))",
+      "(X-np.min(X,axis=1,keepdims=True))/(np.max(X,axis=1,keepdims=True)-np.min(X,axis=1,keepdims=True))",
+      "X/np.max(X,axis=1,keepdims=True)"
+    ],
+    ans: 2
+  }
+];
+
+const labels = ['A','B','C','D'];
+const userAnswers = new Array(questions.length).fill(null);
+let answered = 0;
+let examDone = false;
+const container = document.getElementById('questions-container');
+const resultSec = document.getElementById('result-section');
+const progFill  = document.getElementById('progress-fill');
+const progLabel = document.getElementById('prog-label');
+const progPct   = document.getElementById('prog-pct');
+
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function buildQuestions() {
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'question-card'; card.id = `card-${qi}`;
+    card.style.animationDelay = `${qi * 0.03}s`;
+    const codeBlock = q.code ? `<div class="q-code">${escHtml(q.code)}</div>` : '';
+    const optsHtml = q.opts.map((opt, oi) => `
+      <div class="option" id="opt-${qi}-${oi}" onclick="selectOption(${qi}, ${oi})">
+        <div class="option-letter">${labels[oi]}</div>
+        <div class="option-text">${escHtml(opt)}</div>
+      </div>`).join('');
+    card.innerHTML = `<div class="q-number">Question ${qi + 1} of ${questions.length}</div>
+      <div class="q-text">${escHtml(q.q)}</div>${codeBlock}
+      <div class="options" id="opts-${qi}">${optsHtml}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function selectOption(qi, oi) {
+  if (examDone) return;
+  const wasNull = userAnswers[qi] === null;
+  userAnswers[qi] = oi;
+  for (let i = 0; i < 4; i++) { const el = document.getElementById(`opt-${qi}-${i}`); if (el) el.classList.remove('selected'); }
+  document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+  document.getElementById(`card-${qi}`).classList.add('answered');
+  if (wasNull) answered++;
+  updateProgress();
+  if (answered === questions.length) { examDone = true; setTimeout(showResult, 400); }
+}
+
+function updateProgress() {
+  const pct = Math.round((answered / questions.length) * 100);
+  progFill.style.width = pct + '%';
+  progLabel.textContent = `${answered} / ${questions.length} answered`;
+  progPct.textContent = pct + '%';
+}
+
+function showResult() {
+  let correct = 0;
+  questions.forEach((q, i) => { if (userAnswers[i] === q.ans) correct++; });
+  const wrong = questions.length - correct;
+  const pct = Math.round((correct / questions.length) * 100);
+  let grade, gradeClass, gradeMsg;
+  if (pct >= 80) { grade = '🏆 Excellent'; gradeClass = 'grade-A'; gradeMsg = 'Outstanding performance!'; }
+  else if (pct >= 60) { grade = '✅ Good'; gradeClass = 'grade-B'; gradeMsg = 'Solid understanding!'; }
+  else { grade = '📚 Keep Going'; gradeClass = 'grade-C'; gradeMsg = 'More practice needed.'; }
+  const reviewItems = questions.map((q, i) => {
+    const isRight = userAnswers[i] === q.ans;
+    const userLetter = labels[userAnswers[i]]; const corrLetter = labels[q.ans];
+    const qShort = q.q.length > 60 ? q.q.slice(0, 57) + '…' : q.q;
+    const ansHtml = isRight
+      ? `<span class="ok">✓ ${userLetter}: ${escHtml(q.opts[userAnswers[i]])}</span>`
+      : `<span class="your">✗ You: ${userLetter} — ${escHtml(q.opts[userAnswers[i]])}</span><br><span class="right">✓ Correct: ${corrLetter} — ${escHtml(q.opts[q.ans])}</span>`;
+    return `<div class="review-item ${isRight ? 'correct' : 'wrong'}">
+        <div class="ri-num">Q${i+1}</div>
+        <div class="ri-body"><div class="ri-q">${escHtml(qShort)}</div><div class="ri-ans">${ansHtml}</div></div>
+        <div class="ri-icon">${isRight ? '✅' : '❌'}</div></div>`;
+  }).join('');
+  resultSec.innerHTML = `<div class="result-card">
+    <div class="result-header">
+      <div class="result-label">Your Result</div>
+      <div class="score-display">${correct}<sub> / ${questions.length}</sub></div>
+      <div class="score-percent">${pct}% correct — ${gradeMsg}</div>
+      <span class="grade-badge ${gradeClass}">${grade}</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-val c">${correct}</div><div class="stat-lbl">Correct</div></div>
+      <div class="stat-box"><div class="stat-val w">${wrong}</div><div class="stat-lbl">Wrong</div></div>
+      <div class="stat-box"><div class="stat-val s">${pct}%</div><div class="stat-lbl">Score</div></div>
+    </div>
+    <div class="review-title">Answer Review</div>
+    <div class="review-list">${reviewItems}</div>
+    <button class="retry-btn" onclick="retryExam()">↺ Retry Exam</button>
+    </div>`;
+  resultSec.style.display = 'block';
+  resultSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function retryExam() {
+  userAnswers.fill(null); answered = 0; examDone = false; updateProgress();
+  resultSec.style.display = 'none'; resultSec.innerHTML = '';
+  document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.question-card').forEach(el => el.classList.remove('answered'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+buildQuestions();
+</script>
+</body>
+</html>
