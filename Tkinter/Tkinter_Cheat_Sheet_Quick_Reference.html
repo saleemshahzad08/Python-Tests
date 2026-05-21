@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tkinter Complete Cheatsheet — Tkinter Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a10;
+    --surface: #0e1118;
+    --card: #121620;
+    --card-hover: #171c28;
+    --border: #1e2435;
+    --border-bright: #2a3350;
+    --gold: #f5c842;
+    --cyan: #3df5c8;
+    --pink: #f0437a;
+    --blue: #4a8fff;
+    --tk-accent: #a78bfa;
+    --text: #e2e8f8;
+    --muted: #5a6380;
+    --radius: 14px;
+    --font-mono: 'Space Mono', monospace;
+    --font-body: 'Outfit', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glow-1 {
+    position: fixed;
+    top: -200px; left: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .glow-2 {
+    position: fixed;
+    bottom: -150px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(61,245,200,0.05) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .wrap {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,10,16,0.85);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-logo .snake { font-size: 20px; }
+
+  .nav-home {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    padding: 7px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .nav-home:hover {
+    color: var(--tk-accent);
+    border-color: var(--tk-accent);
+    background: rgba(167,139,250,0.05);
+  }
+
+  .hero {
+    padding: 60px 0 40px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--tk-accent);
+    margin-bottom: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .hero h1 .accent {
+    color: var(--tk-accent);
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+
+  main { padding: 40px 0; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    margin-top: 48px;
+  }
+
+  .section-header:first-of-type { margin-top: 0; }
+
+  .section-title {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tk-accent);
+    white-space: nowrap;
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-bright), transparent);
+  }
+
+  .quick-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 30px 0;
+  }
+
+  .quick-nav-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .quick-nav-item:hover {
+    background: var(--card-hover);
+    border-color: var(--tk-accent);
+    color: var(--tk-accent);
+  }
+
+  .content-block {
+    margin-bottom: 32px;
+  }
+
+  .content-block h3 {
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: var(--text);
+    margin-top: 24px;
+  }
+
+  .content-block h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: var(--text);
+    margin-top: 16px;
+  }
+
+  .content-block p {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 12px;
+    font-size: 14px;
+  }
+
+  .code-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin: 12px 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--cyan);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .toggle-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 12px 0;
+  }
+
+  .toggle-header {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+    font-weight: 600;
+    user-select: none;
+    font-size: 14px;
+  }
+
+  .toggle-header:hover {
+    background: var(--card-hover);
+  }
+
+  .toggle-icon {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
+    color: var(--tk-accent);
+  }
+
+  .toggle-box.open .toggle-icon {
+    transform: rotate(180deg);
+  }
+
+  .toggle-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0 16px;
+  }
+
+  .toggle-box.open .toggle-content {
+    max-height: 3000px;
+    padding: 0 16px 16px 16px;
+  }
+
+  .properties-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-size: 13px;
+  }
+
+  .properties-table th {
+    background: rgba(167,139,250,0.1);
+    padding: 10px 12px;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--tk-accent);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .properties-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .properties-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .properties-table tr:hover {
+    background: rgba(167,139,250,0.03);
+  }
+
+  .example-box {
+    background: rgba(167,139,250,0.05);
+    border-left: 3px solid var(--tk-accent);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin: 12px 0;
+    font-size: 13px;
+  }
+
+  .example-box code {
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    color: var(--cyan);
+  }
+
+  .widget-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 12px 0;
+  }
+
+  .widget-card h4 {
+    color: var(--tk-accent);
+    margin-bottom: 8px;
+  }
+
+  footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    margin-top: 60px;
+  }
+
+  .footer-logo {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .footer-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 32px; }
+    .quick-nav { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="snake">🐍</span>
+        <span>Tkinter<span style="color:var(--text);">Notes</span></span>
+      </a>
+      <a href="index.html" class="nav-home">← Back to Home</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Quick Reference</div>
+    <h1>Tkinter <span class="accent">Cheatsheet</span></h1>
+    <p class="hero-sub">Complete quick reference guide covering all 7 days of tkinter learning. Organized by topic with code examples, properties, and methods.</p>
+  </div>
+</section>
+
+<main>
+  <div class="wrap">
+
+    <!-- TABLE OF CONTENTS -->
+    <div class="section-header">
+      <span class="section-title">// quick navigation</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="quick-nav">
+      <a href="#basics" class="quick-nav-item">🪟 Basics</a>
+      <a href="#widgets" class="quick-nav-item">🎛️ Widgets</a>
+      <a href="#properties" class="quick-nav-item">⚙️ Properties</a>
+      <a href="#methods" class="quick-nav-item">🔧 Methods</a>
+      <a href="#layouts" class="quick-nav-item">📐 Layouts</a>
+      <a href="#events" class="quick-nav-item">⚡ Events</a>
+      <a href="#dialogs" class="quick-nav-item">💬 Dialogs</a>
+      <a href="#patterns" class="quick-nav-item">🎯 Patterns</a>
+    </div>
+
+    <!-- BASICS -->
+    <div id="basics" class="section-header">
+      <span class="section-title">// basics & setup</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Minimal Window</h3>
+      <div class="code-block">from tkinter import Tk
+
+root = Tk()
+root.title("My App")
+root.geometry("400x300")
+root.mainloop()
+      </div>
+
+      <h3>Window Configuration</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Method</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>root.title()</code></td>
+          <td>Set window title</td>
+          <td><code>root.title("App Name")</code></td>
+        </tr>
+        <tr>
+          <td><code>root.geometry()</code></td>
+          <td>Set size & position</td>
+          <td><code>root.geometry("400x300+100+50")</code></td>
+        </tr>
+        <tr>
+          <td><code>root.config()</code></td>
+          <td>Configure properties</td>
+          <td><code>root.config(bg="white")</code></td>
+        </tr>
+        <tr>
+          <td><code>root.resizable()</code></td>
+          <td>Allow/disable resize</td>
+          <td><code>root.resizable(False, False)</code></td>
+        </tr>
+        <tr>
+          <td><code>root.mainloop()</code></td>
+          <td>Keep window open</td>
+          <td><code>root.mainloop()</code></td>
+        </tr>
+      </table>
+
+      <h3>Import Patterns</h3>
+      <div class="code-block">from tkinter import Tk, Label, Button, Entry
+from tkinter.ttk import Combobox, Spinbox
+from tkinter import messagebox, filedialog
+      </div>
+    </div>
+
+    <!-- WIDGETS -->
+    <div id="widgets" class="section-header">
+      <span class="section-title">// all widgets quick reference</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <div class="widget-card">
+        <h4>Label - Display Text</h4>
+        <div class="code-block">label = Label(root, text="Hello", 
+             font=("Arial", 12), fg="black", bg="white")
+label.pack()</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Button - Clickable Element</h4>
+        <div class="code-block">def on_click():
+    print("Clicked!")
+
+button = Button(root, text="Click", command=on_click)
+button.pack()</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Entry - Single Line Input</h4>
+        <div class="code-block">entry = Entry(root, width=30)
+entry.pack()
+value = entry.get()
+entry.delete(0, "end")
+entry.insert(0, "default")</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Text - Multi-line Input</h4>
+        <div class="code-block">text = Text(root, height=10, width=40)
+text.pack()
+content = text.get("1.0", "end-1c")
+text.insert("1.0", "Hello")
+text.delete("1.0", "end")</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Frame - Container</h4>
+        <div class="code-block">frame = Frame(root, bg="lightblue", 
+            height=100, width=300)
+frame.pack()
+
+label = Label(frame, text="Inside frame")
+label.pack()</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Listbox - List Selection</h4>
+        <div class="code-block">listbox = Listbox(root, height=8, width=30)
+listbox.pack()
+listbox.insert(0, "Item 1")
+listbox.insert(1, "Item 2")
+selected = listbox.curselection()</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Checkbutton - Multiple Selection</h4>
+        <div class="code-block">from tkinter import IntVar
+
+var = IntVar()
+check = Checkbutton(root, text="Option", variable=var)
+check.pack()
+is_checked = var.get()  # 1 or 0</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Radiobutton - Single Selection</h4>
+        <div class="code-block">from tkinter import StringVar
+
+var = StringVar(value="default")
+radio1 = Radiobutton(root, text="A", variable=var, value="A")
+radio1.pack()
+selected = var.get()</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Combobox - Dropdown</h4>
+        <div class="code-block">from tkinter.ttk import Combobox
+
+combo = Combobox(root, values=["A", "B", "C"])
+combo.pack()
+combo.set("A")
+selected = combo.get()</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Scale - Slider</h4>
+        <div class="code-block">from tkinter import Scale, HORIZONTAL
+
+scale = Scale(root, from_=0, to=100, 
+             orient=HORIZONTAL)
+scale.pack()
+value = scale.get()</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Spinbox - Numeric Input</h4>
+        <div class="code-block">from tkinter.ttk import Spinbox
+
+spinbox = Spinbox(root, from_=0, to=100)
+spinbox.pack()
+value = spinbox.get()</div>
+      </div>
+
+      <div class="widget-card">
+        <h4>Menu - Menu Bar</h4>
+        <div class="code-block">menubar = Menu(root)
+root.config(menu=menubar)
+
+file_menu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="Open", command=func)
+file_menu.add_separator()
+file_menu.add_command(label="Exit", command=root.quit)</div>
+      </div>
+    </div>
+
+    <!-- PROPERTIES -->
+    <div id="properties" class="section-header">
+      <span class="section-title">// widget properties</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Common Properties (All Widgets)</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Property</th>
+          <th>Values/Type</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>text</code></td>
+          <td>string</td>
+          <td><code>text="Hello"</code></td>
+        </tr>
+        <tr>
+          <td><code>font</code></td>
+          <td>(name, size, style)</td>
+          <td><code>font=("Arial", 12, "bold")</code></td>
+        </tr>
+        <tr>
+          <td><code>fg</code></td>
+          <td>color name or hex</td>
+          <td><code>fg="red"</code> or <code>fg="#FF0000"</code></td>
+        </tr>
+        <tr>
+          <td><code>bg</code></td>
+          <td>color name or hex</td>
+          <td><code>bg="lightblue"</code></td>
+        </tr>
+        <tr>
+          <td><code>padx</code></td>
+          <td>integer (pixels)</td>
+          <td><code>padx=10</code></td>
+        </tr>
+        <tr>
+          <td><code>pady</code></td>
+          <td>integer (pixels)</td>
+          <td><code>pady=5</code></td>
+        </tr>
+        <tr>
+          <td><code>width</code></td>
+          <td>integer</td>
+          <td><code>width=20</code></td>
+        </tr>
+        <tr>
+          <td><code>height</code></td>
+          <td>integer</td>
+          <td><code>height=10</code></td>
+        </tr>
+        <tr>
+          <td><code>state</code></td>
+          <td>"normal" or "disabled"</td>
+          <td><code>state="disabled"</code></td>
+        </tr>
+        <tr>
+          <td><code>command</code></td>
+          <td>function</td>
+          <td><code>command=my_func</code></td>
+        </tr>
+      </table>
+
+      <h3>Font Styles</h3>
+      <div class="example-box">
+        <code>font=("Arial", 14)</code> - Normal<br>
+        <code>font=("Arial", 14, "bold")</code> - Bold<br>
+        <code>font=("Arial", 14, "italic")</code> - Italic<br>
+        <code>font=("Arial", 14, "bold italic")</code> - Bold Italic
+      </div>
+
+      <h3>Common Colors</h3>
+      <div class="example-box">
+        Named: "white", "black", "red", "blue", "green", "yellow", "lightblue", "lightgreen", "gray", "orange", "purple"<br>
+        Hex: "#FF0000" (red), "#00FF00" (green), "#0000FF" (blue)
+      </div>
+    </div>
+
+    <!-- METHODS -->
+    <div id="methods" class="section-header">
+      <span class="section-title">// widget methods</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Entry Methods</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Method</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>.get()</code></td>
+          <td>Get text</td>
+          <td><code>value = entry.get()</code></td>
+        </tr>
+        <tr>
+          <td><code>.insert()</code></td>
+          <td>Insert text</td>
+          <td><code>entry.insert(0, "Hello")</code></td>
+        </tr>
+        <tr>
+          <td><code>.delete()</code></td>
+          <td>Delete text</td>
+          <td><code>entry.delete(0, "end")</code></td>
+        </tr>
+      </table>
+
+      <h3>Text Methods</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Method</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>.get()</code></td>
+          <td>Get range of text</td>
+          <td><code>text.get("1.0", "end")</code></td>
+        </tr>
+        <tr>
+          <td><code>.insert()</code></td>
+          <td>Insert text at position</td>
+          <td><code>text.insert("1.0", "Hello")</code></td>
+        </tr>
+        <tr>
+          <td><code>.delete()</code></td>
+          <td>Delete text range</td>
+          <td><code>text.delete("1.0", "end")</code></td>
+        </tr>
+      </table>
+
+      <h3>Listbox Methods</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Method</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>.insert()</code></td>
+          <td>Add item</td>
+          <td><code>listbox.insert("end", "Item")</code></td>
+        </tr>
+        <tr>
+          <td><code>.delete()</code></td>
+          <td>Remove item</td>
+          <td><code>listbox.delete(0)</code></td>
+        </tr>
+        <tr>
+          <td><code>.get()</code></td>
+          <td>Get item text</td>
+          <td><code>listbox.get(0)</code></td>
+        </tr>
+        <tr>
+          <td><code>.curselection()</code></td>
+          <td>Get selected index</td>
+          <td><code>selected = listbox.curselection()</code></td>
+        </tr>
+      </table>
+
+      <h3>Var Methods (StringVar, IntVar)</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Method</th>
+          <th>Purpose</th>
+          <th>Example</th>
+        </tr>
+        <tr>
+          <td><code>.get()</code></td>
+          <td>Get value</td>
+          <td><code>value = var.get()</code></td>
+        </tr>
+        <tr>
+          <td><code>.set()</code></td>
+          <td>Set value</td>
+          <td><code>var.set("new value")</code></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- LAYOUTS -->
+    <div id="layouts" class="section-header">
+      <span class="section-title">// layout managers</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <div class="toggle-box">
+        <div class="toggle-header">
+          <span>📦 Pack Layout</span>
+          <div class="toggle-icon">▼</div>
+        </div>
+        <div class="toggle-content">
+          <p style="color: var(--muted); margin-bottom: 10px;">Stacks widgets in a line (top-to-bottom or left-to-right)</p>
+          <div class="code-block">widget.pack(side="top", fill="x", expand=True, padx=10, pady=5)</div>
+          <table class="properties-table">
+            <tr>
+              <th>Parameter</th>
+              <th>Values</th>
+            </tr>
+            <tr>
+              <td><code>side</code></td>
+              <td>"top", "bottom", "left", "right"</td>
+            </tr>
+            <tr>
+              <td><code>fill</code></td>
+              <td>"x", "y", "both", "none"</td>
+            </tr>
+            <tr>
+              <td><code>expand</code></td>
+              <td>True, False</td>
+            </tr>
+            <tr>
+              <td><code>padx</code></td>
+              <td>integer</td>
+            </tr>
+            <tr>
+              <td><code>pady</code></td>
+              <td>integer</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="toggle-box">
+        <div class="toggle-header">
+          <span>🎯 Grid Layout (PROFESSIONAL)</span>
+          <div class="toggle-icon">▼</div>
+        </div>
+        <div class="toggle-content">
+          <p style="color: var(--muted); margin-bottom: 10px;">Arranges widgets in rows and columns (like a table)</p>
+          <div class="code-block">widget.grid(row=0, column=0, columnspan=2, rowspan=1, 
+           sticky="nsew", padx=5, pady=5)</div>
+          <table class="properties-table">
+            <tr>
+              <th>Parameter</th>
+              <th>Purpose</th>
+            </tr>
+            <tr>
+              <td><code>row</code></td>
+              <td>Row number (0-based)</td>
+            </tr>
+            <tr>
+              <td><code>column</code></td>
+              <td>Column number (0-based)</td>
+            </tr>
+            <tr>
+              <td><code>columnspan</code></td>
+              <td>Span N columns</td>
+            </tr>
+            <tr>
+              <td><code>rowspan</code></td>
+              <td>Span N rows</td>
+            </tr>
+            <tr>
+              <td><code>sticky</code></td>
+              <td>"n", "s", "e", "w", "ne", "nsew"</td>
+            </tr>
+            <tr>
+              <td><code>padx</code></td>
+              <td>Horizontal padding</td>
+            </tr>
+            <tr>
+              <td><code>pady</code></td>
+              <td>Vertical padding</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="toggle-box">
+        <div class="toggle-header">
+          <span>📍 Place Layout</span>
+          <div class="toggle-icon">▼</div>
+        </div>
+        <div class="toggle-content">
+          <p style="color: var(--muted); margin-bottom: 10px;">Positions widgets at exact pixel coordinates</p>
+          <div class="code-block">widget.place(x=100, y=50, width=150, height=50)</div>
+          <table class="properties-table">
+            <tr>
+              <th>Parameter</th>
+              <th>Purpose</th>
+            </tr>
+            <tr>
+              <td><code>x</code></td>
+              <td>X coordinate (pixels)</td>
+            </tr>
+            <tr>
+              <td><code>y</code></td>
+              <td>Y coordinate (pixels)</td>
+            </tr>
+            <tr>
+              <td><code>width</code></td>
+              <td>Width (pixels)</td>
+            </tr>
+            <tr>
+              <td><code>height</code></td>
+              <td>Height (pixels)</td>
+            </tr>
+            <tr>
+              <td><code>relx</code></td>
+              <td>Relative X (0.0-1.0)</td>
+            </tr>
+            <tr>
+              <td><code>rely</code></td>
+              <td>Relative Y (0.0-1.0)</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTS -->
+    <div id="events" class="section-header">
+      <span class="section-title">// event handling & shortcuts</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Event Binding</h3>
+      <div class="code-block">def on_event(event):
+    print(f"Event: {event}")
+
+widget.bind("<Button-1>", on_event)      # Left click
+widget.bind("<Button-3>", on_event)      # Right click
+widget.bind("<Double-Button-1>", on_event)  # Double click
+widget.bind("<Enter>", on_event)         # Mouse enter
+widget.bind("<Leave>", on_event)         # Mouse leave
+widget.bind("<Motion>", on_event)        # Mouse move
+      </div>
+
+      <h3>Keyboard Events</h3>
+      <div class="code-block">root.bind("<Return>", on_enter)        # Enter key
+root.bind("<space>", on_space)          # Space bar
+root.bind("<KeyPress>", on_key)         # Any key
+root.bind("<Control-s>", on_save)       # Ctrl+S
+root.bind("<Control-o>", on_open)       # Ctrl+O
+      </div>
+
+      <h3>Lambda with Arguments</h3>
+      <div class="code-block">def greet(name):
+    print(f"Hello, {name}!")
+
+button = Button(root, text="Greet",
+               command=lambda: greet("Alice"))
+button.pack()
+      </div>
+
+      <h3>Common Key Symbols</h3>
+      <table class="properties-table">
+        <tr>
+          <th>Key</th>
+          <th>Keysym</th>
+        </tr>
+        <tr>
+          <td>Enter/Return</td>
+          <td><code>Return</code></td>
+        </tr>
+        <tr>
+          <td>Space</td>
+          <td><code>space</code></td>
+        </tr>
+        <tr>
+          <td>Tab</td>
+          <td><code>Tab</code></td>
+        </tr>
+        <tr>
+          <td>Escape</td>
+          <td><code>Escape</code></td>
+        </tr>
+        <tr>
+          <td>Backspace</td>
+          <td><code>BackSpace</code></td>
+        </tr>
+        <tr>
+          <td>Arrow Up/Down/Left/Right</td>
+          <td><code>Up, Down, Left, Right</code></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- DIALOGS -->
+    <div id="dialogs" class="section-header">
+      <span class="section-title">// dialogs & message boxes</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Message Boxes</h3>
+      <div class="code-block">from tkinter import messagebox
+
+messagebox.showinfo("Title", "Information message")
+messagebox.showwarning("Title", "Warning message")
+messagebox.showerror("Title", "Error message")
+
+response = messagebox.askyesno("Question", "Continue?")
+response = messagebox.askokcancel("Confirm", "Proceed?")
+      </div>
+
+      <h3>File Dialogs</h3>
+      <div class="code-block">from tkinter import filedialog
+
+file_path = filedialog.askopenfilename(
+    title="Open File",
+    filetypes=[("Text Files", "*.txt"), ("All", "*.*")]
+)
+
+file_path = filedialog.asksaveasfilename(
+    title="Save As",
+    defaultextension=".txt",
+    filetypes=[("Text Files", "*.txt")]
+)
+
+folder = filedialog.askdirectory(title="Select Folder")
+      </div>
+    </div>
+
+    <!-- PATTERNS -->
+    <div id="patterns" class="section-header">
+      <span class="section-title">// common patterns</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Class-Based Application</h3>
+      <div class="code-block">from tkinter import Tk, Label, Button
+
+class MyApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("My App")
+        
+        self.create_widgets()
+    
+    def create_widgets(self):
+        self.label = Label(self.root, text="Hello")
+        self.label.pack()
+        
+        self.button = Button(self.root, text="Click",
+                            command=self.on_click)
+        self.button.pack()
+    
+    def on_click(self):
+        self.label.config(text="Clicked!")
+
+if __name__ == "__main__":
+    root = Tk()
+    app = MyApp(root)
+    root.mainloop()
+      </div>
+
+      <h3>File Operations</h3>
+      <div class="code-block">try:
+    with open("file.txt", "r") as file:
+        content = file.read()
+except FileNotFoundError:
+    messagebox.showerror("Error", "File not found")
+except Exception as e:
+    messagebox.showerror("Error", f"Error: {str(e)}")
+
+try:
+    with open("file.txt", "w") as file:
+        file.write(content)
+except Exception as e:
+    messagebox.showerror("Error", f"Cannot save: {e}")
+      </div>
+
+      <h3>Getting Multiple Entry Values</h3>
+      <div class="code-block">name_entry = Entry(root)
+email_entry = Entry(root)
+age_entry = Entry(root)
+
+def submit():
+    name = name_entry.get()
+    email = email_entry.get()
+    age = age_entry.get()
+    
+    if name and email and age:
+        print(f"Name: {name}, Email: {email}, Age: {age}")
+    else:
+        messagebox.showwarning("Error", "Fill all fields!")
+
+button = Button(root, text="Submit", command=submit)
+      </div>
+
+      <h3>Creating Menus</h3>
+      <div class="code-block">from tkinter import Menu
+
+menubar = Menu(root)
+root.config(menu=menubar)
+
+file_menu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="New", command=new_file)
+file_menu.add_command(label="Open", command=open_file)
+file_menu.add_separator()
+file_menu.add_command(label="Exit", command=root.quit)
+      </div>
+
+      <h3>Calculator Pattern</h3>
+      <div class="code-block">display = Entry(root, font=("Arial", 20))
+display.pack()
+
+def append_number(num):
+    current = display.get()
+    if current == "0":
+        display.delete(0, "end")
+    display.insert("end", str(num))
+
+def calculate():
+    try:
+        result = eval(display.get())
+        display.delete(0, "end")
+        display.insert(0, str(result))
+    except:
+        messagebox.showerror("Error", "Invalid expression")
+
+button1 = Button(root, text="1", command=lambda: append_number(1))
+button1.pack()
+      </div>
+    </div>
+
+    <!-- QUICK LOOKUP -->
+    <div class="section-header">
+      <span class="section-title">// geometry format</span>
+      <span class="section-line"></span>
+    </div>
+
+    <div class="content-block">
+      <h3>Window Geometry String</h3>
+      <div class="example-box">
+        Format: <code>"WIDTHxHEIGHT+X+Y"</code><br><br>
+        Examples:<br>
+        <code>"400x300"</code> - 400px wide, 300px tall<br>
+        <code>"600x400+100+50"</code> - 600×400, positioned at (100,50)<br>
+        <code>"500x500"</code> - 500×500, auto-positioned
+      </div>
+
+      <h3>Text Widget Positions</h3>
+      <div class="example-box">
+        <code>"1.0"</code> - Line 1, Character 0 (start)<br>
+        <code>"end"</code> - End of text<br>
+        <code>"end-1c"</code> - End minus 1 character (removes newline)<br>
+        <code>"2.5"</code> - Line 2, Character 5
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-logo">🐍 Tkinter<span>Notes</span></div>
+    <div class="footer-sub">Complete 7-day cheatsheet · Quick reference · Always available</div>
+  </div>
+</footer>
+
+<script>
+  const toggleBoxes = document.querySelectorAll('.toggle-box');
+  
+  toggleBoxes.forEach(box => {
+    const header = box.querySelector('.toggle-header');
+    header.addEventListener('click', () => {
+      box.classList.toggle('open');
+    });
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

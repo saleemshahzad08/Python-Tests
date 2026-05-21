@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tkinter Cheatsheet — Complete 7-Day Reference</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080a10;
+    --surface: #0e1118;
+    --card: #121620;
+    --card-hover: #171c28;
+    --border: #1e2435;
+    --border-bright: #2a3350;
+    --gold: #f5c842;
+    --gold-dim: #c9a330;
+    --cyan: #3df5c8;
+    --pink: #f0437a;
+    --blue: #4a8fff;
+    --tk-accent: #a78bfa;
+    --tk-accent-dim: #7c5fc9;
+    --text: #e2e8f8;
+    --muted: #5a6380;
+    --radius: 14px;
+    --font-mono: 'Space Mono', monospace;
+    --font-body: 'Outfit', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glow-1 {
+    position: fixed;
+    top: -200px; left: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(167,139,250,0.08) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  .glow-2 {
+    position: fixed;
+    bottom: -150px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(61,245,200,0.05) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .wrap {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,10,16,0.92);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo .snake { font-size: 20px; }
+  .nav-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--tk-accent);
+    border: 1px solid rgba(167,139,250,0.3);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.1em;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .home-link {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 7px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    letter-spacing: 0.06em;
+  }
+  .home-link:hover {
+    color: var(--text);
+    border-color: var(--tk-accent);
+    background: rgba(167,139,250,0.06);
+  }
+  .expand-all-btn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--cyan);
+    background: rgba(61,245,200,0.06);
+    border: 1px solid rgba(61,245,200,0.2);
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: all 0.2s;
+  }
+  .expand-all-btn:hover {
+    background: rgba(61,245,200,0.12);
+    border-color: rgba(61,245,200,0.4);
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 56px 0 36px;
+    animation: fadeUp 0.7s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--tk-accent);
+    margin-bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero h1 {
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 14px;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .hero h1 .accent { color: var(--tk-accent); }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 640px;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  /* ─── DAY PILLS ─── */
+  .day-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .day-pill {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border-bright);
+    background: var(--card);
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .day-pill:hover {
+    color: var(--tk-accent);
+    border-color: rgba(167,139,250,0.4);
+    background: rgba(167,139,250,0.06);
+  }
+  .day-pill.d1 { --dc: #f5c842; }
+  .day-pill.d2 { --dc: #3df5c8; }
+  .day-pill.d3 { --dc: #4a8fff; }
+  .day-pill.d4 { --dc: #f0437a; }
+  .day-pill.d5 { --dc: #a78bfa; }
+  .day-pill.d6 { --dc: #f5c842; }
+  .day-pill.d7 { --dc: #3df5c8; }
+  .day-pill:hover { color: var(--dc); border-color: var(--dc); }
+
+  /* ─── MAIN ─── */
+  main { padding: 8px 0 60px; }
+
+  /* ─── DAY SECTION ─── */
+  .day-section {
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--card);
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+  .day-section.open .day-body { display: block; }
+  .day-section:not(.open) .day-body { display: none; }
+
+  .day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 28px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+    gap: 16px;
+  }
+  .day-header:hover { background: var(--card-hover); }
+
+  .day-header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+  }
+  .day-number {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .day-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .day-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+  }
+  .day-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .day-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: rgba(167,139,250,0.08);
+    color: var(--tk-accent);
+    border: 1px solid rgba(167,139,250,0.15);
+  }
+  .chevron {
+    font-size: 18px;
+    color: var(--muted);
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
+  }
+  .day-section.open .chevron { transform: rotate(180deg); }
+
+  .day-body {
+    padding: 0 28px 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Day color themes */
+  .day-section.day1 .day-number { color: var(--gold); border-color: rgba(245,200,66,0.3); background: rgba(245,200,66,0.06); }
+  .day-section.day1 .day-header { border-left: 3px solid var(--gold); }
+  .day-section.day2 .day-number { color: var(--cyan); border-color: rgba(61,245,200,0.3); background: rgba(61,245,200,0.06); }
+  .day-section.day2 .day-header { border-left: 3px solid var(--cyan); }
+  .day-section.day3 .day-number { color: var(--blue); border-color: rgba(74,143,255,0.3); background: rgba(74,143,255,0.06); }
+  .day-section.day3 .day-header { border-left: 3px solid var(--blue); }
+  .day-section.day4 .day-number { color: var(--pink); border-color: rgba(240,67,122,0.3); background: rgba(240,67,122,0.06); }
+  .day-section.day4 .day-header { border-left: 3px solid var(--pink); }
+  .day-section.day5 .day-number { color: var(--tk-accent); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.06); }
+  .day-section.day5 .day-header { border-left: 3px solid var(--tk-accent); }
+  .day-section.day6 .day-number { color: var(--gold); border-color: rgba(245,200,66,0.3); background: rgba(245,200,66,0.06); }
+  .day-section.day6 .day-header { border-left: 3px solid var(--gold); }
+  .day-section.day7 .day-number { color: var(--cyan); border-color: rgba(61,245,200,0.3); background: rgba(61,245,200,0.06); }
+  .day-section.day7 .day-header { border-left: 3px solid var(--cyan); }
+
+  /* ─── SUB-SECTIONS ─── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 36px 0 20px;
+  }
+  .section-title {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tk-accent);
+    white-space: nowrap;
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border-bright), transparent);
+  }
+
+  /* ─── COLLAPSIBLE TOPIC ─── */
+  .topic {
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .topic.open .topic-body { display: block; }
+  .topic:not(.open) .topic-body { display: none; }
+
+  .topic-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    gap: 12px;
+  }
+  .topic-header:hover { background: rgba(167,139,250,0.04); }
+  .topic-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .topic-arrow {
+    font-size: 14px;
+    color: var(--muted);
+    transition: transform 0.25s;
+    flex-shrink: 0;
+  }
+  .topic.open .topic-arrow { transform: rotate(180deg); }
+
+  .topic-body {
+    padding: 4px 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ─── CONTENT ELEMENTS ─── */
+  .content-block { margin-bottom: 24px; }
+  .content-block h3 {
+    font-size: 18px;
+    margin: 20px 0 10px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .content-block h3:first-child { margin-top: 16px; }
+  .content-block p {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 12px;
+    font-size: 15px;
+  }
+
+  /* ─── CODE BLOCKS ─── */
+  .code-block {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--border-bright);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin: 12px 0;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--cyan);
+    line-height: 1.75;
+    white-space: pre;
+    word-break: normal;
+  }
+  .code-block .kw  { color: #f0437a; }
+  .code-block .fn  { color: #a78bfa; }
+  .code-block .cm  { color: #5a6380; font-style: italic; }
+  .code-block .st  { color: #f5c842; }
+  .code-block .nm  { color: #4a8fff; }
+
+  /* ─── EXAMPLE BOX ─── */
+  .example-box {
+    background: rgba(167,139,250,0.05);
+    border-left: 3px solid var(--tk-accent);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin: 14px 0;
+  }
+  .example-box .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--tk-accent);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .example-box p { color: var(--text); margin: 0; font-size: 14px; line-height: 1.65; }
+
+  /* ─── KEY POINTS ─── */
+  .key-points {
+    background: rgba(61,245,200,0.04);
+    border: 1px solid rgba(61,245,200,0.15);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin: 14px 0;
+  }
+  .key-points ul { list-style: none; padding: 0; }
+  .key-points li {
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+    padding: 4px 0;
+    padding-left: 20px;
+    position: relative;
+  }
+  .key-points li::before {
+    content: '▹';
+    position: absolute;
+    left: 0;
+    color: var(--cyan);
+    font-size: 13px;
+  }
+  .key-points li code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: rgba(61,245,200,0.1);
+    color: var(--cyan);
+    padding: 1px 6px;
+    border-radius: 5px;
+  }
+  .key-points li strong { color: var(--text); }
+
+  /* ─── PROPERTY TABLES ─── */
+  .properties-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-size: 13.5px;
+  }
+  .properties-table th {
+    background: rgba(167,139,250,0.1);
+    padding: 10px 14px;
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--tk-accent);
+    border-bottom: 1px solid var(--border);
+  }
+  .properties-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+  .properties-table tr:last-child td { border-bottom: none; }
+  .properties-table tr:nth-child(even) td { background: rgba(255,255,255,0.015); }
+  .properties-table td:nth-child(2), .properties-table td:nth-child(3) {
+    color: var(--muted);
+  }
+  .properties-table code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--cyan);
+    background: rgba(61,245,200,0.07);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+  .content-block code {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--cyan);
+    background: rgba(61,245,200,0.07);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+
+  /* ─── GRID LAYOUT for two-col tables ─── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 14px 0;
+  }
+  @media (max-width: 720px) {
+    .two-col { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 36px; }
+    .day-header { padding: 18px 16px; }
+    .day-body { padding: 0 16px 24px; }
+  }
+
+  /* ─── QUICK REF BOX ─── */
+  .quick-ref {
+    background: rgba(74,143,255,0.06);
+    border: 1px solid rgba(74,143,255,0.2);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin: 14px 0;
+  }
+  .quick-ref .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--blue);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .quick-ref .code-block {
+    margin: 0;
+    border: none;
+    padding: 0;
+    background: transparent;
+    font-size: 12px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    margin-top: 40px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-logo {
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .footer-logo span { color: var(--tk-accent); }
+  .footer-sub {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--tk-accent), var(--cyan));
+    z-index: 200;
+    transition: width 0.1s;
+  }
+
+  /* ─── SEARCH ─── */
+  .search-wrap {
+    margin: 0 0 20px;
+    position: relative;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border-bright);
+    border-radius: 10px;
+    padding: 12px 18px 12px 44px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input::placeholder { color: var(--muted); }
+  .search-input:focus { border-color: var(--tk-accent); }
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+    pointer-events: none;
+  }
+  .search-count {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .highlight { background: rgba(245,200,66,0.25); color: var(--gold); border-radius: 3px; }
+
+  /* topic hidden by search */
+  .topic.search-hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progress"></div>
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">
+        <span class="snake">🐍</span>
+        Tkinter<span style="color:var(--tk-accent)">Notes</span>
+        <span class="nav-badge">CHEATSHEET</span>
+      </a>
+      <div class="nav-right">
+        <button class="expand-all-btn" id="expandAll">⊞ Expand All</button>
+        <a href="index.html" class="home-link">← Home</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <span>◈</span> COMPLETE REFERENCE · 7 DAYS · 30+ CONCEPTS
+    </div>
+    <h1>TKINTER <span class="accent">CHEATSHEET</span></h1>
+    <p class="hero-sub">Everything from window creation to class-based applications — all 7 days, definitions, examples, properties, methods and tables in one place.</p>
+    <div class="day-pills">
+      <a class="day-pill d1" href="#day1">Day 1 · Foundations</a>
+      <a class="day-pill d2" href="#day2">Day 2 · Basic Widgets</a>
+      <a class="day-pill d3" href="#day3">Day 3 · More Widgets</a>
+      <a class="day-pill d4" href="#day4">Day 4 · Layouts</a>
+      <a class="day-pill d5" href="#day5">Day 5 · Advanced Widgets</a>
+      <a class="day-pill d6" href="#day6">Day 6 · Events</a>
+      <a class="day-pill d7" href="#day7">Day 7 · Capstone</a>
+    </div>
+  </section>
+</div>
+
+<main>
+  <div class="wrap">
+
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search widgets, methods, properties…" autocomplete="off">
+      <span class="search-count" id="searchCount"></span>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         DAY 1 · FOUNDATIONS & SETUP
+    ══════════════════════════════════════════════════ -->
+    <div class="day-section day1 open" id="day1">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-header-left">
+          <span class="day-number">Day 01</span>
+          <div>
+            <div class="day-title">Foundations &amp; Setup</div>
+            <div class="day-subtitle">// window creation · geometry · mainloop · colors</div>
+            <div class="day-tags">
+              <span class="day-tag">Tk()</span>
+              <span class="day-tag">.title()</span>
+              <span class="day-tag">.geometry()</span>
+              <span class="day-tag">.mainloop()</span>
+              <span class="day-tag">.config()</span>
+              <span class="day-tag">.resizable()</span>
+            </div>
+          </div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="day-body">
+
+        <div class="section-header">
+          <span class="section-title">// what is tkinter?</span>
+          <span class="section-line"></span>
+        </div>
+        <div class="content-block">
+          <p><strong>Tkinter</strong> is Python's <em>standard built-in GUI library</em>. It lets you create desktop applications with windows, buttons, text, forms and more. No extra installation needed — it ships with Python.</p>
+          <div class="two-col">
+            <div class="example-box">
+              <span class="label">Full name</span>
+              <p>Tk Interface — wraps the Tk GUI toolkit</p>
+            </div>
+            <div class="example-box">
+              <span class="label">Import</span>
+              <p><code>import tkinter</code> or <code>from tkinter import Tk</code></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <span class="section-title">// minimal program</span>
+          <span class="section-line"></span>
+        </div>
+
+        <div class="topic open" id="t-minwin">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">The 3-Line Window</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <div class="code-block">from tkinter import Tk
+
+root = Tk()
+root.mainloop()</div>
+              <div class="example-box">
+                <span class="label">What happens</span>
+                <p>✅ A window appears &nbsp;✅ Stays open until closed &nbsp;✅ Minimal working GUI</p>
+              </div>
+              <h3>With Title &amp; Size</h3>
+              <div class="code-block">from tkinter import Tk
+
+root = Tk()
+root.title("My First App")
+root.geometry("400x300")
+root.mainloop()</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic" id="t-winprops">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Window Methods &amp; Properties</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <table class="properties-table">
+                <tr><th>Method</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>.title()</code></td><td>Set/get window title</td><td><code>root.title("My App")</code></td></tr>
+                <tr><td><code>.geometry()</code></td><td>Set/get size &amp; position</td><td><code>root.geometry("400x300+100+50")</code></td></tr>
+                <tr><td><code>.config()</code></td><td>Configure properties</td><td><code>root.config(bg="blue")</code></td></tr>
+                <tr><td><code>.resizable()</code></td><td>Allow/disable resizing</td><td><code>root.resizable(False, False)</code></td></tr>
+                <tr><td><code>.minsize()</code></td><td>Set minimum size</td><td><code>root.minsize(300, 200)</code></td></tr>
+                <tr><td><code>.maxsize()</code></td><td>Set maximum size</td><td><code>root.maxsize(800, 600)</code></td></tr>
+                <tr><td><code>.mainloop()</code></td><td>Keep window open &amp; responsive</td><td><code>root.mainloop()</code></td></tr>
+              </table>
+              <h3>Full Configuration Example</h3>
+              <div class="code-block">from tkinter import Tk
+
+root = Tk()
+root.title("My Application")       # Window title
+root.geometry("500x400")           # Size: 500w × 400h
+root.geometry("500x400+100+50")    # Size + position (x=100, y=50)
+root.resizable(True, True)         # Allow resizing (w, h)
+root.minsize(300, 200)             # Minimum size
+root.maxsize(1200, 800)            # Maximum size
+root.config(bg="lightblue")        # Background color
+root.mainloop()</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic" id="t-geom">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Geometry String Format</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <div class="example-box">
+                <span class="label">Pattern</span>
+                <p><code>"WIDTHxHEIGHT+X+Y"</code><br><br>
+                  WIDTH = window width in pixels<br>
+                  HEIGHT = window height in pixels<br>
+                  X = pixels from left edge (optional)<br>
+                  Y = pixels from top edge (optional)
+                </p>
+              </div>
+              <div class="code-block">"400x300"           # 400w × 300h, auto position
+"600x500+100+50"    # 600w × 500h, at screen pos (100, 50)
+"800x600"           # 800w × 600h, auto position</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic" id="t-colors">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Colors &amp; Execution Flow</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <div class="code-block"># Named colors
+root.config(bg="lightblue")
+root.config(bg="white")
+root.config(bg="darkgreen")
+
+# Hex codes
+root.config(bg="#FF5733")
+root.config(bg="#00FF00")</div>
+              <h3>Program Flow</h3>
+              <div class="code-block">1. Import tkinter components
+   ↓
+2. Create root window: root = Tk()
+   ↓
+3. Configure window (title, size, bg…)
+   ↓
+4. Add widgets (buttons, labels, etc.)
+   ↓
+5. root.mainloop()   ← REQUIRED · keeps window alive</div>
+              <div class="key-points"><ul>
+                <li><code>mainloop()</code> must be the LAST line and is mandatory</li>
+                <li>Code after <code>mainloop()</code> won't run until the window closes</li>
+                <li>Always create <code>root = Tk()</code> first, before any widgets</li>
+              </ul></div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /day-body -->
+    </div><!-- /day1 -->
+
+
+    <!-- ══════════════════════════════════════════════════
+         DAY 2 · BASIC WIDGETS — LABEL, BUTTON, ENTRY
+    ══════════════════════════════════════════════════ -->
+    <div class="day-section day2" id="day2">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-header-left">
+          <span class="day-number">Day 02</span>
+          <div>
+            <div class="day-title">Basic Widgets Part 1</div>
+            <div class="day-subtitle">// Label · Button · Entry · common properties</div>
+            <div class="day-tags">
+              <span class="day-tag">Label</span>
+              <span class="day-tag">Button</span>
+              <span class="day-tag">Entry</span>
+              <span class="day-tag">.pack()</span>
+              <span class="day-tag">font tuple</span>
+              <span class="day-tag">command=</span>
+              <span class="day-tag">lambda</span>
+            </div>
+          </div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="day-body">
+
+        <div class="section-header">
+          <span class="section-title">// label widget</span>
+          <span class="section-line"></span>
+        </div>
+
+        <div class="topic open">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Label — Display Text &amp; Images</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>A <strong>Label</strong> displays text or images. It is NOT interactive — users cannot click or type into it.</p>
+              <div class="code-block">from tkinter import Tk, Label
+
+root = Tk()
+root.title("Label Demo")
+root.geometry("400x300")
+
+# Basic label
+label = Label(root, text="Hello, World!")
+label.pack()
+
+# Styled label
+styled = Label(
+    root,
+    text="Styled Label",
+    font=("Arial", 18, "bold"),
+    fg="blue",
+    bg="lightgray",
+    padx=20,
+    pady=10
+)
+styled.pack()
+
+root.mainloop()</div>
+              <h3>Label Properties</h3>
+              <table class="properties-table">
+                <tr><th>Property</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>text</code></td><td>Text to display</td><td><code>text="Hello"</code></td></tr>
+                <tr><td><code>font</code></td><td>Font (name, size, style)</td><td><code>font=("Arial", 14, "bold")</code></td></tr>
+                <tr><td><code>fg</code></td><td>Foreground / text color</td><td><code>fg="red"</code></td></tr>
+                <tr><td><code>bg</code></td><td>Background color</td><td><code>bg="lightgray"</code></td></tr>
+                <tr><td><code>padx</code></td><td>Horizontal padding</td><td><code>padx=10</code></td></tr>
+                <tr><td><code>pady</code></td><td>Vertical padding</td><td><code>pady=5</code></td></tr>
+                <tr><td><code>width</code></td><td>Width in characters</td><td><code>width=20</code></td></tr>
+                <tr><td><code>height</code></td><td>Height in lines</td><td><code>height=3</code></td></tr>
+                <tr><td><code>anchor</code></td><td>Text alignment</td><td><code>anchor="w"</code></td></tr>
+                <tr><td><code>wraplength</code></td><td>Wrap text at px width</td><td><code>wraplength=200</code></td></tr>
+              </table>
+              <div class="example-box">
+                <span class="label">Font Tuple Format</span>
+                <p><code>("FontName", Size, "Style")</code><br>
+                Styles: <code>"bold"</code>, <code>"italic"</code>, <code>"underline"</code>, <code>"bold italic"</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <span class="section-title">// button widget</span>
+          <span class="section-line"></span>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Button — Clickable Actions</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>A <strong>Button</strong> performs an action when clicked. Use the <code>command</code> parameter to link it to a function.</p>
+              <div class="code-block">from tkinter import Tk, Button
+
+root = Tk()
+root.geometry("400x300")
+
+def my_function():
+    print("Button clicked!")
+
+# Basic button
+btn = Button(root, text="Click Me", command=my_function)
+btn.pack()
+
+# Styled button
+styled_btn = Button(
+    root,
+    text="Submit",
+    command=my_function,
+    bg="green",
+    fg="white",
+    font=("Arial", 12, "bold"),
+    padx=20,
+    pady=10
+)
+styled_btn.pack(pady=10)
+
+root.mainloop()</div>
+              <h3>Passing Arguments with Lambda</h3>
+              <div class="code-block">def greet(name):
+    print(f"Hello, {name}!")
+
+# WRONG: This calls greet immediately
+btn = Button(root, text="Greet", command=greet("Alice"))  # ❌
+
+# CORRECT: Use lambda to delay execution
+btn = Button(root, text="Greet", command=lambda: greet("Alice"))  # ✅</div>
+              <h3>Button Properties</h3>
+              <table class="properties-table">
+                <tr><th>Property</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>text</code></td><td>Button label</td><td><code>text="Submit"</code></td></tr>
+                <tr><td><code>command</code></td><td>Function to call</td><td><code>command=my_func</code></td></tr>
+                <tr><td><code>font</code></td><td>Font styling</td><td><code>font=("Arial", 12)</code></td></tr>
+                <tr><td><code>fg</code></td><td>Text color</td><td><code>fg="white"</code></td></tr>
+                <tr><td><code>bg</code></td><td>Background color</td><td><code>bg="green"</code></td></tr>
+                <tr><td><code>padx / pady</code></td><td>Internal padding</td><td><code>padx=20</code></td></tr>
+                <tr><td><code>width / height</code></td><td>Size in chars/lines</td><td><code>width=10</code></td></tr>
+                <tr><td><code>state</code></td><td>"normal" or "disabled"</td><td><code>state="disabled"</code></td></tr>
+                <tr><td><code>relief</code></td><td>3D border style</td><td><code>relief="raised"</code></td></tr>
+              </table>
+              <div class="example-box">
+                <span class="label">Relief Options</span>
+                <p><code>"raised"</code> · <code>"sunken"</code> · <code>"flat"</code> · <code>"ridge"</code> · <code>"groove"</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-header">
+          <span class="section-title">// entry widget</span>
+          <span class="section-line"></span>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Entry — Single-Line Text Input</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>An <strong>Entry</strong> lets users type single-line text input into your program.</p>
+              <div class="code-block">from tkinter import Tk, Entry, Button, Label
+
+root = Tk()
+root.geometry("400x300")
+
+entry = Entry(root, width=30)
+entry.pack()
+
+# Insert default text
+entry.insert(0, "Type here…")
+
+# Password field
+password = Entry(root, show="*")
+password.pack()
+
+def get_text():
+    user_input = entry.get()       # Retrieve text
+    print(f"You typed: {user_input}")
+
+def clear_text():
+    entry.delete(0, "end")        # Clear all text
+
+btn = Button(root, text="Submit", command=get_text)
+btn.pack()
+
+root.mainloop()</div>
+              <h3>Entry Methods</h3>
+              <table class="properties-table">
+                <tr><th>Method</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>.get()</code></td><td>Get text from entry</td><td><code>text = entry.get()</code></td></tr>
+                <tr><td><code>.insert(index, text)</code></td><td>Insert text at position</td><td><code>entry.insert(0, "Hello")</code></td></tr>
+                <tr><td><code>.delete(start, end)</code></td><td>Delete text range</td><td><code>entry.delete(0, "end")</code></td></tr>
+              </table>
+              <h3>Entry Properties</h3>
+              <table class="properties-table">
+                <tr><th>Property</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>width</code></td><td>Width in characters</td><td><code>width=30</code></td></tr>
+                <tr><td><code>font</code></td><td>Font styling</td><td><code>font=("Arial", 12)</code></td></tr>
+                <tr><td><code>fg / bg</code></td><td>Text / background color</td><td><code>fg="black"</code></td></tr>
+                <tr><td><code>show</code></td><td>Mask character (passwords)</td><td><code>show="*"</code></td></tr>
+                <tr><td><code>state</code></td><td>"normal" or "disabled"</td><td><code>state="disabled"</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Practical Example — Registration Form</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <div class="code-block">from tkinter import Tk, Label, Entry, Button
+
+root = Tk()
+root.title("Registration Form")
+root.geometry("400x320")
+root.config(bg="lightgray")
+
+Label(root, text="Registration", font=("Arial", 18, "bold"), bg="lightgray").pack(pady=10)
+
+Label(root, text="Name:", bg="lightgray").pack()
+name_entry = Entry(root, width=30)
+name_entry.pack(pady=4)
+
+Label(root, text="Email:", bg="lightgray").pack()
+email_entry = Entry(root, width=30)
+email_entry.pack(pady=4)
+
+Label(root, text="Password:", bg="lightgray").pack()
+pw_entry = Entry(root, width=30, show="*")
+pw_entry.pack(pady=4)
+
+def submit():
+    name  = name_entry.get()
+    email = email_entry.get()
+    pw    = pw_entry.get()
+    if name and email and pw:
+        print(f"Name: {name}  Email: {email}")
+    else:
+        print("Please fill all fields!")
+
+Button(root, text="Submit", command=submit,
+       bg="green", fg="white", padx=20, pady=8).pack(pady=14)
+
+root.mainloop()</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-points"><ul>
+          <li><strong>Widgets</strong> are interactive/display elements in your GUI</li>
+          <li><strong>Label</strong> → display only (no interaction)</li>
+          <li><strong>Button</strong> → action on click via <code>command=</code></li>
+          <li><strong>Entry</strong> → single-line input; retrieve with <code>.get()</code></li>
+          <li><strong>Font tuple</strong> format: <code>("Name", Size, "Style")</code></li>
+          <li><strong>Use <code>lambda</code></strong> to pass arguments to button commands</li>
+        </ul></div>
+
+      </div>
+    </div><!-- /day2 -->
+
+
+    <!-- ══════════════════════════════════════════════════
+         DAY 3 · MORE WIDGETS
+    ══════════════════════════════════════════════════ -->
+    <div class="day-section day3" id="day3">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-header-left">
+          <span class="day-number">Day 03</span>
+          <div>
+            <div class="day-title">Basic Widgets Part 2</div>
+            <div class="day-subtitle">// Text · Frame · Listbox · Checkbutton · Radiobutton</div>
+            <div class="day-tags">
+              <span class="day-tag">Text</span>
+              <span class="day-tag">Frame</span>
+              <span class="day-tag">Listbox</span>
+              <span class="day-tag">Checkbutton</span>
+              <span class="day-tag">Radiobutton</span>
+              <span class="day-tag">IntVar</span>
+              <span class="day-tag">StringVar</span>
+            </div>
+          </div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="day-body">
+
+        <div class="topic open">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Text Widget — Multi-line Input</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>The <strong>Text</strong> widget provides a <em>multi-line editable text area</em> (unlike Entry which is one line).</p>
+              <div class="code-block">from tkinter import Tk, Text, Button, Scrollbar
+
+root = Tk()
+root.geometry("500x400")
+
+# Create text widget
+text = Text(root, height=15, width=50, font=("Arial", 11))
+text.pack(padx=10, pady=10)
+
+def get_content():
+    content = text.get("1.0", "end-1c")   # "1.0" = line 1, char 0
+    print(content)
+
+def set_content():
+    text.delete("1.0", "end")
+    text.insert("1.0", "Hello!\nThis is multi-line text.")
+
+Button(root, text="Get", command=get_content).pack()
+Button(root, text="Set", command=set_content).pack()
+root.mainloop()</div>
+              <h3>Text Methods</h3>
+              <table class="properties-table">
+                <tr><th>Method</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>.get(start, end)</code></td><td>Get text in range</td><td><code>text.get("1.0", "end-1c")</code></td></tr>
+                <tr><td><code>.insert(index, text)</code></td><td>Insert at position</td><td><code>text.insert("1.0", "Hello")</code></td></tr>
+                <tr><td><code>.delete(start, end)</code></td><td>Delete range</td><td><code>text.delete("1.0", "end")</code></td></tr>
+              </table>
+              <div class="example-box">
+                <span class="label">Index Format</span>
+                <p><code>"line.char"</code> — e.g. <code>"1.0"</code> = line 1, character 0 (start) &nbsp;·&nbsp; <code>"end"</code> = end of text &nbsp;·&nbsp; <code>"end-1c"</code> = end minus trailing newline</p>
+              </div>
+              <h3>Text Properties</h3>
+              <table class="properties-table">
+                <tr><th>Property</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>height</code></td><td>Height in lines</td><td><code>height=15</code></td></tr>
+                <tr><td><code>width</code></td><td>Width in characters</td><td><code>width=50</code></td></tr>
+                <tr><td><code>font</code></td><td>Font styling</td><td><code>font=("Arial", 11)</code></td></tr>
+                <tr><td><code>relief</code></td><td>Border style</td><td><code>relief="raised"</code></td></tr>
+                <tr><td><code>borderwidth</code></td><td>Border thickness</td><td><code>borderwidth=2</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Frame — Container / Organizer</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>A <strong>Frame</strong> is an <em>invisible container</em> used to group and organize other widgets. Essential for complex layouts.</p>
+              <div class="code-block">from tkinter import Tk, Frame, Label, Button
+
+root = Tk()
+root.geometry("500x400")
+
+# Top frame
+top_frame = Frame(root, bg="lightblue", height=80)
+top_frame.pack(fill="x", padx=10, pady=5)
+
+Label(top_frame, text="Header Area",
+      bg="lightblue", font=("Arial", 16)).pack(pady=20)
+
+# Bottom frame
+bottom_frame = Frame(root, bg="lightyellow")
+bottom_frame.pack(fill="both", expand=True, padx=10)
+
+Button(bottom_frame, text="Button 1").pack(side="left", padx=5)
+Button(bottom_frame, text="Button 2").pack(side="left", padx=5)
+
+root.mainloop()</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Listbox — Selectable List</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>A <strong>Listbox</strong> displays a <em>list of items</em> that users can select from.</p>
+              <div class="code-block">from tkinter import Tk, Listbox, Button
+
+root = Tk()
+root.geometry("400x300")
+
+listbox = Listbox(root, height=8, width=30)
+listbox.pack(padx=10, pady=10)
+
+# Add items
+listbox.insert(0, "Apple")
+listbox.insert(1, "Banana")
+listbox.insert(2, "Orange")
+listbox.insert("end", "Grape")   # "end" adds to end
+
+def get_selection():
+    selected = listbox.curselection()   # Returns tuple of indices
+    if selected:
+        item = listbox.get(selected[0])
+        print(f"Selected: {item}")
+    else:
+        print("Nothing selected")
+
+Button(root, text="Get Selection", command=get_selection).pack()
+root.mainloop()</div>
+              <h3>Listbox Methods</h3>
+              <table class="properties-table">
+                <tr><th>Method</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>.insert(index, item)</code></td><td>Add item</td><td><code>listbox.insert("end", "Apple")</code></td></tr>
+                <tr><td><code>.delete(index)</code></td><td>Remove item</td><td><code>listbox.delete(0)</code></td></tr>
+                <tr><td><code>.get(index)</code></td><td>Get item text</td><td><code>listbox.get(0)</code></td></tr>
+                <tr><td><code>.curselection()</code></td><td>Get selected index tuple</td><td><code>selected = listbox.curselection()</code></td></tr>
+                <tr><td><code>.size()</code></td><td>Number of items</td><td><code>count = listbox.size()</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Checkbutton — Multiple Selections (IntVar)</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>A <strong>Checkbutton</strong> lets users select <em>multiple independent options</em>. Uses <code>IntVar</code> to track state.</p>
+              <div class="code-block">from tkinter import Tk, Checkbutton, IntVar, Button
+
+root = Tk()
+root.geometry("400x300")
+
+var1 = IntVar()   # 1 if checked, 0 if unchecked
+var2 = IntVar()
+var3 = IntVar()
+
+Checkbutton(root, text="Python", variable=var1, font=("Arial", 12)).pack()
+Checkbutton(root, text="Java",   variable=var2, font=("Arial", 12)).pack()
+Checkbutton(root, text="C++",    variable=var3, font=("Arial", 12)).pack()
+
+def get_selections():
+    selected = [name for name, var in
+                [("Python",var1),("Java",var2),("C++",var3)]
+                if var.get() == 1]
+    print("Selected:", selected)
+
+Button(root, text="Get", command=get_selections).pack(pady=10)
+root.mainloop()</div>
+              <div class="example-box">
+                <span class="label">IntVar</span>
+                <p><code>var = IntVar()</code> &nbsp;·&nbsp; <code>var.get()</code> → 1 (checked) or 0 (unchecked) &nbsp;·&nbsp; <code>var.set(1)</code> to check programmatically</p>
+              </div>
+              <h3>Checkbutton Properties</h3>
+              <table class="properties-table">
+                <tr><th>Property</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>text</code></td><td>Label text</td><td><code>text="Python"</code></td></tr>
+                <tr><td><code>variable</code></td><td>IntVar to store state</td><td><code>variable=var1</code></td></tr>
+                <tr><td><code>onvalue</code></td><td>Value when checked</td><td><code>onvalue=1</code></td></tr>
+                <tr><td><code>offvalue</code></td><td>Value when unchecked</td><td><code>offvalue=0</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Radiobutton — Single Selection (StringVar)</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>A <strong>Radiobutton</strong> lets users select <em>ONE option from multiple choices</em>. All share the same <code>StringVar</code>.</p>
+              <div class="code-block">from tkinter import Tk, Radiobutton, StringVar, Button
+
+root = Tk()
+root.geometry("400x300")
+
+# All radiobuttons share ONE variable
+var = StringVar(value="Python")   # Default selection
+
+Radiobutton(root, text="Python", variable=var, value="Python").pack()
+Radiobutton(root, text="Java",   variable=var, value="Java").pack()
+Radiobutton(root, text="C++",    variable=var, value="C++").pack()
+
+def get_selection():
+    selected = var.get()
+    print(f"You selected: {selected}")
+
+Button(root, text="Get Selection", command=get_selection).pack(pady=10)
+root.mainloop()</div>
+              <div class="example-box">
+                <span class="label">Key Difference</span>
+                <p><strong>Checkbutton</strong> = multiple selections allowed (IntVar per button)<br>
+                <strong>Radiobutton</strong> = only ONE selection allowed (one shared StringVar)</p>
+              </div>
+              <h3>StringVar Reference</h3>
+              <div class="code-block">var = StringVar(value="default")  # Create with default
+var.get()                         # Get current value
+var.set("new_value")              # Set new value</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-points"><ul>
+          <li><strong>Text</strong> = multi-line input (<code>Entry</code> is single-line)</li>
+          <li><strong>Frame</strong> = invisible container to group widgets</li>
+          <li><strong>Listbox</strong> = selectable list; <code>.curselection()</code> returns tuple of indices</li>
+          <li><strong>Checkbutton + IntVar</strong> → multiple independent selections</li>
+          <li><strong>Radiobutton + StringVar</strong> → mutually exclusive single selection</li>
+        </ul></div>
+
+      </div>
+    </div><!-- /day3 -->
+
+
+    <!-- ══════════════════════════════════════════════════
+         DAY 4 · LAYOUTS
+    ══════════════════════════════════════════════════ -->
+    <div class="day-section day4" id="day4">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-header-left">
+          <span class="day-number">Day 04</span>
+          <div>
+            <div class="day-title">Layout Managers</div>
+            <div class="day-subtitle">// pack · grid · place · sticky · columnspan</div>
+            <div class="day-tags">
+              <span class="day-tag">.pack()</span>
+              <span class="day-tag">.grid()</span>
+              <span class="day-tag">.place()</span>
+              <span class="day-tag">sticky</span>
+              <span class="day-tag">columnspan</span>
+              <span class="day-tag">rowspan</span>
+            </div>
+          </div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="day-body">
+
+        <div class="topic open">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Pack — Simple Stacking</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p><strong>Pack</strong> stacks widgets in a line (top-to-bottom by default). Simple but limited.</p>
+              <div class="code-block">from tkinter import Tk, Label
+
+root = Tk()
+root.geometry("400x300")
+
+Label(root, text="First",  bg="red",   fg="white").pack()
+Label(root, text="Second", bg="green", fg="white").pack()
+Label(root, text="Third",  bg="blue",  fg="white").pack()
+
+# Side by side
+Label(root, text="Left",   bg="purple",fg="white").pack(side="left")
+Label(root, text="Right",  bg="orange",fg="white").pack(side="right")
+
+root.mainloop()</div>
+              <h3>Pack Parameters</h3>
+              <table class="properties-table">
+                <tr><th>Parameter</th><th>Values</th><th>Purpose</th></tr>
+                <tr><td><code>side</code></td><td>"top", "bottom", "left", "right"</td><td>Direction to stack</td></tr>
+                <tr><td><code>fill</code></td><td>"x", "y", "both", "none"</td><td>Stretch to fill space</td></tr>
+                <tr><td><code>expand</code></td><td>True / False</td><td>Take remaining space</td></tr>
+                <tr><td><code>padx</code></td><td>integer</td><td>Left-right outer padding</td></tr>
+                <tr><td><code>pady</code></td><td>integer</td><td>Top-bottom outer padding</td></tr>
+                <tr><td><code>anchor</code></td><td>"n","s","e","w","center"</td><td>Alignment within space</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Grid — Professional Table Layout ⭐</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p><strong>Grid</strong> arranges widgets in <em>rows and columns</em> like a spreadsheet. This is the most professional and flexible layout manager.</p>
+              <div class="code-block">from tkinter import Tk, Label
+
+root = Tk()
+root.geometry("400x300")
+
+# row, column both start at 0
+Label(root, text="Cell(0,0)", bg="red",   fg="white", width=10, height=3).grid(row=0, column=0)
+Label(root, text="Cell(0,1)", bg="green", fg="white", width=10, height=3).grid(row=0, column=1)
+Label(root, text="Cell(1,0)", bg="blue",  fg="white", width=10, height=3).grid(row=1, column=0)
+Label(root, text="Cell(1,1)", bg="orange",fg="white", width=10, height=3).grid(row=1, column=1)
+
+root.mainloop()</div>
+              <h3>Grid Parameters</h3>
+              <table class="properties-table">
+                <tr><th>Parameter</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>row</code></td><td>Row number (0-based)</td><td><code>row=0</code></td></tr>
+                <tr><td><code>column</code></td><td>Column number (0-based)</td><td><code>column=1</code></td></tr>
+                <tr><td><code>rowspan</code></td><td>Span multiple rows</td><td><code>rowspan=2</code></td></tr>
+                <tr><td><code>columnspan</code></td><td>Span multiple columns</td><td><code>columnspan=3</code></td></tr>
+                <tr><td><code>sticky</code></td><td>Alignment within cell</td><td><code>sticky="nsew"</code></td></tr>
+                <tr><td><code>padx / pady</code></td><td>Outer padding</td><td><code>padx=10</code></td></tr>
+                <tr><td><code>ipadx / ipady</code></td><td>Inner padding</td><td><code>ipadx=5</code></td></tr>
+              </table>
+              <h3>Sticky Values</h3>
+              <div class="code-block">"n"     = North (top center)
+"s"     = South (bottom center)
+"e"     = East (right center)
+"w"     = West (left center)
+"ne"    = top-right corner
+"nsew"  = stretch to fill entire cell</div>
+              <h3>Professional Login Form</h3>
+              <div class="code-block">from tkinter import Tk, Label, Entry, Button
+
+root = Tk()
+root.title("Login Form")
+root.geometry("400x300")
+
+Label(root, text="Login", font=("Arial", 16, "bold")).grid(
+    row=0, column=0, columnspan=2, pady=10)
+
+Label(root, text="Username:").grid(row=1, column=0, sticky="e", padx=10, pady=5)
+Entry(root, width=20).grid(row=1, column=1, padx=10, pady=5)
+
+Label(root, text="Password:").grid(row=2, column=0, sticky="e", padx=10, pady=5)
+Entry(root, width=20, show="*").grid(row=2, column=1, padx=10, pady=5)
+
+Button(root, text="Login",  bg="green", fg="white", width=10).grid(row=3, column=0, pady=15, padx=5)
+Button(root, text="Cancel", bg="red",   fg="white", width=10).grid(row=3, column=1, pady=15, padx=5)
+
+root.mainloop()</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Place — Exact Pixel Positioning</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p><strong>Place</strong> positions widgets at <em>exact pixel coordinates</em>. Most precise but doesn't adapt to window resize.</p>
+              <div class="code-block">from tkinter import Tk, Label
+
+root = Tk()
+root.geometry("500x400")
+
+Label(root, text="Position 100,50", bg="red", fg="white").place(x=100, y=50, width=150, height=50)
+Label(root, text="Center (relative)", bg="blue", fg="white").place(relx=0.5, rely=0.5,
+      anchor="center", width=150, height=50)
+
+root.mainloop()</div>
+              <h3>Place Parameters</h3>
+              <table class="properties-table">
+                <tr><th>Parameter</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>x / y</code></td><td>Absolute pixel position</td><td><code>x=100, y=50</code></td></tr>
+                <tr><td><code>width / height</code></td><td>Widget size in pixels</td><td><code>width=150</code></td></tr>
+                <tr><td><code>relx / rely</code></td><td>Relative position 0.0–1.0</td><td><code>relx=0.5</code> (center)</td></tr>
+                <tr><td><code>anchor</code></td><td>Anchor point of widget</td><td><code>anchor="center"</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-points"><ul>
+          <li><strong>Pack</strong> = simple stacking (quick prototyping)</li>
+          <li><strong>Grid</strong> = rows &amp; columns table — MOST PROFESSIONAL ⭐</li>
+          <li><strong>Place</strong> = pixel-perfect absolute positioning</li>
+          <li><strong>NEVER mix</strong> pack &amp; grid in the same parent widget!</li>
+          <li>Use <strong>Frames</strong> if you need different managers in different regions</li>
+          <li>Grid <code>sticky="nsew"</code> makes a widget fill its entire cell</li>
+        </ul></div>
+
+      </div>
+    </div><!-- /day4 -->
+
+
+    <!-- ══════════════════════════════════════════════════
+         DAY 5 · ADVANCED WIDGETS
+    ══════════════════════════════════════════════════ -->
+    <div class="day-section day5" id="day5">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-header-left">
+          <span class="day-number">Day 05</span>
+          <div>
+            <div class="day-title">Advanced Widgets</div>
+            <div class="day-subtitle">// Combobox · Menu · Scale · Spinbox · Dialogs · filedialog</div>
+            <div class="day-tags">
+              <span class="day-tag">Combobox</span>
+              <span class="day-tag">Menu</span>
+              <span class="day-tag">Scale</span>
+              <span class="day-tag">Spinbox</span>
+              <span class="day-tag">messagebox</span>
+              <span class="day-tag">filedialog</span>
+            </div>
+          </div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="day-body">
+
+        <div class="topic open">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Combobox — Dropdown Selection (ttk)</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>A <strong>Combobox</strong> provides a <em>dropdown list</em> of options. It comes from <code>tkinter.ttk</code>, not plain <code>tkinter</code>.</p>
+              <div class="code-block">from tkinter import Tk, Button
+from tkinter.ttk import Combobox
+
+root = Tk()
+root.geometry("400x300")
+
+combo = Combobox(root, values=["Python", "Java", "C++", "JavaScript"],
+                 state="readonly", width=20)
+combo.pack(padx=10, pady=10)
+combo.set("Python")   # Set default selection
+
+def get_selection():
+    selected = combo.get()
+    print(f"You selected: {selected}")
+
+Button(root, text="Get Selection", command=get_selection).pack()
+root.mainloop()</div>
+              <h3>Combobox Properties</h3>
+              <table class="properties-table">
+                <tr><th>Property</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>values</code></td><td>List of options</td><td><code>values=["A", "B", "C"]</code></td></tr>
+                <tr><td><code>state</code></td><td>"readonly" or "normal"</td><td><code>state="readonly"</code></td></tr>
+                <tr><td><code>width</code></td><td>Width in characters</td><td><code>width=20</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Menu &amp; Menubar</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <div class="code-block">from tkinter import Tk, Menu
+
+root = Tk()
+root.geometry("400x300")
+
+menubar = Menu(root)
+root.config(menu=menubar)
+
+# File menu
+file_menu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="File", menu=file_menu)
+file_menu.add_command(label="New",  command=lambda: print("New"))
+file_menu.add_command(label="Open", command=lambda: print("Open"))
+file_menu.add_separator()
+file_menu.add_command(label="Exit", command=root.quit)
+
+# Edit menu
+edit_menu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Edit", menu=edit_menu)
+edit_menu.add_command(label="Cut",   command=lambda: print("Cut"))
+edit_menu.add_command(label="Copy",  command=lambda: print("Copy"))
+edit_menu.add_command(label="Paste", command=lambda: print("Paste"))
+
+root.mainloop()</div>
+              <h3>Menu Methods</h3>
+              <table class="properties-table">
+                <tr><th>Method</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>.add_command()</code></td><td>Add clickable item</td><td><code>menu.add_command(label="Open", command=func)</code></td></tr>
+                <tr><td><code>.add_separator()</code></td><td>Add divider line</td><td><code>menu.add_separator()</code></td></tr>
+                <tr><td><code>.add_cascade()</code></td><td>Add submenu</td><td><code>menubar.add_cascade(label="File", menu=file_menu)</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Scale (Slider) &amp; Spinbox</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <h3>Scale Widget</h3>
+              <div class="code-block">from tkinter import Tk, Scale, HORIZONTAL, Button
+
+root = Tk()
+root.geometry("400x300")
+
+scale = Scale(root, from_=0, to=100, orient=HORIZONTAL,
+              label="Volume", length=300)
+scale.pack(padx=10, pady=10)
+
+def get_value():
+    print(f"Value: {scale.get()}")
+
+Button(root, text="Get Value", command=get_value).pack()
+root.mainloop()</div>
+              <h3>Spinbox Widget</h3>
+              <div class="code-block">from tkinter import Tk, Button
+from tkinter.ttk import Spinbox
+
+root = Tk()
+root.geometry("400x300")
+
+spinbox = Spinbox(root, from_=0, to=100)
+spinbox.pack(padx=10, pady=10)
+
+def get_value():
+    print(f"Value: {spinbox.get()}")
+
+Button(root, text="Get Value", command=get_value).pack()
+root.mainloop()</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Message Boxes &amp; File Dialogs</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <div class="code-block">from tkinter import Tk, Button, messagebox, filedialog
+
+root = Tk()
+root.geometry("400x300")
+
+# MESSAGE BOXES
+def show_info():    messagebox.showinfo("Info", "Operation succeeded!")
+def show_warning(): messagebox.showwarning("Warning", "Something may be wrong.")
+def show_error():   messagebox.showerror("Error", "Something went wrong!")
+def ask_yes_no():
+    response = messagebox.askyesno("Question", "Do you want to continue?")
+    print("Yes!" if response else "No!")
+def ask_ok_cancel():
+    response = messagebox.askokcancel("Confirm", "Delete this file?")
+    print("OK!" if response else "Cancelled!")
+
+# FILE DIALOGS
+def open_file():
+    file_path = filedialog.askopenfilename(
+        title="Open File",
+        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+    )
+    if file_path:
+        print(f"Opened: {file_path}")
+
+def save_file():
+    file_path = filedialog.asksaveasfilename(
+        title="Save File",
+        defaultextension=".txt",
+        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+    )
+    if file_path:
+        print(f"Saving to: {file_path}")
+
+root.mainloop()</div>
+              <h3>Message Box Functions</h3>
+              <table class="properties-table">
+                <tr><th>Function</th><th>Purpose</th><th>Returns</th></tr>
+                <tr><td><code>showinfo(title, msg)</code></td><td>Information dialog</td><td>None</td></tr>
+                <tr><td><code>showwarning(title, msg)</code></td><td>Warning dialog</td><td>None</td></tr>
+                <tr><td><code>showerror(title, msg)</code></td><td>Error dialog</td><td>None</td></tr>
+                <tr><td><code>askyesno(title, msg)</code></td><td>Yes / No question</td><td>True / False</td></tr>
+                <tr><td><code>askokcancel(title, msg)</code></td><td>OK / Cancel question</td><td>True / False</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-points"><ul>
+          <li><strong>Combobox</strong> is from <code>tkinter.ttk</code>, not plain <code>tkinter</code></li>
+          <li><strong>Menu</strong> uses <code>add_cascade()</code> for submenus, <code>tearoff=0</code> disables tear-off</li>
+          <li><strong>Scale</strong> = slider; <code>.get()</code> returns current value</li>
+          <li><strong>Spinbox</strong> = numeric input with arrow buttons</li>
+          <li><strong>messagebox</strong> functions return True/False for question dialogs</li>
+          <li><strong>filedialog</strong> returns empty string <code>""</code> if user cancels — always check!</li>
+        </ul></div>
+
+      </div>
+    </div><!-- /day5 -->
+
+
+    <!-- ══════════════════════════════════════════════════
+         DAY 6 · EVENTS & FUNCTIONS
+    ══════════════════════════════════════════════════ -->
+    <div class="day-section day6" id="day6">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-header-left">
+          <span class="day-number">Day 06</span>
+          <div>
+            <div class="day-title">Events &amp; Functions</div>
+            <div class="day-subtitle">// .bind() · mouse events · keyboard events · lambda · event object</div>
+            <div class="day-tags">
+              <span class="day-tag">.bind()</span>
+              <span class="day-tag">&lt;Button-1&gt;</span>
+              <span class="day-tag">&lt;Return&gt;</span>
+              <span class="day-tag">&lt;KeyPress&gt;</span>
+              <span class="day-tag">lambda event:</span>
+              <span class="day-tag">event.x / event.y</span>
+            </div>
+          </div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="day-body">
+
+        <div class="topic open">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Event Binding with .bind()</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p><strong>Events</strong> are user actions (click, keystroke, mouse move). Use <code>.bind()</code> to connect events to handler functions.</p>
+              <div class="code-block">widget.bind("&lt;Event&gt;", handler_function)
+
+# Handler function MUST accept an event parameter
+def handler(event):
+    print("Event triggered!")
+    print(f"Mouse at: {event.x}, {event.y}")
+    print(f"Key pressed: {event.keysym}")</div>
+              <h3>Mouse Event Reference</h3>
+              <table class="properties-table">
+                <tr><th>Event</th><th>Syntax</th><th>Triggers</th></tr>
+                <tr><td>Left Click</td><td><code>&lt;Button-1&gt;</code></td><td>Click left button</td></tr>
+                <tr><td>Right Click</td><td><code>&lt;Button-3&gt;</code></td><td>Click right button</td></tr>
+                <tr><td>Double Click</td><td><code>&lt;Double-Button-1&gt;</code></td><td>Double click</td></tr>
+                <tr><td>Mouse Motion</td><td><code>&lt;Motion&gt;</code></td><td>Mouse moves</td></tr>
+                <tr><td>Mouse Enter</td><td><code>&lt;Enter&gt;</code></td><td>Mouse enters widget</td></tr>
+                <tr><td>Mouse Leave</td><td><code>&lt;Leave&gt;</code></td><td>Mouse leaves widget</td></tr>
+              </table>
+              <h3>Click Example</h3>
+              <div class="code-block">from tkinter import Tk, Label
+
+root = Tk()
+root.geometry("400x300")
+
+label = Label(root, text="Click on me!", font=("Arial", 14), bg="lightblue")
+label.pack(pady=20)
+
+def on_click(event):
+    label.config(text=f"Clicked at ({event.x}, {event.y})")
+
+label.bind("&lt;Button-1&gt;", on_click)
+root.mainloop()</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Keyboard Events</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <div class="code-block">from tkinter import Tk, Label, Entry
+
+root = Tk()
+root.geometry("400x300")
+
+entry = Entry(root, font=("Arial", 14), width=30)
+entry.pack(pady=20)
+
+result = Label(root, text="", font=("Arial", 12))
+result.pack()
+
+def on_key(event):
+    result.config(text=f"You pressed: {event.keysym}")
+
+entry.bind("&lt;KeyPress&gt;", on_key)                          # Any key
+root.bind("&lt;Return&gt;", lambda e: result.config(text="ENTER!")) # Enter key
+root.bind("&lt;Escape&gt;", lambda e: root.destroy())            # Escape
+
+root.mainloop()</div>
+              <h3>Common Key Symbols (event.keysym)</h3>
+              <table class="properties-table">
+                <tr><th>Key</th><th>keysym</th><th>Bind string</th></tr>
+                <tr><td>Enter</td><td><code>Return</code></td><td><code>&lt;Return&gt;</code></td></tr>
+                <tr><td>Space</td><td><code>space</code></td><td><code>&lt;space&gt;</code></td></tr>
+                <tr><td>Tab</td><td><code>Tab</code></td><td><code>&lt;Tab&gt;</code></td></tr>
+                <tr><td>Escape</td><td><code>Escape</code></td><td><code>&lt;Escape&gt;</code></td></tr>
+                <tr><td>Backspace</td><td><code>BackSpace</code></td><td><code>&lt;BackSpace&gt;</code></td></tr>
+                <tr><td>Ctrl+S</td><td>—</td><td><code>&lt;Control-s&gt;</code></td></tr>
+                <tr><td>F5</td><td><code>F5</code></td><td><code>&lt;F5&gt;</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Lambda Functions &amp; Passing Arguments</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>When you need to pass arguments to a button <code>command</code>, you cannot call the function directly (it executes immediately). Use <code>lambda</code> to wrap it.</p>
+              <div class="code-block">def greet(name):
+    print(f"Hello, {name}!")
+
+# ❌ WRONG — executes immediately at widget creation
+btn = Button(root, text="Greet", command=greet("Alice"))
+
+# ✅ CORRECT — creates anonymous function, called on click
+btn = Button(root, text="Greet", command=lambda: greet("Alice"))</div>
+              <h3>Lambda with .bind() and Event Object</h3>
+              <div class="code-block">from tkinter import Tk, Label
+
+root = Tk()
+root.geometry("400x300")
+
+label = Label(root, text="Click me", font=("Arial", 14), bg="lightblue")
+label.pack(pady=20)
+
+def process_click(name, event):
+    label.config(text=f"{name} clicked at X={event.x}, Y={event.y}")
+
+# Pass extra arg + event via lambda
+label.bind("&lt;Button-1&gt;", lambda event: process_click("Label", event))
+
+root.mainloop()</div>
+              <h3>Event Object Attributes</h3>
+              <table class="properties-table">
+                <tr><th>Attribute</th><th>Purpose</th><th>Example</th></tr>
+                <tr><td><code>event.x</code></td><td>Mouse X coordinate</td><td><code>print(event.x)</code></td></tr>
+                <tr><td><code>event.y</code></td><td>Mouse Y coordinate</td><td><code>print(event.y)</code></td></tr>
+                <tr><td><code>event.keysym</code></td><td>Key symbol pressed</td><td><code>if event.keysym == "Return"</code></td></tr>
+                <tr><td><code>event.char</code></td><td>Character pressed</td><td><code>print(event.char)</code></td></tr>
+                <tr><td><code>event.widget</code></td><td>Widget that fired event</td><td><code>event.widget.config(…)</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-points"><ul>
+          <li><strong>Events</strong> are user actions: click, type, mouse move, key press</li>
+          <li><code>.bind("&lt;Event&gt;", handler)</code> connects event to a function</li>
+          <li>Handler functions always take an <code>event</code> parameter</li>
+          <li><strong>Lambda</strong> lets you pass arguments to <code>command=</code> or <code>.bind()</code></li>
+          <li><code>event.x, event.y</code> = mouse coordinates at event time</li>
+          <li><code>event.keysym</code> = which key was pressed</li>
+        </ul></div>
+
+      </div>
+    </div><!-- /day6 -->
+
+
+    <!-- ══════════════════════════════════════════════════
+         DAY 7 · CAPSTONE — CLASS-BASED APP
+    ══════════════════════════════════════════════════ -->
+    <div class="day-section day7" id="day7">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-header-left">
+          <span class="day-number">Day 07</span>
+          <div>
+            <div class="day-title">Capstone — Professional Application</div>
+            <div class="day-subtitle">// OOP · class architecture · File I/O · shortcuts · NoteApp</div>
+            <div class="day-tags">
+              <span class="day-tag">Class</span>
+              <span class="day-tag">__init__</span>
+              <span class="day-tag">File I/O</span>
+              <span class="day-tag">Ctrl+S</span>
+              <span class="day-tag">find &amp; replace</span>
+              <span class="day-tag">status bar</span>
+            </div>
+          </div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="day-body">
+
+        <div class="topic open">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Why Class-Based Architecture?</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <p>Classes keep related functions and variables together, making code organized, scalable, and professional.</p>
+              <div class="code-block">class NoteApp:
+    def __init__(self, root):
+        # Initialize all state variables
+        self.root = root
+        self.current_file = None
+        self.file_changed = False
+
+        # Build UI in logical methods
+        self.create_menu()
+        self.create_toolbar()
+        self.create_text_area()
+        self.create_status_bar()
+        self.setup_shortcuts()
+        self.update_status()
+
+    def create_menu(self):   pass
+    def create_toolbar(self): pass
+    def create_text_area(self): pass
+    def create_status_bar(self): pass
+    def setup_shortcuts(self): pass
+    def new_file(self):  pass
+    def open_file(self): pass
+    def save_file(self): pass
+    def update_status(self): pass</div>
+              <div class="example-box">
+                <span class="label">Benefits of Class-Based Design</span>
+                <p>✅ Related functionality grouped together<br>
+                ✅ Shared state via <code>self.current_file</code>, <code>self.file_changed</code><br>
+                ✅ Easy to extend and maintain<br>
+                ✅ Professional, scalable architecture</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">File I/O Operations</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <h3>Reading a File</h3>
+              <div class="code-block">try:
+    with open(file_path, "r") as file:
+        content = file.read()
+        self.text_area.delete("1.0", "end")
+        self.text_area.insert("1.0", content)
+        self.current_file = file_path
+except FileNotFoundError:
+    messagebox.showerror("Error", "File not found")
+except Exception as e:
+    messagebox.showerror("Error", f"Cannot open: {str(e)}")</div>
+              <h3>Writing a File</h3>
+              <div class="code-block">try:
+    content = self.text_area.get("1.0", "end-1c")
+    with open(file_path, "w") as file:
+        file.write(content)
+    self.file_changed = False
+    messagebox.showinfo("Success", "File saved!")
+except Exception as e:
+    messagebox.showerror("Error", f"Cannot save: {str(e)}")</div>
+              <h3>File Dialog Integration</h3>
+              <div class="code-block">from tkinter import filedialog
+
+def open_file(self):
+    file_path = filedialog.askopenfilename(
+        title="Open File",
+        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+    )
+    if file_path:               # Empty string if user cancelled
+        self._read_file(file_path)
+
+def save_as_file(self):
+    file_path = filedialog.asksaveasfilename(
+        title="Save As",
+        defaultextension=".txt",
+        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+    )
+    if file_path:
+        self._write_file(file_path)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Menu System &amp; Keyboard Shortcuts</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <div class="code-block">def create_menu(self):
+    menubar = Menu(self.root)
+    self.root.config(menu=menubar)
+
+    # FILE MENU
+    file_menu = Menu(menubar, tearoff=0)
+    menubar.add_cascade(label="File", menu=file_menu)
+    file_menu.add_command(label="New",     command=self.new_file,  accelerator="Ctrl+N")
+    file_menu.add_command(label="Open",    command=self.open_file, accelerator="Ctrl+O")
+    file_menu.add_command(label="Save",    command=self.save_file, accelerator="Ctrl+S")
+    file_menu.add_separator()
+    file_menu.add_command(label="Exit",    command=self.exit_app,  accelerator="Ctrl+Q")
+
+    # EDIT MENU
+    edit_menu = Menu(menubar, tearoff=0)
+    menubar.add_cascade(label="Edit", menu=edit_menu)
+    edit_menu.add_command(label="Cut",     command=self.cut_text)
+    edit_menu.add_command(label="Copy",    command=self.copy_text)
+    edit_menu.add_command(label="Paste",   command=self.paste_text)
+    edit_menu.add_separator()
+    edit_menu.add_command(label="Find",    command=self.find_text, accelerator="Ctrl+F")
+
+def setup_shortcuts(self):
+    self.root.bind("&lt;Control-n&gt;", lambda e: self.new_file())
+    self.root.bind("&lt;Control-o&gt;", lambda e: self.open_file())
+    self.root.bind("&lt;Control-s&gt;", lambda e: self.save_file())
+    self.root.bind("&lt;Control-q&gt;", lambda e: self.exit_app())
+    self.root.bind("&lt;Control-f&gt;", lambda e: self.find_text())</div>
+              <h3>Common Keyboard Shortcuts</h3>
+              <table class="properties-table">
+                <tr><th>Shortcut</th><th>Action</th><th>Bind String</th></tr>
+                <tr><td>Ctrl+N</td><td>New File</td><td><code>&lt;Control-n&gt;</code></td></tr>
+                <tr><td>Ctrl+O</td><td>Open File</td><td><code>&lt;Control-o&gt;</code></td></tr>
+                <tr><td>Ctrl+S</td><td>Save File</td><td><code>&lt;Control-s&gt;</code></td></tr>
+                <tr><td>Ctrl+F</td><td>Find Text</td><td><code>&lt;Control-f&gt;</code></td></tr>
+                <tr><td>Ctrl+H</td><td>Replace Text</td><td><code>&lt;Control-h&gt;</code></td></tr>
+                <tr><td>Ctrl+Q</td><td>Quit App</td><td><code>&lt;Control-q&gt;</code></td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Complete NoteApp Structure</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <div class="code-block">import tkinter as tk
+from tkinter import Menu, filedialog, messagebox
+
+class NoteApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Note-Taking Application")
+        self.root.geometry("800x600")
+
+        self.current_file = None
+        self.file_changed = False
+
+        self.create_menu()
+        self.create_toolbar()
+        self.create_text_area()
+        self.create_status_bar()
+        self.setup_shortcuts()
+        self.update_status()
+
+    def create_menu(self):
+        # Build menubar with File, Edit, Help menus
+        pass
+
+    def create_toolbar(self):
+        # Frame with quick-access buttons
+        pass
+
+    def create_text_area(self):
+        # Main Text widget with scrollbar
+        self.text_area = tk.Text(self.root, font=("Arial", 12))
+        scrollbar = tk.Scrollbar(self.root, command=self.text_area.yview)
+        self.text_area.config(yscrollcommand=scrollbar.set)
+        scrollbar.pack(side="right", fill="y")
+        self.text_area.pack(fill="both", expand=True)
+        self.text_area.bind("&lt;&lt;Modified&gt;&gt;", self.on_text_change)
+
+    def create_status_bar(self):
+        # Label at bottom showing filename + stats
+        self.status = tk.Label(self.root, text="Ready", anchor="w",
+                               font=("Arial", 9), relief="sunken")
+        self.status.pack(fill="x", side="bottom")
+
+    def setup_shortcuts(self):
+        self.root.bind("&lt;Control-n&gt;", lambda e: self.new_file())
+        self.root.bind("&lt;Control-o&gt;", lambda e: self.open_file())
+        self.root.bind("&lt;Control-s&gt;", lambda e: self.save_file())
+        self.root.bind("&lt;Control-q&gt;", lambda e: self.exit_app())
+        self.root.bind("&lt;Control-f&gt;", lambda e: self.find_text())
+
+    def new_file(self):
+        if self.file_changed:
+            if not messagebox.askyesno("Unsaved", "Discard changes?"):
+                return
+        self.text_area.delete("1.0", "end")
+        self.current_file = None
+        self.file_changed = False
+        self.update_status()
+
+    def open_file(self):
+        path = filedialog.askopenfilename(
+            filetypes=[("Text Files","*.txt"),("All Files","*.*")])
+        if path:
+            try:
+                with open(path, "r") as f:
+                    self.text_area.delete("1.0","end")
+                    self.text_area.insert("1.0", f.read())
+                self.current_file = path
+                self.file_changed = False
+                self.update_status()
+            except Exception as e:
+                messagebox.showerror("Error", str(e))
+
+    def save_file(self):
+        if not self.current_file:
+            self.save_as_file()
+            return
+        try:
+            content = self.text_area.get("1.0","end-1c")
+            with open(self.current_file,"w") as f:
+                f.write(content)
+            self.file_changed = False
+            self.update_status()
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
+    def save_as_file(self):
+        path = filedialog.asksaveasfilename(
+            defaultextension=".txt",
+            filetypes=[("Text Files","*.txt"),("All Files","*.*")])
+        if path:
+            self.current_file = path
+            self.save_file()
+
+    def on_text_change(self, event=None):
+        self.file_changed = True
+        self.update_status()
+
+    def update_status(self):
+        name = self.current_file or "Untitled"
+        changed = " ●" if self.file_changed else ""
+        self.status.config(text=f"{name}{changed}")
+
+    def exit_app(self):
+        if self.file_changed:
+            if not messagebox.askyesno("Quit","Unsaved changes. Quit anyway?"):
+                return
+        self.root.destroy()
+
+    def find_text(self): pass
+    def cut_text(self):   self.root.event_generate("&lt;&lt;Cut&gt;&gt;")
+    def copy_text(self):  self.root.event_generate("&lt;&lt;Copy&gt;&gt;")
+    def paste_text(self): self.root.event_generate("&lt;&lt;Paste&gt;&gt;")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = NoteApp(root)
+    root.mainloop()</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="topic">
+          <div class="topic-header" onclick="toggleTopic(this)">
+            <span class="topic-title">Complete 7-Day Summary &amp; Skills Achieved</span>
+            <span class="topic-arrow">▾</span>
+          </div>
+          <div class="topic-body">
+            <div class="content-block">
+              <table class="properties-table">
+                <tr><th>Day</th><th>Topic</th><th>Key Concepts</th></tr>
+                <tr><td>1</td><td>Foundations</td><td>Tk(), geometry(), mainloop(), colors</td></tr>
+                <tr><td>2</td><td>Basic Widgets</td><td>Label, Button, Entry, font tuple, lambda</td></tr>
+                <tr><td>3</td><td>More Widgets</td><td>Text, Frame, Listbox, Checkbutton, Radiobutton</td></tr>
+                <tr><td>4</td><td>Layouts</td><td>pack, grid, place, sticky, columnspan</td></tr>
+                <tr><td>5</td><td>Advanced Widgets</td><td>Combobox, Menu, Scale, Spinbox, messagebox, filedialog</td></tr>
+                <tr><td>6</td><td>Events</td><td>.bind(), mouse events, keyboard events, lambda + event</td></tr>
+                <tr><td>7</td><td>Capstone</td><td>Classes, File I/O, shortcuts, status bar, full app</td></tr>
+              </table>
+              <h3>Skills Achieved</h3>
+              <table class="properties-table">
+                <tr><th>Skill</th><th>Level</th></tr>
+                <tr><td>Create &amp; configure GUI windows</td><td>⭐⭐⭐⭐⭐ Expert</td></tr>
+                <tr><td>Use 13+ widget types</td><td>⭐⭐⭐⭐⭐ Expert</td></tr>
+                <tr><td>Professional layouts (Grid)</td><td>⭐⭐⭐⭐⭐ Expert</td></tr>
+                <tr><td>Event handling &amp; binding</td><td>⭐⭐⭐⭐⭐ Expert</td></tr>
+                <tr><td>File I/O operations</td><td>⭐⭐⭐⭐ Advanced</td></tr>
+                <tr><td>Menu systems</td><td>⭐⭐⭐⭐⭐ Expert</td></tr>
+                <tr><td>Dialog boxes</td><td>⭐⭐⭐⭐⭐ Expert</td></tr>
+                <tr><td>Class-based application design</td><td>⭐⭐⭐⭐ Advanced</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="key-points"><ul>
+          <li><strong>Classes</strong> organize GUI apps professionally — use <code>self</code> to share state</li>
+          <li>Always check if <code>file_path</code> is non-empty after dialogs (user may cancel)</li>
+          <li>Wrap file operations in <code>try/except</code> for error-resilient code</li>
+          <li><code>text.get("1.0", "end-1c")</code> gets all text without trailing newline</li>
+          <li>Track unsaved changes with a boolean flag like <code>self.file_changed</code></li>
+          <li>Use <code>accelerator=</code> in menu commands to show shortcut labels</li>
+        </ul></div>
+
+      </div>
+    </div><!-- /day7 -->
+
+  </div><!-- /wrap -->
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-logo">🐍 Tkinter<span>Notes</span></div>
+    <div class="footer-sub">7 days · 30+ concepts · complete GUI reference · beginner-friendly · free forever</div>
+  </div>
+</footer>
+
+<script>
+  /* ─── PROGRESS BAR ─── */
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = (scrolled / total * 100) + '%';
+  });
+
+  /* ─── TOGGLE DAY SECTIONS ─── */
+  function toggleDay(header) {
+    const section = header.closest('.day-section');
+    section.classList.toggle('open');
+  }
+
+  /* ─── TOGGLE TOPICS ─── */
+  function toggleTopic(header) {
+    const topic = header.closest('.topic');
+    topic.classList.toggle('open');
+  }
+
+  /* ─── EXPAND ALL BUTTON ─── */
+  const expandBtn = document.getElementById('expandAll');
+  let allOpen = true;
+  expandBtn.addEventListener('click', () => {
+    allOpen = !allOpen;
+    document.querySelectorAll('.day-section').forEach(s => {
+      allOpen ? s.classList.add('open') : s.classList.remove('open');
+    });
+    document.querySelectorAll('.topic').forEach(t => {
+      allOpen ? t.classList.add('open') : t.classList.remove('open');
+    });
+    expandBtn.textContent = allOpen ? '⊟ Collapse All' : '⊞ Expand All';
+  });
+
+  /* ─── SEARCH ─── */
+  const searchInput = document.getElementById('searchInput');
+  const searchCount = document.getElementById('searchCount');
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    clearHighlights();
+
+    if (!q) {
+      searchCount.textContent = '';
+      document.querySelectorAll('.topic').forEach(t => {
+        t.classList.remove('search-hidden');
+      });
+      return;
+    }
+
+    let visibleTopics = 0;
+
+    document.querySelectorAll('.topic').forEach(topic => {
+      const text = topic.textContent.toLowerCase();
+      if (text.includes(q)) {
+        topic.classList.remove('search-hidden');
+        topic.classList.add('open');
+        // Also open parent day section
+        const daySection = topic.closest('.day-section');
+        if (daySection) daySection.classList.add('open');
+        visibleTopics++;
+        highlightIn(topic, q);
+      } else {
+        topic.classList.add('search-hidden');
+      }
+    });
+
+    searchCount.textContent = visibleTopics > 0 ? visibleTopics + ' match' + (visibleTopics > 1 ? 'es' : '') : 'no matches';
+  });
+
+  function clearHighlights() {
+    document.querySelectorAll('.highlight').forEach(el => {
+      el.outerHTML = el.textContent;
+    });
+  }
+
+  function highlightIn(el, q) {
+    // Only highlight in text nodes inside code-free areas
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+    const nodesToProcess = [];
+    let node;
+    while (node = walker.nextNode()) {
+      if (!node.parentElement.closest('.code-block') && node.textContent.toLowerCase().includes(q)) {
+        nodesToProcess.push(node);
+      }
+    }
+    nodesToProcess.forEach(n => {
+      const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      const span = document.createElement('span');
+      span.innerHTML = n.textContent.replace(regex, '<mark class="highlight">$1</mark>');
+      n.parentNode.replaceChild(span, n);
+    });
+  }
+
+  /* ─── ANCHOR SMOOTH SCROLL FOR DAY PILLS ─── */
+  document.querySelectorAll('.day-pill').forEach(pill => {
+    pill.addEventListener('click', e => {
+      const id = pill.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if (target) {
+        target.classList.add('open');
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 80);
+        e.preventDefault();
+      }
+    });
+  });
+
+  /* ─── INITIAL STATE: Day 1 open, rest closed ─── */
+  document.querySelectorAll('.day-section:not(.day1)').forEach(s => s.classList.remove('open'));
+  document.querySelectorAll('.day1 .topic:not(.topic:first-child)').forEach(t => t.classList.remove('open'));
+</script>
+
+</body>
+</html>
