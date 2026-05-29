@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pandas DataFrames — MCQ Test</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14; --surface: #13161e; --card: #1a1e2a; --border: #252a38;
+    --accent: #f7c948; --accent2: #4af0b0; --accent3: #f04a7a;
+    --text: #e8eaf0; --muted: #6b7394; --correct: #4af0b0; --wrong: #f04a7a; --radius: 12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif;
+    min-height: 100vh; padding: 40px 20px 80px;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(247,201,72,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(74,240,176,0.05) 0%, transparent 50%);
+  }
+  .container { max-width: 780px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 52px; animation: fadeDown .6s ease both; }
+  .badge { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(247,201,72,.3); padding: 5px 14px; border-radius: 100px; margin-bottom: 18px; }
+  h1 { font-size: clamp(28px, 5vw, 46px); font-weight: 800; line-height: 1.1; letter-spacing: -.02em; }
+  h1 span { color: var(--accent); }
+  .subtitle { margin-top: 10px; color: var(--muted); font-size: 15px; font-family: 'JetBrains Mono', monospace; }
+  .topics { margin-top: 10px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: .08em; }
+  .topics span { color: var(--accent2); opacity: .8; }
+  .section-divider { display: flex; align-items: center; gap: 12px; margin: 32px 0 20px; font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .section-divider span { background: var(--accent); color: #000; padding: 3px 10px; border-radius: 100px; font-weight: 700; font-size: 10px; }
+  .progress-wrap { margin-bottom: 36px; animation: fadeDown .6s .1s ease both; }
+  .progress-meta { display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .progress-meta span:last-child { color: var(--accent); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 100px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 100px; transition: width .5s cubic-bezier(.4,0,.2,1); width: 0%; }
+  .question-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px 36px; margin-bottom: 16px; animation: slideUp .4s ease both; position: relative; overflow: hidden; }
+  .question-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0; transition: opacity .3s; }
+  .question-card.answered::before { opacity: 1; }
+  .q-number { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; }
+  .q-tag { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; font-weight: 700; }
+  .q-tag.theory { background: rgba(247,201,72,.15); color: var(--accent); }
+  .q-tag.code   { background: rgba(74,240,176,.12); color: var(--accent2); }
+  .q-text { font-size: 16px; font-weight: 600; line-height: 1.6; margin-bottom: 22px; }
+  .q-code { font-family: 'JetBrains Mono', monospace; background: #0a0c11; border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: var(--accent2); margin-bottom: 22px; line-height: 1.7; white-space: pre; overflow-x: auto; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { display: flex; align-items: center; gap: 14px; padding: 13px 18px; border: 1.5px solid var(--border); border-radius: var(--radius); cursor: pointer; transition: all .2s ease; background: var(--surface); user-select: none; }
+  .option:hover:not(.locked) { border-color: var(--accent); background: rgba(247,201,72,.06); transform: translateX(4px); }
+  .option-letter { width: 30px; height: 30px; border-radius: 8px; background: var(--border); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--muted); flex-shrink: 0; transition: all .2s; }
+  .option-text { font-size: 14.5px; line-height: 1.5; font-family: 'JetBrains Mono', monospace; }
+  .option.selected { border-color: var(--accent); background: rgba(247,201,72,.08); }
+  .option.selected .option-letter { background: var(--accent); border-color: var(--accent); color: #000; }
+  #result-section { display: none; animation: slideUp .5s ease both; margin-top: 24px; }
+  .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 40px 36px; position: relative; overflow: hidden; }
+  .result-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(247,201,72,.07) 0%, transparent 60%); pointer-events: none; }
+  .result-header { text-align: center; margin-bottom: 36px; }
+  .result-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+  .score-display { font-size: clamp(52px, 10vw, 80px); font-weight: 800; line-height: 1; color: var(--accent); letter-spacing: -.04em; }
+  .score-display sub { font-size: 28px; color: var(--muted); font-weight: 600; letter-spacing: 0; }
+  .score-percent { font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .grade-badge { display: inline-block; margin-top: 16px; padding: 6px 20px; border-radius: 100px; font-size: 13px; font-weight: 700; letter-spacing: .06em; }
+  .grade-A { background: rgba(74,240,176,.15); color: var(--correct); border: 1px solid rgba(74,240,176,.3); }
+  .grade-B { background: rgba(247,201,72,.15); color: var(--accent); border: 1px solid rgba(247,201,72,.3); }
+  .grade-C { background: rgba(240,74,122,.15); color: var(--wrong); border: 1px solid rgba(240,74,122,.3); }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
+  .stat-val { font-size: 26px; font-weight: 800; font-family: 'JetBrains Mono', monospace; }
+  .stat-val.c { color: var(--correct); } .stat-val.w { color: var(--wrong); } .stat-val.s { color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: .08em; text-transform: uppercase; }
+  .review-title { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; font-family: 'JetBrains Mono', monospace; }
+  .review-list { display: flex; flex-direction: column; gap: 10px; }
+  .review-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: start; }
+  .review-item.correct { border-color: rgba(74,240,176,.25); }
+  .review-item.wrong   { border-color: rgba(240,74,122,.2); }
+  .ri-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); padding-top: 1px; }
+  .ri-body { font-size: 13.5px; line-height: 1.5; }
+  .ri-q { font-weight: 600; margin-bottom: 5px; color: var(--text); }
+  .ri-ans { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .ri-ans .your { color: var(--wrong); } .ri-ans .right { color: var(--correct); } .ri-ans .ok { color: var(--correct); }
+  .ri-icon { font-size: 18px; padding-top: 1px; }
+  .retry-btn { margin-top: 32px; width: 100%; padding: 16px; background: var(--accent); color: #000; border: none; border-radius: var(--radius); font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; letter-spacing: .04em; transition: all .2s; }
+  .retry-btn:hover { background: #ffd966; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(247,201,72,.25); }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideUp  { from { opacity: 0; transform: translateY(20px);  } to { opacity: 1; transform: translateY(0); } }
+  @media (max-width: 520px) { .question-card { padding: 22px 18px; } .stats-row { gap: 8px; } .result-card { padding: 28px 18px; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="badge">🐼 Pandas · DataFrames</div>
+    <h1>Pandas DataFrames<br><span>MCQ Exam</span></h1>
+    <p class="subtitle">30 questions · Theory (Q1–8) · Hands-on (Q9–30)</p>
+    <p class="topics"><span>loc</span> · <span>iloc</span> · <span>filtering</span> · <span>copy</span> · <span>shape</span> · <span>dtypes</span> · <span>SettingWithCopyWarning</span></p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span id="prog-label">0 / 30 answered</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div id="questions-container"></div>
+  <div id="result-section"></div>
+
+</div>
+
+<script>
+const questions = [
+  // ── Theory Q1–8 ──
+  {
+    tag: "theory",
+    q: "What does df['col'] return vs df[['col']]?",
+    opts: [
+      "Both return Series",
+      "Both return DataFrame",
+      "df['col'] returns Series; df[['col']] returns DataFrame",
+      "df['col'] returns DataFrame; df[['col']] returns Series"
+    ],
+    ans: 2
+  },
+  {
+    tag: "theory",
+    q: "What does .loc use for access?",
+    opts: ["Integer position", "Index label", "Column number", "Random"],
+    ans: 1
+  },
+  {
+    tag: "theory",
+    q: "Is df.loc['a':'c'] inclusive or exclusive on 'c'?",
+    opts: ["Exclusive", "Depends on dtype", "Inclusive", "Neither"],
+    ans: 2
+  },
+  {
+    tag: "theory",
+    q: "What is the safe way to modify a filtered subset?",
+    opts: [
+      "df[mask]['col'] = val",
+      "df[mask].col = val",
+      "sub = df[mask].copy(); sub['col'] = val",
+      "df.iloc[mask]['col'] = val"
+    ],
+    ans: 2
+  },
+  {
+    tag: "theory",
+    q: "What does SettingWithCopyWarning mean?",
+    opts: [
+      "The DataFrame is read-only",
+      "You forgot .copy() on a subset",
+      "The dtype is wrong",
+      "The index is not set"
+    ],
+    ans: 1
+  },
+  {
+    tag: "theory",
+    q: "Which boolean operator is correct for DataFrame conditions?",
+    opts: ["and", "or", "&", "+"],
+    ans: 2
+  },
+  {
+    tag: "theory",
+    q: "When should you check .shape?",
+    opts: [
+      "After every single operation",
+      "Never",
+      "After merge, drop, filter, add — when count might change",
+      "Only at start"
+    ],
+    ans: 2
+  },
+  {
+    tag: "theory",
+    q: "What does df.copy() do?",
+    opts: [
+      "Copies only the index",
+      "Creates a shallow reference",
+      "Creates a fully independent copy",
+      "Copies only values"
+    ],
+    ans: 2
+  },
+
+  // ── Hands-on Q9–30 ──
+  {
+    tag: "code",
+    q: "What does this return?",
+    code: "df=pd.DataFrame({'A':[1,2,3],'B':[4,5,6]})\ntype(df['A'])",
+    opts: ["DataFrame", "ndarray", "Series", "Error"],
+    ans: 2
+  },
+  {
+    tag: "code",
+    q: "What does this return?",
+    code: "df=pd.DataFrame({'A':[1,2,3],'B':[4,5,6]})\ntype(df[['A']])",
+    opts: ["Series", "ndarray", "Error", "DataFrame"],
+    ans: 3
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,2,3]},index=['x','y','z'])\nprint(df.loc['x':'y','A'].tolist())",
+    opts: ["[1]", "[1,2,3]", "[1,2]", "Error"],
+    ans: 2
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,2,3]},index=['x','y','z'])\nprint(df.iloc[0:2,0].tolist())",
+    opts: ["[1,2,3]", "[1,2]", "[1]", "Error"],
+    ans: 1
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,2,3],'B':[4,5,6]})\nprint(df.shape)",
+    opts: ["(2,3)", "(6,)", "(3,2)", "Error"],
+    ans: 2
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,2,3],'B':[4,5,6]})\nprint(df.size)",
+    opts: ["2", "3", "5", "6"],
+    ans: 3
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,2,3],'B':['x','y','z']})\nprint(df.dtypes['B'])",
+    opts: ["int64", "str", "float64", "object"],
+    ans: 3
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'score':[85,70,90],'name':['A','B','C']})\nprint(df[df['score']>80]['name'].tolist())",
+    opts: ["['A','C']", "['B']", "[85,90]", "Error"],
+    ans: 0
+  },
+  {
+    tag: "code",
+    q: "What is the correct way to access a row by position?",
+    opts: ["df[0]", "df.loc[0]", "df.iloc[0]", "df.row(0)"],
+    ans: 2
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,2,3],'B':[4,5,6],'C':[7,8,9]})\nprint(df.iloc[0:2,1:3])",
+    opts: ["A and B cols", "B and C cols rows 0-1", "All rows cols 1-3", "Error"],
+    ans: 1
+  },
+  {
+    tag: "code",
+    q: "After this, is df changed?",
+    code: "df=pd.DataFrame({'A':[1,2,3]})\ndf2=df.drop(columns=['A'])",
+    opts: ["Yes — df has no columns", "No — drop returns new df", "Error", "Both changed"],
+    ans: 1
+  },
+  {
+    tag: "code",
+    q: "What does this produce?",
+    code: "df=pd.DataFrame({'A':[1,2,3]})\ndf2=df\ndf2['A']=99\nprint(df['A'].tolist())",
+    opts: ["[1,2,3]", "Error", "[99,99,99]", "None"],
+    ans: 2
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,np.nan,3],'B':[np.nan,5,6]})\nprint(df.isna().sum()['A'])",
+    opts: ["0", "3", "1", "Error"],
+    ans: 2
+  },
+  {
+    tag: "code",
+    q: "What does pd.cut do?",
+    code: "s=pd.Series([45,75,92])\nprint(pd.cut(s,bins=[0,60,80,100],labels=['F','C','A']).tolist())",
+    opts: ["['F','C','C']", "['F','C','A']", "[45,75,92]", "Error"],
+    ans: 1
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,2,3],'B':[4,5,6]})\nprint(len(df))",
+    opts: ["6", "2", "3", "Error"],
+    ans: 2
+  },
+  {
+    tag: "code",
+    q: "Which adds a column to df correctly?",
+    opts: [
+      "df.add_column('C',[1,2,3])",
+      "df['C']=[1,2,3]",
+      "df.append('C',[1,2,3])",
+      "df.insert('C',[1,2,3])"
+    ],
+    ans: 1
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[3,1,2]})\nprint(df.sort_values('A')['A'].tolist())",
+    opts: ["[3,1,2]", "[1,2,3]", "[3,2,1]", "Error"],
+    ans: 1
+  },
+  {
+    tag: "code",
+    q: "What does df.loc[mask, 'col'] = val do?",
+    opts: [
+      "Creates a new DataFrame",
+      "Raises SettingWithCopyWarning",
+      "Modifies df in place at matching rows — safest pattern",
+      "Error always"
+    ],
+    ans: 2
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,2,3],'B':[4,5,6]})\nprint(df[['A','B']].sum(axis=1).tolist())",
+    opts: ["[5,6,7]", "[6,9]", "[5,7,9]", "Error"],
+    ans: 2
+  },
+  {
+    tag: "code",
+    q: "What does reset_index(drop=True) do?",
+    opts: [
+      "Deletes the index",
+      "Resets to 0,1,2... and discards old index",
+      "Sorts the index",
+      "Converts index to column"
+    ],
+    ans: 1
+  },
+  {
+    tag: "code",
+    q: "What does this print?",
+    code: "df=pd.DataFrame({'A':[1,2,3],'B':[4,5,6]})\nprint(df.rename(columns={'A':'X'}).columns.tolist())",
+    opts: ["['A','B']", "['X','B']", "['X','A','B']", "Error"],
+    ans: 1
+  },
+  {
+    tag: "code",
+    q: "Which pattern correctly avoids SettingWithCopyWarning?",
+    opts: [
+      "df[df['A']>1]['B'] = 0",
+      "sub=df[df['A']>1]; sub['B']=0",
+      "sub=df[df['A']>1].copy(); sub['B']=0",
+      "df[df['A']>1].B = 0"
+    ],
+    ans: 2
+  }
+];
+
+const labels = ['A','B','C','D'];
+const userAnswers = new Array(questions.length).fill(null);
+let answered = 0;
+let examDone = false;
+
+const container = document.getElementById('questions-container');
+const resultSec = document.getElementById('result-section');
+const progFill  = document.getElementById('progress-fill');
+const progLabel = document.getElementById('prog-label');
+const progPct   = document.getElementById('prog-pct');
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildQuestions() {
+  let lastTag = null;
+  questions.forEach((q, qi) => {
+    if (q.tag !== lastTag) {
+      const div = document.createElement('div');
+      div.className = 'section-divider';
+      div.innerHTML = q.tag === 'theory'
+        ? '<span>Theory · Q1–8</span>'
+        : '<span>Hands-on · Q9–30</span>';
+      container.appendChild(div);
+      lastTag = q.tag;
+    }
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `card-${qi}`;
+    card.style.animationDelay = `${qi * 0.03}s`;
+
+    const tagHtml = `<span class="q-tag ${q.tag}">${q.tag === 'theory' ? 'Theory' : 'Code'}</span>`;
+    const codeBlock = q.code ? `<div class="q-code">${escHtml(q.code)}</div>` : '';
+    const optsHtml = q.opts.map((opt, oi) => `
+      <div class="option" id="opt-${qi}-${oi}" onclick="selectOption(${qi}, ${oi})">
+        <div class="option-letter">${labels[oi]}</div>
+        <div class="option-text">${escHtml(opt)}</div>
+      </div>`).join('');
+
+    card.innerHTML = `
+      <div class="q-number">Question ${qi + 1} of ${questions.length} ${tagHtml}</div>
+      <div class="q-text">${escHtml(q.q)}</div>
+      ${codeBlock}
+      <div class="options" id="opts-${qi}">${optsHtml}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function selectOption(qi, oi) {
+  if (examDone) return;
+  const wasNull = userAnswers[qi] === null;
+  userAnswers[qi] = oi;
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if (el) el.classList.remove('selected');
+  }
+  document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+  document.getElementById(`card-${qi}`).classList.add('answered');
+  if (wasNull) answered++;
+  updateProgress();
+  if (answered === questions.length) { examDone = true; setTimeout(showResult, 400); }
+}
+
+function updateProgress() {
+  const pct = Math.round((answered / questions.length) * 100);
+  progFill.style.width = pct + '%';
+  progLabel.textContent = `${answered} / ${questions.length} answered`;
+  progPct.textContent = pct + '%';
+}
+
+function showResult() {
+  let correct = 0;
+  questions.forEach((q, i) => { if (userAnswers[i] === q.ans) correct++; });
+  const wrong = questions.length - correct;
+  const pct = Math.round((correct / questions.length) * 100);
+  let grade, gradeClass, gradeMsg;
+  if (pct >= 80)      { grade = '🏆 Excellent'; gradeClass = 'grade-A'; gradeMsg = 'Outstanding performance!'; }
+  else if (pct >= 60) { grade = '✅ Good';       gradeClass = 'grade-B'; gradeMsg = 'Solid understanding!'; }
+  else                { grade = '📚 Keep Going'; gradeClass = 'grade-C'; gradeMsg = 'More practice needed.'; }
+
+  const reviewItems = questions.map((q, i) => {
+    const isRight = userAnswers[i] === q.ans;
+    const userLetter = labels[userAnswers[i]];
+    const corrLetter = labels[q.ans];
+    const qShort = q.q.length > 60 ? q.q.slice(0, 57) + '…' : q.q;
+    const ansHtml = isRight
+      ? `<span class="ok">✓ ${userLetter}: ${escHtml(q.opts[userAnswers[i]])}</span>`
+      : `<span class="your">✗ You: ${userLetter} — ${escHtml(q.opts[userAnswers[i]])}</span><br><span class="right">✓ Correct: ${corrLetter} — ${escHtml(q.opts[q.ans])}</span>`;
+    return `
+      <div class="review-item ${isRight ? 'correct' : 'wrong'}">
+        <div class="ri-num">Q${i+1}</div>
+        <div class="ri-body">
+          <div class="ri-q">${escHtml(qShort)}</div>
+          <div class="ri-ans">${ansHtml}</div>
+        </div>
+        <div class="ri-icon">${isRight ? '✅' : '❌'}</div>
+      </div>`;
+  }).join('');
+
+  resultSec.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-label">Your Result</div>
+        <div class="score-display">${correct}<sub> / ${questions.length}</sub></div>
+        <div class="score-percent">${pct}% correct — ${gradeMsg}</div>
+        <span class="grade-badge ${gradeClass}">${grade}</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-val c">${correct}</div><div class="stat-lbl">Correct</div></div>
+        <div class="stat-box"><div class="stat-val w">${wrong}</div><div class="stat-lbl">Wrong</div></div>
+        <div class="stat-box"><div class="stat-val s">${pct}%</div><div class="stat-lbl">Score</div></div>
+      </div>
+      <div class="review-title">Answer Review</div>
+      <div class="review-list">${reviewItems}</div>
+      <button class="retry-btn" onclick="retryExam()">↺ Retry Exam</button>
+    </div>`;
+
+  resultSec.style.display = 'block';
+  resultSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function retryExam() {
+  userAnswers.fill(null);
+  answered = 0;
+  examDone = false;
+  updateProgress();
+  resultSec.style.display = 'none';
+  resultSec.innerHTML = '';
+  document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.question-card').forEach(el => el.classList.remove('answered'));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuestions();
+</script>
+</body>
+</html>
