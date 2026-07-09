@@ -277,7 +277,7 @@
 <div class="container">
 
   <header>
-    <div class="badge">🐍 Python Arrays</div>
+    <div class="badge">Python Arrays</div>
     <h1>Intermediate<br><span>MCQ Test</span></h1>
     <p class="subtitle">30 questions · one correct answer each</p>
     <p class="topics"><span>array module</span> · <span>typecodes</span> · <span>slicing</span> · <span>append / extend / insert</span> · <span>buffer_info</span> · <span>NumPy arrays</span> · <span>memory &amp; performance</span></p>
@@ -610,9 +610,9 @@ function showResult() {
   const pct = Math.round((correct / questions.length) * 100);
 
   let grade, gradeClass, gradeMsg;
-  if (pct >= 80)      { grade = '🏆 Excellent'; gradeClass = 'grade-A'; gradeMsg = 'Outstanding performance!'; }
-  else if (pct >= 60) { grade = '✅ Good';       gradeClass = 'grade-B'; gradeMsg = 'Solid understanding!'; }
-  else                { grade = '📚 Keep Going'; gradeClass = 'grade-C'; gradeMsg = 'More practice needed.'; }
+  if (pct >= 80)      { grade = 'Excellent'; gradeClass = 'grade-A'; gradeMsg = 'Outstanding performance!'; }
+  else if (pct >= 60) { grade = 'Good';       gradeClass = 'grade-B'; gradeMsg = 'Solid understanding!'; }
+  else                { grade = 'Keep Going'; gradeClass = 'grade-C'; gradeMsg = 'More practice needed.'; }
 
   const reviewItems = questions.map((q, i) => {
     const isRight = userAnswers[i] === q.ans;
